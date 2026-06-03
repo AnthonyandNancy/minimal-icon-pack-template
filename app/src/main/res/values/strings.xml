@@ -29,7 +29,7 @@
     <string name="card_adaptive_title">Adaptive Icons</string>
     <string name="card_adaptive_desc">自适应图标示例</string>
     <string name="card_request_title">申请图标</string>
-    <string name="card_request_desc">已安装: %d | 已适配: %d | 未适配: %d</string>
+    <string name="card_request_desc" formatted="false">已安装: %d | 已适配: %d | 未适配: %d</string>
     <string name="card_wallpapers_title">云端壁纸</string>
     <string name="card_wallpapers_desc">%d 张壁纸可用</string>
     <string name="card_more_apps_title">更多应用</string>
