@@ -31,8 +31,10 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    // viewBinding disabled: not used by code, and it generates binding
+    // classes that can break after apktool recompilation
     buildFeatures {
-        viewBinding true
+        viewBinding false
     }
 }
 

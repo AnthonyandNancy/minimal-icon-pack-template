@@ -106,6 +106,9 @@ apktool d /tmp/work/blank-icon-pack-template.apk -o /tmp/work/decompiled/
 # 编辑 /tmp/work/decompiled/AndroidManifest.xml
 # 将 package="com.template.iconpack" 改为你的包名
 # ⚠️ 注意：不要修改 Activity 的完整类名
+# ⚠️ 无需处理 DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION：
+#    模板已在编译时通过 tools:node="remove" 剥离了该权限，
+#    反编译后的 manifest 中不会出现这个权限项。
 # Activity android:name="com.template.iconpack.MainActivity" 保持不变
 # apktool 在重新编译时会自动处理包名映射
 
@@ -141,8 +144,8 @@ cp /tmp/work/decompiled/res/xml/appfilter.xml /tmp/work/decompiled/assets/appfil
 # 10. 同步 assets/drawable.xml
 cp /tmp/work/decompiled/res/xml/drawable.xml /tmp/work/decompiled/assets/drawable.xml
 
-# 11. apktool 重新打包
-apktool b /tmp/work/decompiled/ -o /tmp/work/output-unsigned.apk
+# 11. apktool 重新打包（❗ 必须使用 --use-aapt2）
+apktool b /tmp/work/decompiled/ -o /tmp/work/output-unsigned.apk --use-aapt2
 
 # 12. 签名（需要 keystore）
 # 生成签名密钥（首次）：
@@ -156,6 +159,20 @@ apksigner sign --ks my-key.keystore \
 
 # zipalign 优化：
 zipalign -v 4 /tmp/work/output-signed.apk /tmp/work/final.apk
+```
+
+### 为什么 apktool 必须用 `--use-aapt2`？
+
+本项目使用 AGP 8.2.0 / AAPT2 编译。apktool 默认使用 AAPT1 重新打包，两者分配的资源 ID（R 类中的整数值）不同。但 smali 字节码里已经硬编码了 AAPT2 分配的原始 ID，用 AAPT1 重新编译会导致 `ResourceNotFoundException` 或 `NullPointerException` → **闪退**。
+
+`--use-aapt2` 让 apktool 用和原始构建相同的 AAPT2 工具分配资源 ID，确保 ID 一致。
+
+```bash
+#  正确（不闪退）
+apktool b decompiled/ -o output.apk --use-aapt2
+
+#  错误（可能闪退）
+apktool b decompiled/ -o output.apk
 ```
 
 ## 关键设计决策
