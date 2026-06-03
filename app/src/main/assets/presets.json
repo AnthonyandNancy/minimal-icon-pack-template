@@ -1,0 +1,6 @@
+[
+    { "id": "default_circle", "name": "默认圆形", "iconShape": "circle" },
+    { "id": "rounded_square", "name": "圆角矩形", "iconShape": "rounded_square" },
+    { "id": "dark_bg", "name": "深色背景", "iconShape": "circle", "background": "dark" },
+    { "id": "light_bg", "name": "浅色背景", "iconShape": "circle", "background": "light" }
+]

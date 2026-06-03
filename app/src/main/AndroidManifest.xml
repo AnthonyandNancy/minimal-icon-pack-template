@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Icon Pack: No internet, no complex permissions needed -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.IconPackTemplate"
+        tools:targetApi="35">
+
+        <!-- Main Activity: MUST use fully qualified class name for apktool -->
+        <activity
+            android:name="com.template.iconpack.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.IconPackTemplate"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
+
+            <!-- Launcher entry -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- App drawer info -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.INFO" />
+            </intent-filter>
+
+            <!-- ADW / LauncherPro theme picker -->
+            <intent-filter>
+                <action android:name="org.adw.launcher.THEMES" />
+            </intent-filter>
+
+            <!-- Icon picker -->
+            <intent-filter>
+                <action android:name="org.adw.launcher.icons.ACTION_PICK_ICON" />
+            </intent-filter>
+
+            <!-- Nova / Action Launcher apply -->
+            <intent-filter>
+                <action android:name="com.novalauncher.THEME" />
+            </intent-filter>
+
+        </activity>
+
+        <!--
+            Explicitly NO FileProvider, NO AndroidX Startup, NO custom permissions.
+            NO resource obfuscation. Keep APK clean for apktool round-trip.
+        -->
+
+    </application>
+
+</manifest>

@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+app/build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# APK
+*.apk
+*.aab
+
+# Local properties
+local.properties
+
+# Generated scripts
+_gen_*.py

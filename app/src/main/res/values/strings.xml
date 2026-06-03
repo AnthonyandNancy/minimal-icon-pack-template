@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Icon Pack Template</string>
+    <string name="version_name">1.0.0</string>
+
+    <!-- Drawer -->
+    <string name="drawer_open">打开菜单</string>
+    <string name="drawer_close">关闭菜单</string>
+
+    <!-- Menu items -->
+    <string name="menu_home">首页</string>
+    <string name="menu_apply">应用图标</string>
+    <string name="menu_icons">图标</string>
+    <string name="menu_request">申请图标</string>
+    <string name="menu_wallpapers">壁纸</string>
+    <string name="menu_presets">预设</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_faq">常见问题</string>
+    <string name="menu_about">关于</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">主页</string>
+    <string name="card_apply_title">应用</string>
+    <string name="card_apply_desc">应用此图标包到启动器</string>
+    <string name="card_donate_title">捐赠</string>
+    <string name="card_donate_desc">支持图标包的开发工作</string>
+    <string name="card_icons_title">自定图标</string>
+    <string name="card_icons_desc">%d 个图标已就绪</string>
+    <string name="card_adaptive_title">Adaptive Icons</string>
+    <string name="card_adaptive_desc">自适应图标示例</string>
+    <string name="card_request_title">申请图标</string>
+    <string name="card_request_desc">已安装: %d | 已适配: %d | 未适配: %d</string>
+    <string name="card_wallpapers_title">云端壁纸</string>
+    <string name="card_wallpapers_desc">%d 张壁纸可用</string>
+    <string name="card_more_apps_title">更多应用</string>
+    <string name="card_more_apps_desc">查看更多应用</string>
+
+    <!-- Toolbar actions -->
+    <string name="action_rate">评分</string>
+    <string name="action_share">分享</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_search">搜索</string>
+
+    <!-- Apply -->
+    <string name="apply_title">应用图标</string>
+    <string name="apply_hint">请在对应启动器设置中应用此图标包</string>
+    <string name="apply_not_supported">不支持直接应用</string>
+
+    <!-- Icons -->
+    <string name="icons_title">图标</string>
+    <string name="icons_empty">暂无图标\n等待 Electron 注入资源</string>
+    <string name="icons_search_hint">搜索图标名称...</string>
+
+    <!-- Request -->
+    <string name="request_title">申请图标</string>
+    <string name="request_total">总计: %d</string>
+    <string name="request_themed">已适配: %d</string>
+    <string name="request_unthemed">未适配: %d</string>
+    <string name="request_export">导出申请列表</string>
+    <string name="request_share">分享申请列表</string>
+    <string name="request_all">全部</string>
+    <string name="request_themed_filter">已适配</string>
+    <string name="request_unthemed_filter">未适配</string>
+
+    <!-- Wallpapers -->
+    <string name="wallpapers_title">壁纸</string>
+    <string name="wallpapers_empty">暂无壁纸</string>
+    <string name="wallpapers_apply">设置壁纸</string>
+    <string name="wallpapers_download">下载</string>
+
+    <!-- Presets -->
+    <string name="presets_title">预设</string>
+    <string name="preset_default_circle">默认圆形</string>
+    <string name="preset_rounded_square">圆角矩形</string>
+    <string name="preset_dark_bg">深色背景</string>
+    <string name="preset_light_bg">浅色背景</string>
+
+    <!-- Settings -->
+    <string name="settings_title">设置</string>
+    <string name="settings_dark_mode">深色模式</string>
+    <string name="settings_show_icon_name">显示图标名称</string>
+    <string name="settings_icon_columns">每行图标数量</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_reload">重新加载图标数据</string>
+    <string name="settings_cache_cleared">缓存已清除</string>
+
+    <!-- FAQ -->
+    <string name="faq_title">常见问题</string>
+    <string name="faq_q1">如何应用图标包？</string>
+    <string name="faq_a1">打开你的启动器设置，找到"主题"或"图标包"选项，选择本图标包即可应用。不同启动器的设置位置可能有所不同，请参考对应启动器的帮助文档。</string>
+    <string name="faq_q2">为什么有些图标没有变化？</string>
+    <string name="faq_a2">图标包只会替换已适配的应用图标。如果某个应用的图标没有变化，说明该应用尚未适配。你可以在"申请图标"页面提交申请，开发者会逐步增加适配。</string>
+    <string name="faq_q3">如何申请缺失图标？</string>
+    <string name="faq_a3">在"申请图标"页面，你可以看到所有已安装应用中未适配的列表。勾选需要申请的应用，点击"导出"或"分享"按钮即可将申请列表发送给开发者。</string>
+    <string name="faq_q4">为什么某些启动器不支持？</string>
+    <string name="faq_a4">图标包使用 Android 标准图标主题接口。大部分主流启动器（Nova、Lawnchair、Smart Launcher 等）都支持。如果你的启动器不支持，请尝试切换到兼容的启动器。</string>
+
+    <!-- About -->
+    <string name="about_title">关于</string>
+    <string name="about_description">这是一个由 Electron 工具生成的 Android 图标包模板。\n\n本模板为开发者提供了一个快速创建自定义图标包的基础框架，配合 Electron 桌面工具可以批量注入图标资源和配置。</string>
+    <string name="about_oss">开源许可</string>
+    <string name="about_oss_desc">本应用使用了以下开源组件：\n- AndroidX (Apache 2.0)\n- Google Material Design (Apache 2.0)\n\n本模板工程本身采用 MIT 许可。</string>
+    <string name="about_share">分享此应用</string>
+
+    <!-- Share -->
+    <string name="share_app_message">试试这个图标包：Icon Pack Template\n下载链接：https://play.google.com/store/apps/details?id=com.template.iconpack</string>
+    <string name="share_request_subject">图标包适配申请列表</string>
+
+    <!-- Generic -->
+    <string name="loading">加载中...</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+</resources>
