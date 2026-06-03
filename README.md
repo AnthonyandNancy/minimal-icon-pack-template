@@ -73,7 +73,7 @@ blank-icon-pack-template/
 5. 可选择输入版本号（默认 `1.0.0`）
 6. 点击绿色 **Run workflow** 确认
 7. 等待编译完成（约 3-5 分钟）
-8. 在 workflow run 页面底部 **Artifacts** 区域下载 `blank-icon-pack-template-unsigned.apk`
+8. 在 workflow run 页面底部 **Artifacts** 区域下载 `blank-icon-pack-template.apk`
 
 ### 方式 2：Push 自动触发
 
@@ -83,20 +83,20 @@ blank-icon-pack-template/
 
 ```bash
 # 需要 JDK 17 + Android SDK
-./gradlew :app:assembleRelease --no-daemon
+./gradlew :app:assembleDebug --no-daemon
 
-# 输出路径
-# app/build/outputs/apk/release/app-release-unsigned.apk
+# 输出路径（debug 签名，可直接安装测试）
+# app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ## Electron 使用此模板的完整流程
 
 ```bash
 # 1. 复制模板 APK
-cp blank-icon-pack-template-unsigned.apk /tmp/work/
+cp blank-icon-pack-template.apk /tmp/work/
 
 # 2. apktool 反编译
-apktool d /tmp/work/blank-icon-pack-template-unsigned.apk -o /tmp/work/decompiled/
+apktool d /tmp/work/blank-icon-pack-template.apk -o /tmp/work/decompiled/
 
 # 3. 修改应用名
 # 编辑 /tmp/work/decompiled/res/values/strings.xml
