@@ -77,4 +77,12 @@ public final class GlassTheme {
 
     public static final long ANIM_CARD_CLICK = 110L;
     public static final float ANIM_PRESS_SCALE = 0.97f;
+
+    // ── Backward-compat aliases for GlassDrawableFactory / GlassAnimations ──
+    public static final int GLASS_CARD_PRIMARY = GLASS_ENTRY_BG;
+    public static final int GLASS_TOOLBAR      = GLASS_TOOLBAR_BG;
+    public static final int GLASS_SELECTED_BG  = Color.parseColor("#99FFFFFF");
+    public static final long ANIM_PAGE_TRANSITION = 220L;
+    public static final long ANIM_CARD_STAGGER    = 30L;
+    public static final long ANIM_DRAWER_OPEN     = 260L;
 }
