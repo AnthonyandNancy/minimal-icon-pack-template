@@ -35,7 +35,6 @@
                 android:background="@drawable/glass_toolbar_bg"
                 android:elevation="8dp"
                 app:titleTextColor="@color/text_primary"
-                app:titleTextSize="22sp"
                 app:navigationIcon="@drawable/ic_menu_glass"
                 app:navigationIconTint="@color/text_secondary"
                 app:contentInsetStartWithNavigation="12dp"
