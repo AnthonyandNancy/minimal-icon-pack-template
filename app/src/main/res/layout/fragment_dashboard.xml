@@ -72,8 +72,7 @@
 
                 <ImageView android:id="@+id/hero_icon"
                     android:layout_width="76dp" android:layout_height="76dp"
-                    android:src="@mipmap/ic_launcher" android:scaleType="centerCrop"
-                    android:background="@drawable/glass_hero_icon_bg" />
+                    android:src="@mipmap/ic_launcher" android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="0dp" android:layout_height="wrap_content"

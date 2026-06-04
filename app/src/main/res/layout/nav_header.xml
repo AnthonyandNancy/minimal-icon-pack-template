@@ -14,7 +14,6 @@
         android:layout_height="86dp"
         android:src="@mipmap/ic_launcher"
         android:scaleType="centerCrop"
-        android:background="@drawable/glass_drawer_logo_bg"
         android:layout_marginBottom="14dp" />
 
     <TextView

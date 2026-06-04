@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.template.iconpack.R;
+import com.template.iconpack.ui.BackBarHelper;
 
 public class AboutFragment extends Fragment {
 
@@ -27,6 +28,7 @@ public class AboutFragment extends Fragment {
             }
         });
 
+        BackBarHelper.setup(view, getActivity());
         return view;
     }
 }
