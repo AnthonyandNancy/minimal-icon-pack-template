@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity
             menuBtn.setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
         }
     }
-    }
 
     private void onDashboardCardClicked(int pos) {
         if (pos == -1) { openPlayStore(); return; }
