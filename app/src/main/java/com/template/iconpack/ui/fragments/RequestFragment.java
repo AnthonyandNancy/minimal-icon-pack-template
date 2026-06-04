@@ -152,7 +152,7 @@ public class RequestFragment extends Fragment {
         if (adapter == null) return;
         List<AppInfo> sel = adapter.getSelectedApps();
         if (sel.isEmpty()) {
-            selectedCountView.setText("选择图标申请");
+            selectedCountView.setText("");
         } else {
             selectedCountView.setText("已选 " + sel.size() + " 个");
         }
