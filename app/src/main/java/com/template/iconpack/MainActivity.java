@@ -182,9 +182,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onDashboardCardClicked(int pos) {
-        if (pos == -1) { openPlayStore(); return; }
-        if (pos == -2) { shareApp(); return; }
-        if (pos == -3) { refreshCurrentPage(); return; }
         int idx = pos - 10;
         if (idx >= 0 && idx <= 7) {
             switch (idx) {
@@ -200,6 +197,8 @@ public class MainActivity extends AppCompatActivity
         }
         drawer.closeDrawer(GravityCompat.START);
     }
+
+    public void onBackClicked(View v) { onBackPressed(); }
 
     // ── Scroll listener (DashboardScrollView) ──
     @Override

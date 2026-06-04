@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/icon_grid_item"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="#99FFFFFF"
-    app:strokeColor="@color/glass_stroke_dim"
-    app:strokeWidth="0.5dp"
+    android:layout_margin="4dp"
+    android:background="@drawable/glass_card_stat"
+    android:elevation="2dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:outlineProvider="background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,4 +36,4 @@
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</FrameLayout>

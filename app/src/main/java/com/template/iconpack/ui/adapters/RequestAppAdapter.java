@@ -71,9 +71,6 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case "unthemed":
                 for (AppInfo a : allApps) { if (!a.isThemed) filteredApps.add(a); }
                 break;
-            case "selected":
-                for (AppInfo a : allApps) { if (a.isSelected) filteredApps.add(a); }
-                break;
             default:
                 filteredApps.addAll(allApps);
         }
@@ -125,7 +122,6 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             h.filterAll.setOnClickListener(v -> clickFilter("all"));
             h.filterThemed.setOnClickListener(v -> clickFilter("themed"));
             h.filterUnthemed.setOnClickListener(v -> clickFilter("unthemed"));
-            h.filterSelected.setOnClickListener(v -> clickFilter("selected"));
         } else if (holder instanceof AppHolder) {
             AppInfo app = filteredApps.get(pos - 2);
             AppHolder h = (AppHolder) holder;
@@ -157,7 +153,7 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void clickFilter(String filter) {
         setFilter(filter);
-        setShowCheckboxes(filter.equals("unthemed") || filter.equals("selected"));
+        setShowCheckboxes(filter.equals("unthemed"));
         if (filterListener != null) filterListener.onFilterClicked(filter);
     }
 
@@ -176,13 +172,12 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class FilterHolder extends RecyclerView.ViewHolder {
-        TextView filterAll, filterThemed, filterUnthemed, filterSelected;
+        TextView filterAll, filterThemed, filterUnthemed;
         FilterHolder(View v) {
             super(v);
             filterAll = v.findViewById(R.id.filter_all);
             filterThemed = v.findViewById(R.id.filter_themed);
             filterUnthemed = v.findViewById(R.id.filter_unthemed);
-            filterSelected = v.findViewById(R.id.filter_selected);
         }
     }
 

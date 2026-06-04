@@ -42,6 +42,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:clipToPadding="false"
+        android:paddingStart="20dp" android:paddingEnd="20dp"
         android:paddingBottom="24dp" />
 
 </LinearLayout>

@@ -93,7 +93,6 @@ public class DashboardFragment extends Fragment {
         int unthemedCount = apps.size() - themedCount;
 
         buildHeroCard(ctx, icons.size(), density);
-        setupQuickActions(ctx);
         buildStatCards(ctx, icons.size(), apps.size(), themedCount, unthemedCount, density);
         buildEntryCards(ctx, icons.size(), apps.size(), themedCount, wallpapers.size(), density);
 
@@ -130,18 +129,6 @@ public class DashboardFragment extends Fragment {
         countView.setText(iconCount + " icons");
 
         GlassAnimations.applyPressAnimation(card);
-    }
-
-    private void setupQuickActions(Context ctx) {
-        View rate = rootView.findViewById(R.id.btn_quick_rate);
-        View share = rootView.findViewById(R.id.btn_quick_share);
-        View refresh = rootView.findViewById(R.id.btn_quick_refresh);
-        GlassAnimations.applyPressAnimation(rate);
-        GlassAnimations.applyPressAnimation(share);
-        GlassAnimations.applyPressAnimation(refresh);
-        rate.setOnClickListener(v -> { if (callback != null) callback.onCardClicked(-1); });
-        share.setOnClickListener(v -> { if (callback != null) callback.onCardClicked(-2); });
-        refresh.setOnClickListener(v -> { if (callback != null) callback.onCardClicked(-3); });
     }
 
     private void buildStatCards(Context ctx, int iconCount, int totalApps,
@@ -204,6 +191,15 @@ public class DashboardFragment extends Fragment {
 
         for (int i = 0; i < titles.length; i++) {
             View card = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, container, false);
+
+            // Hide "应用图标" entry (index 0) — not deleted, just GONE
+            if (i == 0) {
+                card.setVisibility(View.GONE);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, 0);
+                card.setLayoutParams(lp);
+                container.addView(card);
+                continue;
+            }
 
             // Apply LiquidGlassDrawable
             card.setBackground(LiquidGlassDrawable.featureCard(density));
