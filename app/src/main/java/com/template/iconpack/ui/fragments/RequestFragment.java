@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.template.iconpack.R;
 import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
+import com.template.iconpack.ui.GlassBlur;
 import com.template.iconpack.ui.LiquidGlassDrawable;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
 import com.template.iconpack.utils.AppScanner;
@@ -46,6 +47,7 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
         bottomBar = view.findViewById(R.id.request_bottom_bar);
         selectedCountView = view.findViewById(R.id.request_selected_count);
         bottomBar.setBackground(LiquidGlassDrawable.floatingBar(density));
+        GlassBlur.bottomBar(bottomBar);
 
         requestList = view.findViewById(R.id.request_list);
         requestList.setLayoutManager(new LinearLayoutManager(ctx));

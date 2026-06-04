@@ -10,23 +10,23 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Deep-space 5-stop gradient background:
- * #09111D → #101B2D → #132233 → #0E2830 → #050B12
+ * Deep-space background: #050A12 → #0B1525 → #101E2E → #0C2A30 → #02060B
+ * + 4 blobs.
  */
 public class LiquidBackgroundView extends View {
 
     private final Paint bgPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    private static final int[] GRAD_COLORS = {
-        0xFF09111D, 0xFF101B2D, 0xFF132233, 0xFF0E2830, 0xFF050B12
+    private static final int[] COLORS = {
+        0xFF050A12, 0xFF0B1525, 0xFF101E2E, 0xFF0C2A30, 0xFF02060B
     };
-    private static final float[] GRAD_STOPS = {0f, 0.25f, 0.50f, 0.75f, 1f};
+    private static final float[] STOPS = {0f, 0.25f, 0.50f, 0.75f, 1f};
 
-    private static final int BLOB_BLUE   = 0xFF2F7DFF;
-    private static final int BLOB_PURPLE = 0xFF7C4DFF;
-    private static final int BLOB_CYAN   = 0xFF15D3C5;
-    private static final int BLOB_BLACK  = 0xFF000000;
+    private static final int BLUE   = 0xFF2F7DFF;
+    private static final int PURPLE = 0xFF7C4DFF;
+    private static final int CYAN   = 0xFF16D6C8;
+    private static final int BLACK  = 0xFF000000;
 
     public LiquidBackgroundView(Context c) { super(c); }
     public LiquidBackgroundView(Context c, AttributeSet a) { super(c, a); }
@@ -36,25 +36,24 @@ public class LiquidBackgroundView extends View {
         int w = getWidth(), h = getHeight();
         if (w == 0 || h == 0) return;
 
-        bgPaint.setShader(new LinearGradient(0, 0, 0, h,
-                GRAD_COLORS, GRAD_STOPS, Shader.TileMode.CLAMP));
+        bgPaint.setShader(new LinearGradient(0, 0, 0, h, COLORS, STOPS, Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, w, h, bgPaint);
 
         float r;
+        r = Math.min(w, h) * 0.72f;
+        blob(canvas, w * 0.12f, h * 0.10f, r, BLUE,   0.22f);
         r = Math.min(w, h) * 0.68f;
-        blob(canvas, w * 0.14f, h * 0.08f, r, BLOB_BLUE, 0.26f);
-        r = Math.min(w, h) * 0.62f;
-        blob(canvas, w * 0.86f, h * 0.14f, r, BLOB_PURPLE, 0.22f);
-        r = Math.min(w, h) * 0.75f;
-        blob(canvas, w * 0.48f, h * 0.50f, r, BLOB_CYAN, 0.14f);
-        r = Math.min(w, h) * 0.95f;
-        blob(canvas, w * 0.50f, h * 0.94f, r, BLOB_BLACK, 0.32f);
+        blob(canvas, w * 0.92f, h * 0.14f, r, PURPLE, 0.20f);
+        r = Math.min(w, h) * 0.78f;
+        blob(canvas, w * 0.48f, h * 0.58f, r, CYAN,   0.14f);
+        r = Math.min(w, h) * 1.05f;
+        blob(canvas, w * 0.50f, h * 1.06f, r, BLACK,  0.35f);
     }
 
-    private void blob(Canvas c, float cx, float cy, float r, int color, float a) {
-        blobPaint.setShader(new RadialGradient(cx, cy, r,
-                argb(color, a), argb(color, 0f), Shader.TileMode.CLAMP));
-        c.drawCircle(cx, cy, r, blobPaint);
+    private void blob(Canvas c, float x, float y, float r, int col, float a) {
+        blobPaint.setShader(new RadialGradient(x, y, r,
+                argb(col, a), argb(col, 0f), Shader.TileMode.CLAMP));
+        c.drawCircle(x, y, r, blobPaint);
     }
-    private static int argb(int c, float a) { return ((int)(255*a)<<24) | (c&0x00FFFFFF); }
+    private static int argb(int c, float a) { return ((int)(255*a)<<24)|(c&0x00FFFFFF); }
 }

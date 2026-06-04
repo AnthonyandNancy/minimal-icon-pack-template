@@ -13,73 +13,67 @@ import android.graphics.drawable.Drawable;
 import java.util.Random;
 
 /**
- * Moisture-like liquid glass Drawable — 6 layers + optional noise texture.
- *
- * Layers:
- *   1. Cool-tinted semi-transparent base
- *   2. Top-left → bottom-right soft white highlight gradient
- *   3. Hairline bright top edge
- *   4. Bottom subtle shadow gradient for depth
- *   5. 1.2dp white highlight stroke
- *   6. Micro noise (optional, alpha ≤ 0.03)
+ * HarmonyOS 6 high-transparency liquid glass.
+ * 7 layers: base → color tint → highlight → top-edge → shadow → noise → stroke.
  */
 public class LiquidGlassDrawable extends Drawable {
 
-    private final Paint fillPaint       = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint hlPaint         = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint edgePaint       = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint shadowPaint     = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint strokePaint     = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint noisePaint      = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Random rng            = new Random(42L);
+    private final Paint fillPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint tintPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint hlPaint     = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint edgePaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint noisePaint  = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Random rng        = new Random(42L);
 
-    private final float radiusPx;
-    private final int   baseColor;
-    private final int   strokeColor;
-    private final float highlightAlpha;
-    private final float shadowAlpha;
-    private final float noiseAlpha;
-    private final float strokeWidthPx;
+    private final float  radiusPx, strokeWidthPx;
+    private final int    baseColor, strokeColor;
+    private final float  highlightAlpha, shadowAlpha, innerGlow;
+    private final float  noiseAlpha;
+    private final int    tintColor;       // subtle cool tint for glass color mixing
+    private final float  tintAlpha;
     private final float[] cornerRadii;
     private final RectF  rect = new RectF();
     private final Path   clip = new Path();
-
     private boolean noiseDrawn;
 
     public LiquidGlassDrawable(float density, float radiusDp,
                                int baseColor, int strokeColor,
                                float highlightAlpha, float shadowAlpha,
-                               float noiseAlpha, float[] cornerRadii) {
-        this.radiusPx       = radiusDp * density;
-        this.baseColor      = baseColor;
-        this.strokeColor    = strokeColor;
+                               float innerGlow, float noiseAlpha,
+                               int tintColor, float tintAlpha,
+                               float[] cornerRadii) {
+        this.radiusPx      = radiusDp * density;
+        this.baseColor     = baseColor;
+        this.strokeColor   = strokeColor;
         this.highlightAlpha = highlightAlpha;
-        this.shadowAlpha    = shadowAlpha;
-        this.noiseAlpha     = noiseAlpha;
-        this.strokeWidthPx  = 1.2f * density;
-        this.cornerRadii    = cornerRadii;
+        this.shadowAlpha   = shadowAlpha;
+        this.innerGlow     = innerGlow;
+        this.noiseAlpha    = noiseAlpha;
+        this.tintColor     = tintColor;
+        this.tintAlpha     = tintAlpha;
+        this.strokeWidthPx = 1.2f * density;
+        this.cornerRadii   = cornerRadii;
 
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(strokeWidthPx);
         edgePaint.setStyle(Paint.Style.STROKE);
-        edgePaint.setStrokeWidth(0.6f * density);
-        noisePaint.setStrokeWidth(1f * density * 0.7f);
+        edgePaint.setStrokeWidth(0.5f * density);
+        noisePaint.setStrokeWidth(0.6f * density);
     }
 
-    // Uniform corners
-    public LiquidGlassDrawable(float density, float radiusDp,
-                               int baseColor, int strokeColor,
-                               float highlightAlpha, float shadowAlpha,
-                               float noiseAlpha) {
-        this(density, radiusDp, baseColor, strokeColor,
-                highlightAlpha, shadowAlpha, noiseAlpha, null);
+    public LiquidGlassDrawable(float dpDens, float radiusDp,
+                               int base, int stroke, float hl, float sh, float ig, float ns,
+                               int tint, float ta) {
+        this(dpDens, radiusDp, base, stroke, hl, sh, ig, ns, tint, ta, null);
     }
 
     @Override
     protected void onBoundsChange(android.graphics.Rect b) {
         super.onBoundsChange(b);
-        float half = strokeWidthPx / 2f;
-        rect.set(b.left + half, b.top + half, b.right - half, b.bottom - half);
+        float h = strokeWidthPx / 2f;
+        rect.set(b.left + h, b.top + h, b.right - h, b.bottom - h);
         clip.reset();
         if (cornerRadii != null) clip.addRoundRect(rect, cornerRadii, Path.Direction.CW);
         else clip.addRoundRect(rect, radiusPx, radiusPx, Path.Direction.CW);
@@ -95,68 +89,72 @@ public class LiquidGlassDrawable extends Drawable {
         fillPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, fillPaint);
 
-        // 2. Highlight gradient (top-left → bottom-right)
+        // 2. Color tint (simulates glass refracting cool tones) — very subtle
+        if (tintAlpha > 0) {
+            tintPaint.setShader(new LinearGradient(rect.left, rect.top,
+                    rect.right, rect.bottom,
+                    argb((int)(255 * tintAlpha), tintColor),
+                    argb(0, tintColor), Shader.TileMode.CLAMP));
+            tintPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(rect, tintPaint);
+        }
+
+        // 3. Inner soft glow (centre-bright)
+        if (innerGlow > 0) {
+            float cx = rect.centerX(), cy = rect.centerY();
+            float rx = rect.width() * 0.40f, ry = rect.height() * 0.35f;
+            tintPaint.setShader(new LinearGradient(cx - rx, cy - ry, cx + rx, cy + ry,
+                    argb((int)(255 * innerGlow), 0xFF, 0xFF, 0xFF),
+                    argb(0, 0xFF, 0xFF, 0xFF), Shader.TileMode.CLAMP));
+            tintPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(rect, tintPaint);
+        }
+
+        // 4. Highlight (top-left → bottom-right)
         if (highlightAlpha > 0) {
             hlPaint.setShader(new LinearGradient(rect.left, rect.top,
                     rect.right, rect.bottom,
                     argb((int)(255 * highlightAlpha), 0xFF, 0xFF, 0xFF),
-                    argb((int)(255 * highlightAlpha * 0.1f), 0xFF, 0xFF, 0xFF),
+                    argb((int)(255 * highlightAlpha * 0.08f), 0xFF, 0xFF, 0xFF),
                     Shader.TileMode.CLAMP));
             hlPaint.setStyle(Paint.Style.FILL);
             canvas.drawRect(rect, hlPaint);
         }
 
-        // 3. Top bright hairline
-        edgePaint.setColor(argb(160, 0xFF, 0xFF, 0xFF));
-        float topY = rect.top + strokeWidthPx * 0.8f;
-        canvas.drawLine(rect.left + radiusPx * 0.35f, topY,
-                rect.right - radiusPx * 0.35f, topY, edgePaint);
+        // 5. Bright top-edge hairline
+        float ty = rect.top + strokeWidthPx * 0.6f;
+        edgePaint.setColor(argb(180, 0xFF, 0xFF, 0xFF));
+        canvas.drawLine(rect.left + radiusPx * 0.3f, ty,
+                rect.right - radiusPx * 0.3f, ty, edgePaint);
 
-        // 4. Bottom subtle shadow
+        // 6. Bottom shadow
         if (shadowAlpha > 0) {
             shadowPaint.setShader(new LinearGradient(
-                    rect.left, rect.bottom - radiusPx * 1.2f,
+                    rect.left, rect.bottom - radiusPx * 1.3f,
                     rect.left, rect.bottom,
                     argb(0, 0, 0, 0),
-                    argb((int)(255 * shadowAlpha), 0x0A, 0x12, 0x20),
+                    argb((int)(255 * shadowAlpha), 0x06, 0x0E, 0x1A),
                     Shader.TileMode.CLAMP));
             shadowPaint.setStyle(Paint.Style.FILL);
             canvas.drawRect(rect, shadowPaint);
         }
 
-        // 5. Noise texture (single-pass, cached)
-        if (noiseAlpha > 0 && !noiseDrawn) {
-            int step = (int)(radiusPx * 0.25f);
-            if (step < 3) step = 3;
-            noisePaint.setColor(argb((int)(255 * noiseAlpha), 0xFF, 0xFF, 0xFF));
-            for (float x = rect.left + step; x < rect.right - step; x += step) {
-                for (float y = rect.top + step; y < rect.bottom - step; y += step) {
-                    if (rng.nextFloat() > 0.5f) {
-                        canvas.drawPoint(x + rng.nextFloat() * step,
-                                y + rng.nextFloat() * step, noisePaint);
-                    }
-                }
-            }
-            noiseDrawn = true;
-        } else if (noiseAlpha > 0) {
-            // Replay cached noise (same seed = same pattern)
-            int step = (int)(radiusPx * 0.25f);
-            if (step < 3) step = 3;
+        // 7. Noise (cached, same seed)
+        if (noiseAlpha > 0) {
+            int step = Math.max(3, (int)(radiusPx * 0.22f));
             noisePaint.setColor(argb((int)(255 * noiseAlpha), 0xFF, 0xFF, 0xFF));
             Random r = new Random(42L);
             for (float x = rect.left + step; x < rect.right - step; x += step) {
                 for (float y = rect.top + step; y < rect.bottom - step; y += step) {
-                    if (r.nextFloat() > 0.5f) {
-                        canvas.drawPoint(x + r.nextFloat() * step,
-                                y + r.nextFloat() * step, noisePaint);
-                    }
+                    if (r.nextFloat() > 0.5f)
+                        canvas.drawPoint(x + r.nextFloat() * step, y + r.nextFloat() * step, noisePaint);
                 }
             }
         }
 
         canvas.restoreToCount(save);
 
-        // 6. Stroke (outside clip)
+        // 8. Stroke (outside clip)
         strokePaint.setColor(strokeColor);
         if (cornerRadii != null) {
             Path sp = new Path(); sp.addRoundRect(rect, cornerRadii, Path.Direction.CW);
@@ -173,37 +171,50 @@ public class LiquidGlassDrawable extends Drawable {
     private static int argb(int a, int r, int g, int b) {
         return (a << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
-
-    // ── A / B / C glass grading system ─────────────────────
-
-    // A-grade: strongest glass — toolbar, hero, drawer, floating bar
-    private static LiquidGlassDrawable gradeA(float density, float radius, float alpha) {
-        return new LiquidGlassDrawable(density, radius,
-                argb((int)(255*alpha), 0xFF,0xFF,0xFF), 0x90FFFFFF, 0.42f, 0.24f, 0.028f);
-    }
-    public static LiquidGlassDrawable toolbar(float density)     { return gradeA(density, 36, 0.30f); }
-    public static LiquidGlassDrawable heroCard(float density)    { return gradeA(density, 32, 0.28f); }
-    public static LiquidGlassDrawable floatingBar(float density) { return gradeA(density, 34, 0.32f); }
-    public static LiquidGlassDrawable drawerBg(float density) {
-        float r = density * 34;
-        return new LiquidGlassDrawable(density, 34, 0x38FFFFFF, 0x90FFFFFF, 0.42f, 0.26f, 0.026f,
-                new float[]{0, 0, r, r, r, r, 0, 0});
+    private static int argb(int a, int color) {
+        return (a << 24) | (color & 0x00FFFFFF);
     }
 
-    // B-grade: medium glass — stat/feature/info cards
-    private static LiquidGlassDrawable gradeB(float density, float radius, float alpha) {
-        return new LiquidGlassDrawable(density, radius,
-                argb((int)(255*alpha), 0xFF,0xFF,0xFF), 0x70FFFFFF, 0.34f, 0.20f, 0.020f);
-    }
-    public static LiquidGlassDrawable statCard(float density)    { return gradeB(density, 28, 0.22f); }
-    public static LiquidGlassDrawable featureCard(float density) { return gradeB(density, 26, 0.20f); }
-    public static LiquidGlassDrawable aboutCard(float density)   { return gradeB(density, 24, 0.18f); }
+    // ── A / B / C grading ─────────────────────────────────
 
-    // C-grade: light glass — list items, filter chips, small buttons
-    private static LiquidGlassDrawable gradeC(float density, float radius, float alpha) {
-        return new LiquidGlassDrawable(density, radius,
-                argb((int)(255*alpha), 0xFF,0xFF,0xFF), 0x50FFFFFF, 0.28f, 0.14f, 0.012f);
+    private static int tint(int color, float a) {
+        return argb((int)(255 * a), color);
     }
-    public static LiquidGlassDrawable glassButton(float density) { return gradeC(density, 999, 0.18f); }
-    public static LiquidGlassDrawable listItem(float density)    { return gradeC(density, 22, 0.14f); }
+    private static final int TINT_BLUE   = 0xFF5EA8FF;
+    private static final int TINT_PURPLE = 0xFF7C4DFF;
+    private static final int TINT_CYAN   = 0xFF16D6C8;
+
+    // A-grade: hero, drawer, floating-bar
+    private static LiquidGlassDrawable gradeA(float d, float r, float a) {
+        return new LiquidGlassDrawable(d, r,
+                argb((int)(255*a),0xFF,0xFF,0xFF), 0xA6FFFFFF,
+                0.42f, 0.26f, 0.18f, 0.025f, TINT_CYAN, 0.10f);
+    }
+    public static LiquidGlassDrawable toolbar(float d) { return gradeA(d, 38, 0.28f); }
+    public static LiquidGlassDrawable heroCard(float d) { return gradeA(d, 34, 0.24f); }
+    public static LiquidGlassDrawable floatingBar(float d) { return gradeA(d, 36, 0.32f); }
+    public static LiquidGlassDrawable drawerBg(float d) {
+        float r = d * 36;
+        return new LiquidGlassDrawable(d, 36, 0x38FFFFFF, 0xA6FFFFFF, 0.42f, 0.26f, 0.18f, 0.025f,
+                TINT_PURPLE, 0.08f, new float[]{0, 0, r, r, r, r, 0, 0});
+    }
+
+    // B-grade: stat cards, feature cards, info/faq
+    private static LiquidGlassDrawable gradeB(float d, float r, float a) {
+        return new LiquidGlassDrawable(d, r,
+                argb((int)(255*a),0xFF,0xFF,0xFF), 0x78FFFFFF,
+                0.32f, 0.20f, 0.12f, 0.018f, TINT_BLUE, 0.06f);
+    }
+    public static LiquidGlassDrawable statCard(float d)    { return gradeB(d, 30, 0.18f); }
+    public static LiquidGlassDrawable featureCard(float d) { return gradeB(d, 28, 0.16f); }
+    public static LiquidGlassDrawable aboutCard(float d)   { return gradeB(d, 26, 0.14f); }
+
+    // C-grade: list items, chips, small buttons
+    private static LiquidGlassDrawable gradeC(float d, float r, float a) {
+        return new LiquidGlassDrawable(d, r,
+                argb((int)(255*a),0xFF,0xFF,0xFF), 0x4DFFFFFF,
+                0.22f, 0.12f, 0.08f, 0.012f, TINT_BLUE, 0.04f);
+    }
+    public static LiquidGlassDrawable glassButton(float d) { return gradeC(d, 999, 0.16f); }
+    public static LiquidGlassDrawable listItem(float d)    { return gradeC(d, 22, 0.12f); }
 }

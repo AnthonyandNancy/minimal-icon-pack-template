@@ -5,11 +5,11 @@
     <color name="primary_light">#FF7AA2FF</color>
     <color name="accent">#FFA78BFA</color>
 
-    <color name="bg_top">#FF09111D</color>
-    <color name="bg_mid">#FF132233</color>
-    <color name="bg_bottom">#FF050B12</color>
-    <color name="background">#FF09111D</color>
-    <color name="background_dark">#FF050B12</color>
+    <color name="bg_top">#FF050A12</color>
+    <color name="bg_mid">#FF101E2E</color>
+    <color name="bg_bottom">#FF02060B</color>
+    <color name="background">#FF050A12</color>
+    <color name="background_dark">#FF02060B</color>
 
     <!-- Glass surfaces (dark mode: white at various alpha) -->
     <color name="glass_card_primary">#30FFFFFF</color>

@@ -20,6 +20,7 @@ import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
+import com.template.iconpack.ui.GlassBlur;
 import com.template.iconpack.ui.LiquidGlassDrawable;
 import com.template.iconpack.ui.anim.GlassAnimations;
 import com.template.iconpack.utils.AppScanner;
@@ -64,6 +65,7 @@ public class DashboardFragment extends Fragment {
         LinearLayout tb = rootView.findViewById(R.id.toolbar);
         if (tb != null) {
             tb.setBackground(LiquidGlassDrawable.toolbar(density));
+            GlassBlur.toolbar(tb);
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).registerHomeToolbar(tb);
             }
@@ -81,6 +83,7 @@ public class DashboardFragment extends Fragment {
         View hero = rootView.findViewById(R.id.hero_card);
         hero.setBackground(LiquidGlassDrawable.heroCard(density));
         hero.setElevation(8f);
+        GlassBlur.hero(hero);
 
         // Stat & entry cards have backgrounds set in their XML/layout builders
 
