@@ -166,7 +166,7 @@ public class DashboardFragment extends Fragment {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            params.setMargins(4, 6, 4, 6);
+            params.setMargins(8, 6, 8, 6);
             card.setLayoutParams(params);
             grid.addView(card);
         }

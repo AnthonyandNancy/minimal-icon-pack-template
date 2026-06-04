@@ -30,9 +30,10 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
 
     private RecyclerView requestList;
     private View bottomBar;
-    private TextView selectedCountView;
+    private View btnSelectAll;
     private RequestAppAdapter adapter;
     private List<AppInfo> allApps;
+    private String currentFilter = "all";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,21 +43,18 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
         if (ctx == null) return view;
 
         float density = ctx.getResources().getDisplayMetrics().density;
-
         bottomBar = view.findViewById(R.id.request_bottom_bar);
-        selectedCountView = view.findViewById(R.id.request_selected_count);
+        btnSelectAll = view.findViewById(R.id.btn_select_all);
         bottomBar.setBackground(LiquidGlassDrawable.floatingBar(density));
 
         requestList = view.findViewById(R.id.request_list);
         requestList.setLayoutManager(new LinearLayoutManager(ctx));
 
-        // Back button
         ImageButton btnBack = view.findViewById(R.id.btn_back_req);
         if (btnBack != null) btnBack.setOnClickListener(v -> {
             if (getActivity() != null) getActivity().onBackPressed();
         });
 
-        // Status spacer
         View spacer = view.findViewById(R.id.status_spacer_req);
         if (spacer != null && getActivity() instanceof MainActivity) {
             MainActivity ma = (MainActivity) getActivity();
@@ -65,39 +63,26 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
         }
 
         allApps = AppScanner.scanInstalledApps(ctx);
-        int total = allApps.size();
-        int themed = 0;
+        int total = allApps.size(), themed = 0;
         for (AppInfo a : allApps) if (a.isThemed) themed++;
 
         adapter = new RequestAppAdapter(allApps);
         adapter.setStats(total, themed, total - themed);
         adapter.setFilterListener(this);
-        adapter.setAppClickListener((app, pos) -> updateBottomBar());
+        adapter.setAppClickListener((app, pos) -> {});
         requestList.setAdapter(adapter);
 
-        // Bottom bar buttons
-        view.findViewById(R.id.btn_select_all).setOnClickListener(v -> selectAll());
+        btnSelectAll.setOnClickListener(v -> selectAll());
         view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
         view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
 
-        updateBottomBar();
         return view;
     }
 
-    // Called when a filter chip is clicked inside the RecyclerView header
     @Override
     public void onFilterClicked(String filter) {
-        updateBottomBar();
-    }
-
-    private void updateBottomBar() {
-        if (adapter == null) return;
-        List<AppInfo> sel = adapter.getSelectedApps();
-        if (sel.isEmpty()) {
-            selectedCountView.setText("");
-        } else {
-            selectedCountView.setText("已选 " + sel.size() + " 个");
-        }
+        currentFilter = filter;
+        btnSelectAll.setVisibility(filter.equals("unthemed") ? View.VISIBLE : View.GONE);
     }
 
     private void selectAll() {
@@ -107,7 +92,6 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
             if (!a.isThemed) { a.isSelected = true; count++; }
         }
         adapter.notifyDataChanged();
-        updateBottomBar();
         if (getContext() != null)
             Toast.makeText(getContext(), "全选 " + count + " 个未适配", Toast.LENGTH_SHORT).show();
     }
