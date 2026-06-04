@@ -203,9 +203,7 @@ public class DashboardFragment extends Fragment {
             // Find views in the card
             ImageView iconView = card.findViewById(R.id.launcher_icon);
             TextView nameView = card.findViewById(R.id.launcher_name);
-            // The description is the 3rd TextView (launcher hint)
-            LinearLayout inner = (LinearLayout) ((LinearLayout) card.getChildAt(0)).getChildAt(1);
-            TextView descView = (TextView) inner.getChildAt(1);
+            TextView descView = card.findViewById(R.id.entry_desc);
 
             iconView.setImageResource(ENTRY_ICONS[i]);
             iconView.setColorFilter(getResources().getColor(ENTRY_ICON_TINTS[i]));
