@@ -207,4 +207,3 @@ public class LiquidGlassDrawable extends Drawable {
     public static LiquidGlassDrawable glassButton(float density) { return gradeC(density, 999, 0.18f); }
     public static LiquidGlassDrawable listItem(float density)    { return gradeC(density, 22, 0.14f); }
 }
-}
