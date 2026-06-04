@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,18 +26,13 @@ import com.template.iconpack.utils.AppScanner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestFragment extends Fragment {
+public class RequestFragment extends Fragment implements RequestAppAdapter.FilterClickListener {
 
     private RecyclerView requestList;
-    private TextView statTotal, statThemed, statUnthemed;
-    private ProgressBar progressBar;
     private View bottomBar;
     private TextView selectedCountView;
     private RequestAppAdapter adapter;
     private List<AppInfo> allApps;
-
-    private TextView filterAll, filterThemed, filterUnthemed;
-    private TextView filterSelected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,22 +43,12 @@ public class RequestFragment extends Fragment {
 
         float density = ctx.getResources().getDisplayMetrics().density;
 
-        statTotal   = view.findViewById(R.id.stat_total);
-        statThemed  = view.findViewById(R.id.stat_themed);
-        statUnthemed = view.findViewById(R.id.stat_unthemed);
-        progressBar = view.findViewById(R.id.request_progress);
-        bottomBar   = view.findViewById(R.id.request_bottom_bar);
+        bottomBar = view.findViewById(R.id.request_bottom_bar);
         selectedCountView = view.findViewById(R.id.request_selected_count);
-
         bottomBar.setBackground(LiquidGlassDrawable.floatingBar(density));
 
         requestList = view.findViewById(R.id.request_list);
         requestList.setLayoutManager(new LinearLayoutManager(ctx));
-
-        filterAll      = view.findViewById(R.id.filter_all);
-        filterThemed   = view.findViewById(R.id.filter_themed);
-        filterUnthemed = view.findViewById(R.id.filter_unthemed);
-        filterSelected = (TextView) view.findViewById(R.id.filter_selected);
 
         // Back button
         ImageButton btnBack = view.findViewById(R.id.btn_back_req);
@@ -81,35 +65,17 @@ public class RequestFragment extends Fragment {
         }
 
         allApps = AppScanner.scanInstalledApps(ctx);
-        updateStats();
+        int total = allApps.size();
+        int themed = 0;
+        for (AppInfo a : allApps) if (a.isThemed) themed++;
+
         adapter = new RequestAppAdapter(allApps);
+        adapter.setStats(total, themed, total - themed);
+        adapter.setFilterListener(this);
+        adapter.setAppClickListener((app, pos) -> updateBottomBar());
         requestList.setAdapter(adapter);
 
-        // Filters — bottom bar always visible
-        filterAll.setOnClickListener(v -> {
-            adapter.setFilter("all");
-            adapter.setShowCheckboxes(false);
-            updateFilterUI("all");
-        });
-        filterThemed.setOnClickListener(v -> {
-            adapter.setFilter("themed");
-            adapter.setShowCheckboxes(false);
-            updateFilterUI("themed");
-        });
-        filterUnthemed.setOnClickListener(v -> {
-            adapter.setFilter("unthemed");
-            adapter.setShowCheckboxes(true);
-            updateFilterUI("unthemed");
-        });
-        if (filterSelected != null) {
-            filterSelected.setOnClickListener(v -> {
-                adapter.setFilter("selected");
-                adapter.setShowCheckboxes(true);
-                updateFilterUI("selected");
-            });
-        }
-
-        // Bottom bar buttons (always visible)
+        // Bottom bar buttons
         view.findViewById(R.id.btn_select_all).setOnClickListener(v -> selectAll());
         view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
         view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
@@ -118,33 +84,9 @@ public class RequestFragment extends Fragment {
         return view;
     }
 
-    private void updateStats() {
-        int total = allApps.size();
-        int themed = 0;
-        for (AppInfo a : allApps) if (a.isThemed) themed++;
-        int unthemed = total - themed;
-        statTotal.setText(String.valueOf(total));
-        statThemed.setText(String.valueOf(themed));
-        statUnthemed.setText(String.valueOf(unthemed));
-        if (total > 0) { progressBar.setMax(total); progressBar.setProgress(themed); }
-    }
-
-    private void updateFilterUI(String active) {
-        int selColor = getResources().getColor(R.color.text_on_primary);
-        int unselColor = getResources().getColor(R.color.text_secondary);
-        int selBg = R.drawable.glass_chip_selected;
-        int unselBg = R.drawable.glass_chip_unselected;
-
-        filterAll.setTextColor(active.equals("all") ? selColor : unselColor);
-        filterAll.setBackgroundResource(active.equals("all") ? selBg : unselBg);
-        filterThemed.setTextColor(active.equals("themed") ? selColor : unselColor);
-        filterThemed.setBackgroundResource(active.equals("themed") ? selBg : unselBg);
-        filterUnthemed.setTextColor(active.equals("unthemed") ? selColor : unselColor);
-        filterUnthemed.setBackgroundResource(active.equals("unthemed") ? selBg : unselBg);
-        if (filterSelected != null) {
-            filterSelected.setTextColor(active.equals("selected") ? selColor : unselColor);
-            filterSelected.setBackgroundResource(active.equals("selected") ? selBg : unselBg);
-        }
+    // Called when a filter chip is clicked inside the RecyclerView header
+    @Override
+    public void onFilterClicked(String filter) {
         updateBottomBar();
     }
 
@@ -173,7 +115,6 @@ public class RequestFragment extends Fragment {
     private List<AppInfo> getSelectedMissing() {
         List<AppInfo> sel = new ArrayList<>();
         for (AppInfo a : allApps) if (!a.isThemed && a.isSelected) sel.add(a);
-        // If nothing explicitly selected, use all unthemed
         if (sel.isEmpty()) for (AppInfo a : allApps) if (!a.isThemed) sel.add(a);
         return sel;
     }

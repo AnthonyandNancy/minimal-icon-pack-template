@@ -173,18 +173,11 @@ public class MainActivity extends AppCompatActivity
     // Hook for DashboardFragment to register home toolbar
     public void registerHomeToolbar(ViewGroup tb) {
         this.homeToolbar = tb;
-        // Menu button opens drawer
         View menuBtn = tb.findViewById(R.id.btn_menu_home);
         if (menuBtn != null) {
             menuBtn.setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
         }
-        // Action buttons
-        View rateBtn = tb.findViewById(R.id.btn_rate_home);
-        View shareBtn = tb.findViewById(R.id.btn_share_home);
-        View refreshBtn = tb.findViewById(R.id.btn_refresh_home);
-        if (rateBtn != null) rateBtn.setOnClickListener(v -> openPlayStore());
-        if (shareBtn != null) shareBtn.setOnClickListener(v -> shareApp());
-        if (refreshBtn != null) refreshBtn.setOnClickListener(v -> refreshCurrentPage());
+    }
     }
 
     private void onDashboardCardClicked(int pos) {

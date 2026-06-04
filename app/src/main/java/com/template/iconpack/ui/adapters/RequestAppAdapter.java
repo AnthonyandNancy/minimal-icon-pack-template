@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,17 +17,37 @@ import com.template.iconpack.models.AppInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.ViewHolder> {
+public class RequestAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_STATS  = 0;
+    private static final int TYPE_FILTER = 1;
+    private static final int TYPE_APP    = 2;
 
     private final List<AppInfo> allApps;
     private final List<AppInfo> filteredApps;
-    private String currentFilter = "all"; // "all", "themed", "unthemed"
+    private String currentFilter = "all";
     private boolean showCheckboxes = false;
+
+    private int totalApps, themedCount, unthemedCount;
+    private FilterClickListener filterListener;
+    private AppClickListener appClickListener;
+
+    public interface FilterClickListener { void onFilterClicked(String filter); }
+    public interface AppClickListener { void onAppClicked(AppInfo app, int position); }
 
     public RequestAppAdapter(List<AppInfo> apps) {
         this.allApps = apps;
         this.filteredApps = new ArrayList<>(apps);
     }
+
+    public void setStats(int total, int themed, int unthemed) {
+        this.totalApps = total;
+        this.themedCount = themed;
+        this.unthemedCount = unthemed;
+    }
+
+    public void setFilterListener(FilterClickListener l) { this.filterListener = l; }
+    public void setAppClickListener(AppClickListener l) { this.appClickListener = l; }
 
     public void setFilter(String filter) {
         currentFilter = filter;
@@ -35,9 +56,7 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Vi
 
     public void setShowCheckboxes(boolean show) {
         this.showCheckboxes = show;
-        if (!show) {
-            for (AppInfo app : allApps) app.isSelected = false;
-        }
+        if (!show) for (AppInfo a : allApps) a.isSelected = false;
         notifyDataSetChanged();
     }
 
@@ -57,87 +76,128 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Vi
                 break;
             default:
                 filteredApps.addAll(allApps);
-                break;
         }
         notifyDataSetChanged();
     }
 
     public List<AppInfo> getSelectedApps() {
-        List<AppInfo> selected = new ArrayList<>();
-        for (AppInfo app : allApps) {
-            if (app.isSelected) selected.add(app);
-        }
-        return selected;
+        List<AppInfo> sel = new ArrayList<>();
+        for (AppInfo a : filteredApps) if (a.isSelected) sel.add(a);
+        return sel;
+    }
+
+    @Override public int getItemViewType(int position) {
+        if (position == 0) return TYPE_STATS;
+        if (position == 1) return TYPE_FILTER;
+        return TYPE_APP;
+    }
+
+    @Override public int getItemCount() {
+        return 2 + filteredApps.size(); // stats + filter + apps
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_app_request, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inf = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_STATS) {
+            return new StatsHolder(inf.inflate(R.layout.item_request_stats, parent, false));
+        }
+        if (viewType == TYPE_FILTER) {
+            return new FilterHolder(inf.inflate(R.layout.item_request_filters, parent, false));
+        }
+        return new AppHolder(inf.inflate(R.layout.item_app_request, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        AppInfo app = filteredApps.get(position);
-        holder.appName.setText(app.appName);
-        holder.packageName.setText(app.packageName);
-
-        // Status badge
-        if (app.isThemed) {
-            holder.status.setText("已适配");
-            holder.status.setBackgroundResource(R.drawable.status_badge);
-            holder.status.setVisibility(View.VISIBLE);
-        } else {
-            holder.status.setText("未适配");
-            holder.status.setBackgroundResource(R.drawable.status_badge);
-            holder.status.setVisibility(View.VISIBLE);
-        }
-
-        // Checkbox
-        holder.checkbox.setVisibility(showCheckboxes ? View.VISIBLE : View.GONE);
-        holder.checkbox.setChecked(app.isSelected);
-        holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            app.isSelected = isChecked;
-        });
-
-        // App icon
-        try {
-            holder.icon.setImageDrawable(
-                    holder.itemView.getContext().getPackageManager()
-                            .getApplicationIcon(app.packageName));
-        } catch (Exception e) {
-            holder.icon.setImageResource(android.R.drawable.sym_def_app_icon);
-        }
-
-        holder.itemView.setOnClickListener(v -> {
-            if (showCheckboxes) {
-                app.isSelected = !app.isSelected;
-                holder.checkbox.setChecked(app.isSelected);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos) {
+        if (holder instanceof StatsHolder) {
+            StatsHolder h = (StatsHolder) holder;
+            h.total.setText(String.valueOf(totalApps));
+            h.themed.setText(String.valueOf(themedCount));
+            h.unthemed.setText(String.valueOf(unthemedCount));
+            if (totalApps > 0) {
+                h.progress.setMax(totalApps);
+                h.progress.setProgress(themedCount);
             }
-        });
+        } else if (holder instanceof FilterHolder) {
+            FilterHolder h = (FilterHolder) holder;
+            h.filterAll.setOnClickListener(v -> clickFilter("all"));
+            h.filterThemed.setOnClickListener(v -> clickFilter("themed"));
+            h.filterUnthemed.setOnClickListener(v -> clickFilter("unthemed"));
+            h.filterSelected.setOnClickListener(v -> clickFilter("selected"));
+        } else if (holder instanceof AppHolder) {
+            AppInfo app = filteredApps.get(pos - 2);
+            AppHolder h = (AppHolder) holder;
+            h.icon.setImageDrawable(app.icon);
+            h.name.setText(app.appName);
+            h.pkg.setText(app.packageName);
+            h.checkbox.setVisibility(showCheckboxes && !app.isThemed ? View.VISIBLE : View.GONE);
+            h.checkbox.setChecked(app.isSelected);
+
+            if (app.isThemed) {
+                h.status.setText("已适配");
+                h.status.setBackgroundResource(R.drawable.glass_badge_green);
+                h.status.setTextColor(0xFFFFFFFF);
+            } else {
+                h.status.setText("未适配");
+                h.status.setBackgroundResource(R.drawable.glass_badge_blue);
+                h.status.setTextColor(0xFFFFFFFF);
+            }
+
+            h.itemView.setOnClickListener(v -> {
+                if (showCheckboxes && !app.isThemed) {
+                    app.isSelected = !app.isSelected;
+                    h.checkbox.setChecked(app.isSelected);
+                    if (appClickListener != null) appClickListener.onAppClicked(app, pos);
+                    notifyItemChanged(pos);
+                }
+            });
+        }
     }
 
-    @Override
-    public int getItemCount() {
-        return filteredApps.size();
+    private void clickFilter(String filter) {
+        setFilter(filter);
+        setShowCheckboxes(filter.equals("unthemed") || filter.equals("selected"));
+        if (filterListener != null) filterListener.onFilterClicked(filter);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkbox;
+    // ── ViewHolders ─────────────────────────────────────
+
+    static class StatsHolder extends RecyclerView.ViewHolder {
+        TextView total, themed, unthemed;
+        ProgressBar progress;
+        StatsHolder(View v) {
+            super(v);
+            total = v.findViewById(R.id.stat_total);
+            themed = v.findViewById(R.id.stat_themed);
+            unthemed = v.findViewById(R.id.stat_unthemed);
+            progress = v.findViewById(R.id.stats_progress);
+        }
+    }
+
+    static class FilterHolder extends RecyclerView.ViewHolder {
+        TextView filterAll, filterThemed, filterUnthemed, filterSelected;
+        FilterHolder(View v) {
+            super(v);
+            filterAll = v.findViewById(R.id.filter_all);
+            filterThemed = v.findViewById(R.id.filter_themed);
+            filterUnthemed = v.findViewById(R.id.filter_unthemed);
+            filterSelected = v.findViewById(R.id.filter_selected);
+        }
+    }
+
+    static class AppHolder extends RecyclerView.ViewHolder {
         ImageView icon;
-        TextView appName;
-        TextView packageName;
-        TextView status;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            checkbox = itemView.findViewById(R.id.request_checkbox);
-            icon = itemView.findViewById(R.id.request_icon);
-            appName = itemView.findViewById(R.id.request_app_name);
-            packageName = itemView.findViewById(R.id.request_package_name);
-            status = itemView.findViewById(R.id.request_status);
+        TextView name, pkg, status;
+        CheckBox checkbox;
+        AppHolder(View v) {
+            super(v);
+            icon = v.findViewById(R.id.request_icon);
+            name = v.findViewById(R.id.request_app_name);
+            pkg = v.findViewById(R.id.request_package_name);
+            status = v.findViewById(R.id.request_status);
+            checkbox = v.findViewById(R.id.request_checkbox);
         }
     }
 }

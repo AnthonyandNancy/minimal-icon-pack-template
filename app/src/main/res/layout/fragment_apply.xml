@@ -9,6 +9,8 @@
     android:paddingEnd="@dimen/page_margin"
     android:paddingTop="20dp">
 
+    <include layout="@layout/include_backbar" />
+
     <!-- Info card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

@@ -8,6 +8,8 @@
     android:paddingEnd="@dimen/page_margin"
     android:paddingTop="20dp">
 
+    <include layout="@layout/include_backbar" />
+
     <EditText
         android:id="@+id/icons_search"
         android:layout_width="match_parent"

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/glass_card_stat"
+    android:elevation="2dp"
+    android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
+    android:layout_marginTop="12dp" android:layout_marginBottom="8dp"
+    android:outlineProvider="background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="18dp" android:paddingEnd="18dp"
+        android:paddingTop="14dp" android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center">
+
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/stat_total"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="24sp" android:textStyle="bold" android:textColor="#5EA8FF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="已安装" android:textSize="11sp" android:textColor="#8FA0B5" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/stat_themed"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="24sp" android:textStyle="bold" android:textColor="#34D399" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="已适配" android:textSize="11sp" android:textColor="#8FA0B5" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/stat_unthemed"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="24sp" android:textStyle="bold" android:textColor="#FDBA3B" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="未适配" android:textSize="11sp" android:textColor="#8FA0B5" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ProgressBar android:id="@+id/stats_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:progressDrawable="@drawable/glass_progress" />
+    </LinearLayout>
+</FrameLayout>

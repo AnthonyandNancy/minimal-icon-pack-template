@@ -60,10 +60,13 @@ public class DashboardFragment extends Fragment {
 
         float density = ctx.getResources().getDisplayMetrics().density;
 
-        // Register home toolbar with MainActivity
+        // Register home toolbar with MainActivity + apply glass background
         LinearLayout tb = rootView.findViewById(R.id.toolbar);
-        if (tb != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).registerHomeToolbar(tb);
+        if (tb != null) {
+            tb.setBackground(LiquidGlassDrawable.toolbar(density));
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).registerHomeToolbar(tb);
+            }
         }
 
         // Set status bar spacer height
