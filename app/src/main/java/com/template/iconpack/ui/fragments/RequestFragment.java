@@ -18,9 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
 import com.template.iconpack.models.AppInfo;
+import com.template.iconpack.ui.LiquidGlassDrawable;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
+import com.template.iconpack.ui.anim.GlassAnimations;
 import com.template.iconpack.utils.AppScanner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestFragment extends Fragment {
@@ -34,57 +37,76 @@ public class RequestFragment extends Fragment {
     private List<AppInfo> allApps;
 
     private TextView filterAll, filterThemed, filterUnthemed;
+    private View filterSelected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_request, container, false);
+        Context ctx = getContext();
+        if (ctx == null) return view;
 
-        statTotal = view.findViewById(R.id.stat_total);
-        statThemed = view.findViewById(R.id.stat_themed);
+        statTotal   = view.findViewById(R.id.stat_total);
+        statThemed  = view.findViewById(R.id.stat_themed);
         statUnthemed = view.findViewById(R.id.stat_unthemed);
         progressBar = view.findViewById(R.id.request_progress);
-        bottomBar = view.findViewById(R.id.request_bottom_bar);
+        bottomBar   = view.findViewById(R.id.request_bottom_bar);
         selectedCountView = view.findViewById(R.id.request_selected_count);
 
-        requestList = view.findViewById(R.id.request_list);
-        requestList.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Apply LiquidGlassDrawable to bottom bar
+        float density = ctx.getResources().getDisplayMetrics().density;
+        bottomBar.setBackground(LiquidGlassDrawable.floatingBar(density));
 
-        // Filter chips (now TextViews, not MaterialButtons)
-        filterAll = view.findViewById(R.id.filter_all);
-        filterThemed = view.findViewById(R.id.filter_themed);
-        filterUnthemed = view.findViewById(R.id.filter_unthemed);
-
-        if (getContext() != null) {
-            allApps = AppScanner.scanInstalledApps(getContext());
-            updateStats();
-            adapter = new RequestAppAdapter(allApps);
-            requestList.setAdapter(adapter);
+        // Apply LiquidGlassDrawable to stats card
+        View statsCard = view.findViewById(R.id.request_stats_card);
+        if (statsCard != null) {
+            statsCard.setBackground(LiquidGlassDrawable.statCard(density));
         }
+
+        requestList = view.findViewById(R.id.request_list);
+        requestList.setLayoutManager(new LinearLayoutManager(ctx));
+
+        filterAll     = view.findViewById(R.id.filter_all);
+        filterThemed  = view.findViewById(R.id.filter_themed);
+        filterUnthemed = view.findViewById(R.id.filter_unthemed);
+        filterSelected = view.findViewById(R.id.filter_selected);
+
+        allApps = AppScanner.scanInstalledApps(ctx);
+        updateStats();
+        adapter = new RequestAppAdapter(allApps);
+        requestList.setAdapter(adapter);
 
         // Filter listeners
         filterAll.setOnClickListener(v -> {
-            if (adapter != null) { adapter.setFilter("all"); adapter.setShowCheckboxes(false); }
-            updateFilterUI("all");
-            bottomBar.setVisibility(View.GONE);
+            adapter.setFilter("all"); adapter.setShowCheckboxes(false);
+            updateFilterUI("all"); bottomBar.setVisibility(View.GONE);
         });
         filterThemed.setOnClickListener(v -> {
-            if (adapter != null) { adapter.setFilter("themed"); adapter.setShowCheckboxes(false); }
-            updateFilterUI("themed");
-            bottomBar.setVisibility(View.GONE);
+            adapter.setFilter("themed"); adapter.setShowCheckboxes(false);
+            updateFilterUI("themed"); bottomBar.setVisibility(View.GONE);
         });
         filterUnthemed.setOnClickListener(v -> {
-            if (adapter != null) { adapter.setFilter("unthemed"); adapter.setShowCheckboxes(true); }
-            updateFilterUI("unthemed");
-            updateBottomBar();
+            adapter.setFilter("unthemed"); adapter.setShowCheckboxes(true);
+            updateFilterUI("unthemed"); updateBottomBar();
         });
+        if (filterSelected != null) {
+            filterSelected.setOnClickListener(v -> {
+                adapter.setFilter("selected"); adapter.setShowCheckboxes(true);
+                updateFilterUI("selected"); updateBottomBar();
+            });
+        }
 
-        // Export & share
+        // Bottom bar actions
         view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
         view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
 
-        // Update bottom bar on selection change via delayed check
-        requestList.postDelayed(() -> updateBottomBar(), 500);
+        // Select All
+        View btnSelectAll = view.findViewById(R.id.btn_select_all);
+        if (btnSelectAll != null) btnSelectAll.setOnClickListener(v -> selectAll());
+
+        // Cancel selection
+        View btnCancel = view.findViewById(R.id.btn_cancel_sel);
+        if (btnCancel != null) btnCancel.setOnClickListener(v -> cancelSelection());
 
         return view;
     }
@@ -92,19 +114,14 @@ public class RequestFragment extends Fragment {
     private void updateStats() {
         int total = allApps.size();
         int themed = 0;
-        for (AppInfo app : allApps) {
-            if (app.isThemed) themed++;
-        }
+        for (AppInfo a : allApps) if (a.isThemed) themed++;
         int unthemed = total - themed;
 
         statTotal.setText(String.valueOf(total));
         statThemed.setText(String.valueOf(themed));
         statUnthemed.setText(String.valueOf(unthemed));
 
-        if (total > 0) {
-            progressBar.setMax(total);
-            progressBar.setProgress(themed);
-        }
+        if (total > 0) { progressBar.setMax(total); progressBar.setProgress(themed); }
     }
 
     private void updateFilterUI(String active) {
@@ -121,67 +138,90 @@ public class RequestFragment extends Fragment {
 
         filterUnthemed.setTextColor(active.equals("unthemed") ? selColor : unselColor);
         filterUnthemed.setBackgroundResource(active.equals("unthemed") ? selBg : unselBg);
+
+        if (filterSelected != null) {
+            filterSelected.setTextColor(active.equals("selected") ? selColor : unselColor);
+            filterSelected.setBackgroundResource(active.equals("selected") ? selBg : unselBg);
+        }
     }
 
     private void updateBottomBar() {
         if (adapter == null) return;
-        List<AppInfo> selected = adapter.getSelectedApps();
-        if (selected.isEmpty()) {
+        List<AppInfo> sel = adapter.getSelectedApps();
+        if (sel.isEmpty()) {
             bottomBar.setVisibility(View.GONE);
         } else {
             bottomBar.setVisibility(View.VISIBLE);
-            selectedCountView.setText("已选 " + selected.size() + " 项");
+            selectedCountView.setText("已选 " + sel.size() + " 个");
+            GlassAnimations.fadeIn(bottomBar, 180);
         }
+    }
+
+    private void selectAll() {
+        if (adapter == null) return;
+        int count = 0;
+        for (AppInfo a : allApps) {
+            if (!a.isThemed) { a.isSelected = true; count++; }
+        }
+        adapter.notifyDataSetChanged();
+        updateBottomBar();
+        if (getContext() != null) Toast.makeText(getContext(), "全选 " + count + " 个未适配", Toast.LENGTH_SHORT).show();
+    }
+
+    private void cancelSelection() {
+        if (adapter == null) return;
+        for (AppInfo a : allApps) a.isSelected = false;
+        adapter.notifyDataSetChanged();
+        bottomBar.setVisibility(View.GONE);
+    }
+
+    private List<AppInfo> getSelectedMissing() {
+        List<AppInfo> sel = new ArrayList<>();
+        for (AppInfo a : allApps) if (!a.isThemed && a.isSelected) sel.add(a);
+        if (sel.isEmpty()) for (AppInfo a : allApps) if (!a.isThemed) sel.add(a);
+        return sel;
+    }
+
+    private String buildRequestText(List<AppInfo> apps) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("图标适配申请\n\n");
+        for (AppInfo a : apps) {
+            sb.append("应用名称：").append(a.appName).append("\n");
+            sb.append("包名：").append(a.packageName).append("\n");
+            sb.append("Activity：").append(a.componentName).append("\n");
+            sb.append("Component：").append(a.getComponentInfo()).append("\n\n");
+        }
+        sb.append("共 ").append(apps.size()).append(" 个应用\n");
+        return sb.toString();
     }
 
     private void exportList() {
         if (adapter == null) return;
-        List<AppInfo> selected = adapter.getSelectedApps();
-        if (selected.isEmpty()) {
-            for (AppInfo app : allApps) { if (!app.isThemed) selected.add(app); }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("图标包适配申请列表\n==================\n\n");
-        for (AppInfo app : selected) {
-            sb.append("应用名: ").append(app.appName).append("\n");
-            sb.append("包名: ").append(app.packageName).append("\n");
-            sb.append("Component: ").append(app.getComponentInfo()).append("\n---\n");
-        }
-
+        List<AppInfo> sel = getSelectedMissing();
+        String text = buildRequestText(sel);
         if (getContext() != null) {
-            ClipboardManager clipboard = (ClipboardManager)
-                    getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("request_list", sb.toString()));
+            ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            cm.setPrimaryClip(ClipData.newPlainText("Icon Request", text));
             Toast.makeText(getContext(), "申请列表已复制到剪贴板", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void shareList() {
         if (adapter == null) return;
-        List<AppInfo> selected = adapter.getSelectedApps();
-        if (selected.isEmpty()) {
-            for (AppInfo app : allApps) { if (!app.isThemed) selected.add(app); }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("图标包适配申请列表\n\n");
-        for (AppInfo app : selected) {
-            sb.append(app.appName).append(" | ").append(app.getComponentInfo()).append("\n");
-        }
-
+        List<AppInfo> sel = getSelectedMissing();
+        String text = buildRequestText(sel);
         if (getContext() != null) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_request_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-            startActivity(Intent.createChooser(intent, "分享申请列表"));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Icon Request");
+            intent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(intent, "分享图标适配申请"));
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestList.postDelayed(() -> updateBottomBar(), 300);
+        requestList.postDelayed(this::updateBottomBar, 300);
     }
 }

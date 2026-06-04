@@ -35,27 +35,25 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Vi
 
     public void setShowCheckboxes(boolean show) {
         this.showCheckboxes = show;
-        // Clear selections when hiding checkboxes
         if (!show) {
-            for (AppInfo app : allApps) {
-                app.isSelected = false;
-            }
+            for (AppInfo app : allApps) app.isSelected = false;
         }
         notifyDataSetChanged();
     }
+
+    public void notifyDataChanged() { notifyDataSetChanged(); }
 
     private void applyFilter() {
         filteredApps.clear();
         switch (currentFilter) {
             case "themed":
-                for (AppInfo app : allApps) {
-                    if (app.isThemed) filteredApps.add(app);
-                }
+                for (AppInfo a : allApps) { if (a.isThemed) filteredApps.add(a); }
                 break;
             case "unthemed":
-                for (AppInfo app : allApps) {
-                    if (!app.isThemed) filteredApps.add(app);
-                }
+                for (AppInfo a : allApps) { if (!a.isThemed) filteredApps.add(a); }
+                break;
+            case "selected":
+                for (AppInfo a : allApps) { if (a.isSelected) filteredApps.add(a); }
                 break;
             default:
                 filteredApps.addAll(allApps);

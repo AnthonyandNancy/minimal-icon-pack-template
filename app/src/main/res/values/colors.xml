@@ -7,10 +7,10 @@
     <color name="accent">#FF7C5CFF</color>
 
     <!-- Background -->
-    <color name="bg_top">#FFC8D7EA</color>
-    <color name="bg_mid">#FFD9D4EC</color>
-    <color name="bg_bottom">#FFC6E1E7</color>
-    <color name="background">#FFC8D7EA</color>
+    <color name="bg_top">#FF9FB5D1</color>
+    <color name="bg_mid">#FFB9B1D6</color>
+    <color name="bg_bottom">#FF7FB5C0</color>
+    <color name="background">#FF9FB5D1</color>
     <color name="background_dark">#FF0F172A</color>
 
     <!-- Glass surfaces (80% = CC, 72% = B8, 60% = 99, 50% = 80) -->
