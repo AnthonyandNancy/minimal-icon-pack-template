@@ -174,61 +174,37 @@ public class LiquidGlassDrawable extends Drawable {
         return (a << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
-    // ── Dark-mode factory presets ──────────────────────────
+    // ── A / B / C glass grading system ─────────────────────
 
-    /** Home toolbar pill — largest, most opaque */
-    public static LiquidGlassDrawable toolbar(float density) {
-        return new LiquidGlassDrawable(density, 36,
-                0x40FFFFFF, 0x80FFFFFF, 0.34f, 0.20f, 0.022f);
+    // A-grade: strongest glass — toolbar, hero, drawer, floating bar
+    private static LiquidGlassDrawable gradeA(float density, float radius, float alpha) {
+        return new LiquidGlassDrawable(density, radius,
+                argb((int)(255*alpha), 0xFF,0xFF,0xFF), 0x90FFFFFF, 0.42f, 0.24f, 0.028f);
     }
-
-    /** Hero card */
-    public static LiquidGlassDrawable heroCard(float density) {
-        return new LiquidGlassDrawable(density, 32,
-                0x30FFFFFF, 0x8AFFFFFF, 0.38f, 0.22f, 0.025f);
-    }
-
-    /** Stat card */
-    public static LiquidGlassDrawable statCard(float density) {
-        return new LiquidGlassDrawable(density, 28,
-                0x26FFFFFF, 0x70FFFFFF, 0.34f, 0.24f, 0.020f);
-    }
-
-    /** Feature / entry card */
-    public static LiquidGlassDrawable featureCard(float density) {
-        return new LiquidGlassDrawable(density, 26,
-                0x28FFFFFF, 0x66FFFFFF, 0.32f, 0.22f, 0.018f);
-    }
-
-    /** Drawer background */
+    public static LiquidGlassDrawable toolbar(float density)     { return gradeA(density, 36, 0.30f); }
+    public static LiquidGlassDrawable heroCard(float density)    { return gradeA(density, 32, 0.28f); }
+    public static LiquidGlassDrawable floatingBar(float density) { return gradeA(density, 34, 0.32f); }
     public static LiquidGlassDrawable drawerBg(float density) {
         float r = density * 34;
-        return new LiquidGlassDrawable(density, 34,
-                0x55FFFFFF, 0x88FFFFFF, 0.36f, 0.22f, 0.020f,
+        return new LiquidGlassDrawable(density, 34, 0x38FFFFFF, 0x90FFFFFF, 0.42f, 0.26f, 0.026f,
                 new float[]{0, 0, r, r, r, r, 0, 0});
     }
 
-    /** Floating action bar */
-    public static LiquidGlassDrawable floatingBar(float density) {
-        return new LiquidGlassDrawable(density, 35,
-                0x4AFFFFFF, 0x90FFFFFF, 0.40f, 0.26f, 0.025f);
+    // B-grade: medium glass — stat/feature/info cards
+    private static LiquidGlassDrawable gradeB(float density, float radius, float alpha) {
+        return new LiquidGlassDrawable(density, radius,
+                argb((int)(255*alpha), 0xFF,0xFF,0xFF), 0x70FFFFFF, 0.34f, 0.20f, 0.020f);
     }
+    public static LiquidGlassDrawable statCard(float density)    { return gradeB(density, 28, 0.22f); }
+    public static LiquidGlassDrawable featureCard(float density) { return gradeB(density, 26, 0.20f); }
+    public static LiquidGlassDrawable aboutCard(float density)   { return gradeB(density, 24, 0.18f); }
 
-    /** Quick action button */
-    public static LiquidGlassDrawable glassButton(float density) {
-        return new LiquidGlassDrawable(density, 999,
-                0x30FFFFFF, 0x66FFFFFF, 0.30f, 0.12f, 0.012f);
+    // C-grade: light glass — list items, filter chips, small buttons
+    private static LiquidGlassDrawable gradeC(float density, float radius, float alpha) {
+        return new LiquidGlassDrawable(density, radius,
+                argb((int)(255*alpha), 0xFF,0xFF,0xFF), 0x50FFFFFF, 0.28f, 0.14f, 0.012f);
     }
-
-    /** About / info card */
-    public static LiquidGlassDrawable aboutCard(float density) {
-        return new LiquidGlassDrawable(density, 24,
-                0x28FFFFFF, 0x60FFFFFF, 0.30f, 0.18f, 0.016f);
-    }
-
-    /** Selected pill inside pill bar */
-    public static LiquidGlassDrawable selectedPill(float density) {
-        return new LiquidGlassDrawable(density, 22,
-                0x60FFFFFF, 0xAAFFFFFF, 0.44f, 0.08f, 0.028f);
-    }
+    public static LiquidGlassDrawable glassButton(float density) { return gradeC(density, 999, 0.18f); }
+    public static LiquidGlassDrawable listItem(float density)    { return gradeC(density, 22, 0.14f); }
+}
 }
