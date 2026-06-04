@@ -168,7 +168,7 @@ public class DashboardFragment extends Fragment {
             params.width = 0;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
             params.setMargins(4, 6, 4, 6);
-            params.height = (int) (118 * ctx.getResources().getDisplayMetrics().density);
+            params.height = (int) (110 * ctx.getResources().getDisplayMetrics().density);
             card.setLayoutParams(params);
             grid.addView(card);
         }
@@ -218,7 +218,7 @@ public class DashboardFragment extends Fragment {
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int) (92 * ctx.getResources().getDisplayMetrics().density));
+                    (int) (84 * ctx.getResources().getDisplayMetrics().density));
             lp.setMargins(0, 0, 0, (int) (8 * ctx.getResources().getDisplayMetrics().density));
             card.setLayoutParams(lp);
             container.addView(card);

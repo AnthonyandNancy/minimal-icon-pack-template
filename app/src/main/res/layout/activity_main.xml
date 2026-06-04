@@ -31,10 +31,11 @@
                 android:layout_height="@dimen/toolbar_height"
                 android:layout_marginStart="@dimen/page_margin"
                 android:layout_marginEnd="@dimen/page_margin"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/glass_toolbar_bg"
-                android:elevation="10dp"
+                android:elevation="8dp"
                 app:titleTextColor="@color/text_primary"
+                app:titleTextSize="22sp"
                 app:navigationIcon="@drawable/ic_menu_glass"
                 app:navigationIconTint="@color/text_secondary"
                 app:contentInsetStartWithNavigation="12dp"
@@ -48,8 +49,8 @@
 
                     <ImageButton
                         android:id="@+id/btn_rate"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:background="@drawable/glass_btn_bg"
                         android:contentDescription="@string/action_rate"
                         android:src="@drawable/ic_rate"
@@ -58,25 +59,23 @@
 
                     <ImageButton
                         android:id="@+id/btn_share"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:background="@drawable/glass_btn_bg"
                         android:contentDescription="@string/action_share"
                         android:src="@drawable/ic_share"
                         android:tint="@color/accent"
-                        android:scaleType="centerInside"
-                        android:layout_marginStart="6dp" />
+                        android:scaleType="centerInside" />
 
                     <ImageButton
                         android:id="@+id/btn_refresh"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:background="@drawable/glass_btn_bg"
                         android:contentDescription="@string/action_refresh"
                         android:src="@drawable/ic_refresh"
                         android:tint="@color/primary"
-                        android:scaleType="centerInside"
-                        android:layout_marginStart="6dp" />
+                        android:scaleType="centerInside" />
                 </LinearLayout>
             </com.google.android.material.appbar.MaterialToolbar>
 

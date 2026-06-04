@@ -3,79 +3,24 @@ package com.template.iconpack.ui;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RoundRectShape;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-
-import java.util.Arrays;
 
 /**
  * Factory for creating glass-effect Drawables programmatically.
- * No PNG assets needed — everything is drawn via GradientDrawable and LayerDrawable.
+ * All backgrounds are semi-transparent — no solid white.
  */
 public final class GlassDrawableFactory {
 
     private GlassDrawableFactory() {}
 
     /**
-     * Creates a glass-card background with semi-transparent fill,
-     * subtle gradient, rounded corners, and highlight stroke.
+     * Standard glass card: semi-transparent fill + thin stroke.
      */
-    public static Drawable glassCardBg(int radiusDp, float density) {
-        return glassCardBg(radiusDp, density, GlassTheme.GLASS_BG_CARD);
+    public static Drawable glassCard(int radiusDp, float density) {
+        return glassCard(radiusDp, density, GlassTheme.GLASS_CARD_PRIMARY);
     }
 
-    public static Drawable glassCardBg(int radiusDp, float density, int fillColor) {
+    public static Drawable glassCard(int radiusDp, float density, int fillColor) {
         int radius = (int) (radiusDp * density);
-
-        // Base fill with subtle top-to-bottom gradient
-        GradientDrawable base = new GradientDrawable();
-        base.setShape(GradientDrawable.RECTANGLE);
-        base.setCornerRadius(radius);
-        base.setColors(new int[]{
-                GlassTheme.GLASS_STROKE_BRIGHT, // top: brighter
-                fillColor                        // bottom: base
-        });
-        base.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-
-        // Stroke layer: thin bright outline
-        GradientDrawable stroke = new GradientDrawable();
-        stroke.setShape(GradientDrawable.RECTANGLE);
-        stroke.setCornerRadius(radius);
-        stroke.setStroke((int) (1.5f * density), GlassTheme.GLASS_STROKE_DIM);
-        stroke.setColor(android.graphics.Color.TRANSPARENT);
-
-        LayerDrawable layer = new LayerDrawable(new Drawable[]{base, stroke});
-        layer.setLayerInset(1, 0, 0, 0, 0);
-        return layer;
-    }
-
-    /**
-     * Glass toolbar background — thicker, more opaque.
-     */
-    public static Drawable glassToolbarBg(int radiusDp, float density) {
-        int radius = (int) (radiusDp * density);
-
-        GradientDrawable bg = new GradientDrawable();
-        bg.setShape(GradientDrawable.RECTANGLE);
-        bg.setCornerRadius(radius);
-        bg.setColor(GlassTheme.GLASS_BG_TOOLBAR);
-
-        GradientDrawable stroke = new GradientDrawable();
-        stroke.setShape(GradientDrawable.RECTANGLE);
-        stroke.setCornerRadius(radius);
-        stroke.setStroke((int) (1.5f * density), GlassTheme.GLASS_STROKE_BRIGHT);
-        stroke.setColor(android.graphics.Color.TRANSPARENT);
-
-        return new LayerDrawable(new Drawable[]{bg, stroke});
-    }
-
-    /**
-     * Capsule button with glass background.
-     */
-    public static Drawable glassButtonBg(float density, int fillColor) {
-        int radius = (int) (999 * density); // capsule = huge radius
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.RECTANGLE);
@@ -85,76 +30,101 @@ public final class GlassDrawableFactory {
         GradientDrawable stroke = new GradientDrawable();
         stroke.setShape(GradientDrawable.RECTANGLE);
         stroke.setCornerRadius(radius);
-        stroke.setStroke((int) (1f * density), GlassTheme.GLASS_STROKE_DIM);
+        stroke.setStroke((int) (0.5f * density), GlassTheme.GLASS_STROKE_DIM);
         stroke.setColor(android.graphics.Color.TRANSPARENT);
 
         return new LayerDrawable(new Drawable[]{bg, stroke});
     }
 
     /**
-     * Glass hero card — slight blue-purple gradient overlay.
+     * Glass toolbar: thicker background with bright stroke.
      */
-    public static Drawable glassHeroBg(int radiusDp, float density) {
-        int radius = (int) (radiusDp * density);
-
-        GradientDrawable base = new GradientDrawable();
-        base.setShape(GradientDrawable.RECTANGLE);
-        base.setCornerRadius(radius);
-        int[] colors = {
-                GlassTheme.GLASS_BG_HERO,
-                GlassTheme.GLASS_BG_CARD
-        };
-        base.setColors(colors);
-        base.setGradientType(GradientDrawable.LINEAR_GRADIENT);
-        base.setOrientation(GradientDrawable.Orientation.TL_BR);
-
-        GradientDrawable stroke = new GradientDrawable();
-        stroke.setShape(GradientDrawable.RECTANGLE);
-        stroke.setCornerRadius(radius);
-        stroke.setStroke((int) (1.5f * density), GlassTheme.GLASS_STROKE_BRIGHT);
-        stroke.setColor(android.graphics.Color.TRANSPARENT);
-
-        return new LayerDrawable(new Drawable[]{base, stroke});
-    }
-
-    /**
-     * Glass menu item selected background — rounded rectangle.
-     */
-    public static Drawable glassMenuSelectedBg(int radiusDp, float density) {
+    public static Drawable glassToolbar(int radiusDp, float density) {
         int radius = (int) (radiusDp * density);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.RECTANGLE);
         bg.setCornerRadius(radius);
-        bg.setColor(GlassTheme.GLASS_SELECTED_BG);
+        bg.setColor(GlassTheme.GLASS_TOOLBAR);
+
+        GradientDrawable stroke = new GradientDrawable();
+        stroke.setShape(GradientDrawable.RECTANGLE);
+        stroke.setCornerRadius(radius);
+        stroke.setStroke((int) (0.5f * density), GlassTheme.GLASS_STROKE_BRIGHT);
+        stroke.setColor(android.graphics.Color.TRANSPARENT);
+
+        return new LayerDrawable(new Drawable[]{bg, stroke});
+    }
+
+    /**
+     * Glass drawer background.
+     */
+    public static Drawable glassDrawer(float density) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setColor(GlassTheme.GLASS_DRAWER_BG);
+        return bg;
+    }
+
+    /**
+     * Capsule button with semi-transparent fill.
+     */
+    public static Drawable glassButton(float density) {
+        int radius = (int) (999 * density);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(radius);
+        bg.setColor(0xAFFFFFFF); // 68% white
+
+        GradientDrawable stroke = new GradientDrawable();
+        stroke.setShape(GradientDrawable.RECTANGLE);
+        stroke.setCornerRadius(radius);
+        stroke.setStroke((int) (0.5f * density), GlassTheme.GLASS_STROKE_DIM);
+        stroke.setColor(android.graphics.Color.TRANSPARENT);
+
+        return new LayerDrawable(new Drawable[]{bg, stroke});
+    }
+
+    /**
+     * Accent pill button.
+     */
+    public static Drawable accentPill(float density) {
+        int radius = (int) (19 * density);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(radius);
+        int[] colors = {GlassTheme.ACCENT_BLUE, GlassTheme.ACCENT_PURPLE};
+        bg.setColors(colors);
+        bg.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        bg.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
 
         return bg;
     }
 
     /**
-     * Glass search bar background.
+     * Search bar background.
      */
     public static Drawable glassSearchBg(float density) {
         int radius = (int) (24 * density);
-
-        GradientDrawable bg = new GradientDrawable();
-        bg.setShape(GradientDrawable.RECTANGLE);
-        bg.setCornerRadius(radius);
-        bg.setColor(GlassTheme.GLASS_BG_CARD);
-
-        GradientDrawable stroke = new GradientDrawable();
-        stroke.setShape(GradientDrawable.RECTANGLE);
-        stroke.setCornerRadius(radius);
-        stroke.setStroke((int) (1f * density), GlassTheme.GLASS_STROKE_DIM);
-        stroke.setColor(android.graphics.Color.TRANSPARENT);
-
-        return new LayerDrawable(new Drawable[]{bg, stroke});
+        return glassCard(radius, density, 0xAFFFFFFF);
     }
 
     /**
-     * Simple circle background (for icon containers).
+     * Menu item selected background.
      */
-    public static Drawable glassCircleBg(int sizeDp, int color, float density) {
+    public static Drawable glassMenuSelectedBg(float density) {
+        int radius = (int) (18 * density);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(radius);
+        bg.setColor(GlassTheme.GLASS_SELECTED_BG);
+        return bg;
+    }
+
+    /**
+     * Icon container circle.
+     */
+    public static Drawable iconCircleBg(int sizeDp, int color, float density) {
         int size = (int) (sizeDp * density);
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
@@ -164,19 +134,7 @@ public final class GlassDrawableFactory {
     }
 
     /**
-     * Status badge — small rounded rectangle.
-     */
-    public static Drawable glassBadge(int color, float density) {
-        int radius = (int) (8 * density);
-        GradientDrawable bg = new GradientDrawable();
-        bg.setShape(GradientDrawable.RECTANGLE);
-        bg.setCornerRadius(radius);
-        bg.setColor(color);
-        return bg;
-    }
-
-    /**
-     * Progress bar track + fill drawable.
+     * Progress bar track + fill.
      */
     public static Drawable progressTrack(float density) {
         int radius = (int) (4 * density);
@@ -198,6 +156,4 @@ public final class GlassDrawableFactory {
         bg.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
         return bg;
     }
-
-    // Helper for hex color parsing
 }
