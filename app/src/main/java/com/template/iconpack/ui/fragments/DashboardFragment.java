@@ -9,7 +9,6 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -29,7 +28,8 @@ public class DashboardFragment extends Fragment {
     private View rootView;
     private boolean animated = false;
 
-    // Entry card definitions: icon, title, description
+    private static final int DP_ENTRY = 88;
+
     private static final int[] ENTRY_ICONS = {
             R.drawable.ic_apply_card, R.drawable.ic_icons_card,
             R.drawable.ic_request_card, R.drawable.ic_wallpapers_card,
@@ -37,7 +37,7 @@ public class DashboardFragment extends Fragment {
             R.drawable.ic_faq, R.drawable.ic_info
     };
 
-    private static final int[] ENTRY_ICON_TINTS = {
+    private static final int[] ENTRY_TINTS = {
             R.color.primary, R.color.accent,
             R.color.status_themed, R.color.primary,
             R.color.accent, R.color.text_secondary,
@@ -48,9 +48,7 @@ public class DashboardFragment extends Fragment {
         void onCardClicked(int position);
     }
 
-    public void setCallback(DashboardCallback callback) {
-        this.callback = callback;
-    }
+    public void setCallback(DashboardCallback callback) { this.callback = callback; }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +57,6 @@ public class DashboardFragment extends Fragment {
         Context ctx = getContext();
         if (ctx == null) return rootView;
 
-        // Load data
         List<DrawableInfo> icons = IconPackLoader.loadDrawables(ctx);
         List<AppInfo> apps = AppScanner.scanInstalledApps(ctx);
         List<WallpaperInfo> wallpapers = IconPackLoader.loadWallpapers(ctx);
@@ -68,16 +65,9 @@ public class DashboardFragment extends Fragment {
         for (AppInfo a : apps) { if (a.isThemed) themedCount++; }
         int unthemedCount = apps.size() - themedCount;
 
-        // Hero card
         buildHeroCard(ctx, icons.size());
-
-        // Quick actions
         setupQuickActions(ctx);
-
-        // Stat cards
         buildStatCards(ctx, icons.size(), apps.size(), themedCount, unthemedCount);
-
-        // Entry cards
         buildEntryCards(ctx, icons.size(), apps.size(), themedCount, wallpapers.size());
 
         return rootView;
@@ -86,10 +76,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!animated) {
-            animated = true;
-            animateCards();
-        }
+        if (!animated) { animated = true; animateCards(); }
     }
 
     private void buildHeroCard(Context ctx, int iconCount) {
@@ -100,36 +87,28 @@ public class DashboardFragment extends Fragment {
 
         nameView.setText(getString(R.string.app_name));
         try {
-            String version = ctx.getPackageManager()
-                    .getPackageInfo(ctx.getPackageName(), 0).versionName;
-            versionView.setText(version);
+            versionView.setText(ctx.getPackageManager()
+                    .getPackageInfo(ctx.getPackageName(), 0).versionName);
         } catch (Exception e) {
             versionView.setText(R.string.version_name);
         }
         countView.setText(iconCount + " icons");
 
         GlassAnimations.applyPressAnimation(card);
-        GlassAnimations.animatePageEntrance(card);
     }
 
     private void setupQuickActions(Context ctx) {
-        View btnRate = rootView.findViewById(R.id.btn_quick_rate);
-        View btnShare = rootView.findViewById(R.id.btn_quick_share);
-        View btnRefresh = rootView.findViewById(R.id.btn_quick_refresh);
+        View rate  = rootView.findViewById(R.id.btn_quick_rate);
+        View share = rootView.findViewById(R.id.btn_quick_share);
+        View refresh = rootView.findViewById(R.id.btn_quick_refresh);
 
-        GlassAnimations.applyPressAnimation(btnRate);
-        GlassAnimations.applyPressAnimation(btnShare);
-        GlassAnimations.applyPressAnimation(btnRefresh);
+        GlassAnimations.applyPressAnimation(rate);
+        GlassAnimations.applyPressAnimation(share);
+        GlassAnimations.applyPressAnimation(refresh);
 
-        btnRate.setOnClickListener(v -> {
-            if (callback != null) callback.onCardClicked(-1); // rate action
-        });
-        btnShare.setOnClickListener(v -> {
-            if (callback != null) callback.onCardClicked(-2); // share action
-        });
-        btnRefresh.setOnClickListener(v -> {
-            if (callback != null) callback.onCardClicked(-3); // refresh action
-        });
+        rate.setOnClickListener(v -> { if (callback != null) callback.onCardClicked(-1); });
+        share.setOnClickListener(v -> { if (callback != null) callback.onCardClicked(-2); });
+        refresh.setOnClickListener(v -> { if (callback != null) callback.onCardClicked(-3); });
     }
 
     private void buildStatCards(Context ctx, int iconCount, int totalApps,
@@ -138,27 +117,29 @@ public class DashboardFragment extends Fragment {
         grid.removeAllViews();
 
         String[][] stats = {
-                {"自定图标", String.valueOf(iconCount), "" + iconCount + " 个图标已就绪"},
-                {"应用总数", String.valueOf(totalApps), "" + totalApps + " 个已安装"},
-                {"已适配", String.valueOf(themedCount), "" + themedCount + " 个应用已适配"},
+                {"自定图标", String.valueOf(iconCount),    "" + iconCount + " 个已就绪"},
+                {"应用总数", String.valueOf(totalApps),     "" + totalApps + " 个已安装"},
+                {"已适配",   String.valueOf(themedCount),   "" + themedCount + " 个已适配"},
                 {"缺失图标", String.valueOf(unthemedCount), "" + unthemedCount + " 个待适配"},
         };
-
-        int[] statColors = {
+        int[] colors = {
                 R.color.primary, R.color.accent,
                 R.color.status_themed, R.color.status_unthemed
         };
 
+        float density = ctx.getResources().getDisplayMetrics().density;
+
         for (int i = 0; i < 4; i++) {
             View card = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_card, grid, false);
-            ImageView icon = card.findViewById(R.id.card_icon);
-            TextView title = card.findViewById(R.id.card_title);
-            TextView value = card.findViewById(R.id.card_value);
-            TextView desc = card.findViewById(R.id.card_desc);
+            ImageView icon   = card.findViewById(R.id.card_icon);
+            TextView title   = card.findViewById(R.id.card_title);
+            TextView value   = card.findViewById(R.id.card_value);
+            TextView desc    = card.findViewById(R.id.card_desc);
 
+            icon.setColorFilter(getResources().getColor(colors[i]));
             title.setText(stats[i][0]);
             value.setText(stats[i][1]);
-            value.setTextColor(getResources().getColor(statColors[i]));
+            value.setTextColor(getResources().getColor(colors[i]));
             desc.setText(stats[i][2]);
             desc.setVisibility(View.VISIBLE);
 
@@ -168,7 +149,7 @@ public class DashboardFragment extends Fragment {
             params.width = 0;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
             params.setMargins(4, 6, 4, 6);
-            params.height = (int) (110 * ctx.getResources().getDisplayMetrics().density);
+            // height: wrap_content — content determines height, no clipping
             card.setLayoutParams(params);
             grid.addView(card);
         }
@@ -179,12 +160,8 @@ public class DashboardFragment extends Fragment {
         LinearLayout container = rootView.findViewById(R.id.dashboard_entries);
         container.removeAllViews();
 
-        String[] entryTitles = {
-                "应用图标", "图标列表", "申请图标", "壁纸",
-                "预设", "设置", "常见问题", "关于"
-        };
-
-        String[] entryDescs = {
+        String[] titles = {"应用图标","图标列表","申请图标","壁纸","预设","设置","常见问题","关于"};
+        String[] descs = {
                 "选择启动器并应用图标包",
                 "共 " + iconCount + " 个图标",
                 "已适配 " + themedCount + " / " + totalApps,
@@ -195,51 +172,42 @@ public class DashboardFragment extends Fragment {
                 "版本与许可信息"
         };
 
-        int layoutId = R.layout.item_launcher; // reuse launcher card layout for entries
+        float density = ctx.getResources().getDisplayMetrics().density;
 
-        for (int i = 0; i < entryTitles.length; i++) {
-            View card = LayoutInflater.from(ctx).inflate(layoutId, container, false);
+        for (int i = 0; i < titles.length; i++) {
+            View card = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, container, false);
 
-            // Find views in the card
             ImageView iconView = card.findViewById(R.id.launcher_icon);
-            TextView nameView = card.findViewById(R.id.launcher_name);
-            TextView descView = card.findViewById(R.id.entry_desc);
+            TextView  nameView = card.findViewById(R.id.launcher_name);
+            TextView  descView = card.findViewById(R.id.entry_desc);
 
             iconView.setImageResource(ENTRY_ICONS[i]);
-            iconView.setColorFilter(getResources().getColor(ENTRY_ICON_TINTS[i]));
-            nameView.setText(entryTitles[i]);
-            descView.setText(entryDescs[i]);
+            iconView.setColorFilter(getResources().getColor(ENTRY_TINTS[i]));
+            nameView.setText(titles[i]);
+            descView.setText(descs[i]);
 
             GlassAnimations.applyPressAnimation(card);
             final int idx = i;
             card.setOnClickListener(v -> {
-                if (callback != null) callback.onCardClicked(idx + 1); // offset from stat cards
+                if (callback != null) callback.onCardClicked(idx + 10);
             });
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int) (84 * ctx.getResources().getDisplayMetrics().density));
-            lp.setMargins(0, 0, 0, (int) (8 * ctx.getResources().getDisplayMetrics().density));
+                    (int) (DP_ENTRY * density));
+            lp.setMargins(0, 0, 0, (int) (8 * density));
             card.setLayoutParams(lp);
             container.addView(card);
         }
     }
 
     private void animateCards() {
-        // Animate quick actions
-        GlassAnimations.animateCardEntrance(
-                rootView.findViewById(R.id.quick_actions), 1);
-
-        // Animate stat cards
         GridLayout grid = rootView.findViewById(R.id.dashboard_stats);
-        for (int i = 0; i < grid.getChildCount(); i++) {
-            GlassAnimations.animateCardEntrance(grid.getChildAt(i), i + 2);
-        }
+        for (int i = 0; i < grid.getChildCount(); i++)
+            GlassAnimations.animateCardEntrance(grid.getChildAt(i), i);
 
-        // Animate entry cards
         LinearLayout entries = rootView.findViewById(R.id.dashboard_entries);
-        for (int i = 0; i < entries.getChildCount(); i++) {
-            GlassAnimations.animateCardEntrance(entries.getChildAt(i), i + 6);
-        }
+        for (int i = 0; i < entries.getChildCount(); i++)
+            GlassAnimations.animateCardEntrance(entries.getChildAt(i), i + 4);
     }
 }

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<!-- ENTRY CARD: FrameLayout + glass drawable — NO MaterialCardView -->
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="84dp"
-    app:cardCornerRadius="24dp"
-    app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/glass_card_secondary"
-    app:strokeColor="@color/glass_stroke_bright"
-    app:strokeWidth="0.5dp"
-    android:layout_marginBottom="8dp"
+    android:layout_height="88dp"
+    android:background="@drawable/glass_card_entry"
+    android:elevation="3dp"
+    android:clipChildren="false"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:outlineProvider="background"
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_marginBottom="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,6 +21,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
+        <!-- Icon circle -->
         <LinearLayout
             android:layout_width="42dp"
             android:layout_height="42dp"
@@ -34,10 +34,11 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_apply_card"
-                android:tint="@color/primary" />
+                android:tint="#3B82F6" />
 
         </LinearLayout>
 
+        <!-- Title + description -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,27 +51,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/text_primary"
+                android:textColor="#111827"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/entry_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="点击查看应用方式"
                 android:textSize="12sp"
-                android:textColor="@color/text_hint"
+                android:textColor="#9CA3AF"
                 android:layout_marginTop="2dp" />
 
         </LinearLayout>
 
+        <!-- Arrow -->
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_info"
-            android:tint="@color/text_hint"
+            android:tint="#9CA3AF"
             android:rotation="180" />
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</FrameLayout>

@@ -2,6 +2,7 @@ package com.template.iconpack.ui.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
@@ -11,79 +12,58 @@ import android.view.View;
 import com.template.iconpack.ui.GlassTheme;
 
 /**
- * Background view that renders soft gradient blobs for Harmony-style Liquid Glass.
- * Five blobs: top-left blue, top-right purple, center soft cyan, mid-right blue, bottom cyan.
+ * Tiered glass background: dark-toned gradient bottom + soft blobs on top.
  */
 public class LiquidBackgroundView extends View {
 
+    private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    public LiquidBackgroundView(Context context) {
-        super(context);
-    }
-
-    public LiquidBackgroundView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    public LiquidBackgroundView(Context context) { super(context); }
+    public LiquidBackgroundView(Context context, AttributeSet attrs) { super(context, attrs); }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        int w = getWidth();
-        int h = getHeight();
+        int w = getWidth(), h = getHeight();
         if (w == 0 || h == 0) return;
 
-        float cx, cy, radius;
+        // 1. Draw linear gradient background
+        LinearGradient lg = new LinearGradient(0, 0, 0, h,
+                GlassTheme.BG_TOP, GlassTheme.BG_BOTTOM, Shader.TileMode.CLAMP);
+        bgPaint.setShader(lg);
+        canvas.drawRect(0, 0, w, h, bgPaint);
 
-        // Blob 1: top-left (blue)
-        cx = w * 0.12f;
-        cy = h * 0.08f;
-        radius = Math.min(w, h) * 0.42f;
-        drawBlob(canvas, cx, cy, radius,
+        float r;
+
+        // 2. Blob: top-left (blue)
+        r = Math.min(w, h) * 0.55f;
+        drawBlob(canvas, w * 0.10f, h * 0.08f, r,
                 GlassTheme.BLOB_BLUE, GlassTheme.BLOB_BLUE_ALPHA);
 
-        // Blob 2: top-right (purple)
-        cx = w * 0.85f;
-        cy = h * 0.18f;
-        radius = Math.min(w, h) * 0.36f;
-        drawBlob(canvas, cx, cy, radius,
+        // 3. Blob: top-right (purple)
+        r = Math.min(w, h) * 0.50f;
+        drawBlob(canvas, w * 0.88f, h * 0.15f, r,
                 GlassTheme.BLOB_PURPLE, GlassTheme.BLOB_PURPLE_ALPHA);
 
-        // Blob 3: center-upper (light cyan)
-        cx = w * 0.50f;
-        cy = h * 0.40f;
-        radius = Math.min(w, h) * 0.35f;
-        drawBlob(canvas, cx, cy, radius,
+        // 4. Blob: bottom-centre (cyan)
+        r = Math.min(w, h) * 0.65f;
+        drawBlob(canvas, w * 0.50f, h * 0.72f, r,
                 GlassTheme.BLOB_CYAN, GlassTheme.BLOB_CYAN_ALPHA);
 
-        // Blob 4: mid-right (soft blue)
-        cx = w * 0.80f;
-        cy = h * 0.60f;
-        radius = Math.min(w, h) * 0.30f;
-        drawBlob(canvas, cx, cy, radius,
-                GlassTheme.BLOB_BLUE, GlassTheme.BLOB_BLUE_ALPHA * 0.6f);
-
-        // Blob 5: bottom-left (cyan blend)
-        cx = w * 0.25f;
-        cy = h * 0.85f;
-        radius = Math.min(w, h) * 0.32f;
-        drawBlob(canvas, cx, cy, radius,
-                GlassTheme.BLOB_CYAN, GlassTheme.BLOB_CYAN_ALPHA * 0.7f);
+        // 5. Soft mid-right (blue-purple blend)
+        r = Math.min(w, h) * 0.35f;
+        drawBlob(canvas, w * 0.78f, h * 0.50f, r,
+                GlassTheme.BLOB_PURPLE, GlassTheme.BLOB_PURPLE_ALPHA * 0.6f);
     }
 
-    private void drawBlob(Canvas canvas, float cx, float cy, float radius,
-                          int color, float alpha) {
-        blobPaint.setShader(new RadialGradient(
-                cx, cy, radius,
-                colorWithAlpha(color, alpha),
-                colorWithAlpha(color, 0f),
-                Shader.TileMode.CLAMP
-        ));
-        canvas.drawCircle(cx, cy, radius, blobPaint);
+    private void drawBlob(Canvas c, float cx, float cy, float r, int color, float alpha) {
+        blobPaint.setShader(new RadialGradient(cx, cy, r,
+                argb(color, alpha), argb(color, 0f), Shader.TileMode.CLAMP));
+        c.drawCircle(cx, cy, r, blobPaint);
     }
 
-    private static int colorWithAlpha(int color, float alpha) {
+    private static int argb(int color, float alpha) {
         int a = (int) (255 * alpha);
         return (a << 24) | (color & 0x00FFFFFF);
     }

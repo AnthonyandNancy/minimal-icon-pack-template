@@ -179,41 +179,19 @@ public class MainActivity extends AppCompatActivity
         if (position == -2) { shareApp(); return; }
         if (position == -3) { refreshCurrentPage(); return; }
 
-        // Entry cards (offset by 1 from DashboardFragment)
-        // 0=Apply, 1=Icons, 2=Request, 3=Wallpapers, 4=Presets, 5=Settings, 6=FAQ, 7=About
-        switch (position) {
-            case 1: // Icons list (first entry card)
-                showFragment(NAV_ICONS);
-                navView.setCheckedItem(R.id.nav_icons);
-                break;
-            case 2: // Apply (now second card)
-                showFragment(NAV_APPLY);
-                navView.setCheckedItem(R.id.nav_apply);
-                break;
-            case 3: // Request
-                showFragment(NAV_REQUEST);
-                navView.setCheckedItem(R.id.nav_request);
-                break;
-            case 4: // Wallpapers
-                showFragment(NAV_WALLPAPERS);
-                navView.setCheckedItem(R.id.nav_wallpapers);
-                break;
-            case 5: // Presets
-                showFragment(NAV_PRESETS);
-                navView.setCheckedItem(R.id.nav_presets);
-                break;
-            case 6: // Settings
-                showFragment(NAV_SETTINGS);
-                navView.setCheckedItem(R.id.nav_settings);
-                break;
-            case 7: // FAQ
-                showFragment(NAV_FAQ);
-                navView.setCheckedItem(R.id.nav_faq);
-                break;
-            case 8: // About
-                showFragment(NAV_ABOUT);
-                navView.setCheckedItem(R.id.nav_about);
-                break;
+        // Entry cards: DashboardFragment sends index+10
+        int entryIdx = position - 10;
+        if (entryIdx >= 0 && entryIdx <= 7) {
+            switch (entryIdx) {
+                case 0: showFragment(NAV_APPLY);     navView.setCheckedItem(R.id.nav_apply);      break;
+                case 1: showFragment(NAV_ICONS);     navView.setCheckedItem(R.id.nav_icons);      break;
+                case 2: showFragment(NAV_REQUEST);   navView.setCheckedItem(R.id.nav_request);    break;
+                case 3: showFragment(NAV_WALLPAPERS); navView.setCheckedItem(R.id.nav_wallpapers); break;
+                case 4: showFragment(NAV_PRESETS);   navView.setCheckedItem(R.id.nav_presets);    break;
+                case 5: showFragment(NAV_SETTINGS);  navView.setCheckedItem(R.id.nav_settings);   break;
+                case 6: showFragment(NAV_FAQ);       navView.setCheckedItem(R.id.nav_faq);        break;
+                case 7: showFragment(NAV_ABOUT);     navView.setCheckedItem(R.id.nav_about);      break;
+            }
         }
         drawer.closeDrawer(GravityCompat.START);
     }
