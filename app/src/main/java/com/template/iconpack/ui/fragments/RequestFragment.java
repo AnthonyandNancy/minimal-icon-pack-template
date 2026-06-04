@@ -37,7 +37,7 @@ public class RequestFragment extends Fragment {
     private List<AppInfo> allApps;
 
     private TextView filterAll, filterThemed, filterUnthemed;
-    private View filterSelected;
+    private TextView filterSelected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +69,7 @@ public class RequestFragment extends Fragment {
         filterAll     = view.findViewById(R.id.filter_all);
         filterThemed  = view.findViewById(R.id.filter_themed);
         filterUnthemed = view.findViewById(R.id.filter_unthemed);
-        filterSelected = view.findViewById(R.id.filter_selected);
+        filterSelected = (TextView) view.findViewById(R.id.filter_selected);
 
         allApps = AppScanner.scanInstalledApps(ctx);
         updateStats();
