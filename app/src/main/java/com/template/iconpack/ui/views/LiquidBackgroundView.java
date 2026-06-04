@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Deep-space background: #050A12 → #0B1525 → #101E2E → #0C2A30 → #02060B
- * + 4 blobs.
+ * Airy mist-blue gradient background: #EAF2FF → #F5F8FF.
+ * Soft light blobs — blue, purple, cyan, warm white.
  */
 public class LiquidBackgroundView extends View {
 
@@ -19,14 +19,15 @@ public class LiquidBackgroundView extends View {
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private static final int[] COLORS = {
-        0xFF050A12, 0xFF0B1525, 0xFF101E2E, 0xFF0C2A30, 0xFF02060B
+        0xFFEAF2FF, 0xFFDDE8F8, 0xFFE8E2F5, 0xFFD7EEF0, 0xFFF5F8FF
     };
     private static final float[] STOPS = {0f, 0.25f, 0.50f, 0.75f, 1f};
 
-    private static final int BLUE   = 0xFF2F7DFF;
-    private static final int PURPLE = 0xFF7C4DFF;
-    private static final int CYAN   = 0xFF16D6C8;
-    private static final int BLACK  = 0xFF000000;
+    private static final int BLUE   = 0xFF8DBBFF;
+    private static final int PURPLE = 0xFFB9A2FF;
+    private static final int CYAN   = 0xFF9DEFE7;
+    private static final int WHITE  = 0xFFFFFFFF;
+    private static final int VIGN   = 0xFFB8C7D9;
 
     public LiquidBackgroundView(Context c) { super(c); }
     public LiquidBackgroundView(Context c, AttributeSet a) { super(c, a); }
@@ -40,14 +41,16 @@ public class LiquidBackgroundView extends View {
         canvas.drawRect(0, 0, w, h, bgPaint);
 
         float r;
-        r = Math.min(w, h) * 0.72f;
-        blob(canvas, w * 0.12f, h * 0.10f, r, BLUE,   0.22f);
-        r = Math.min(w, h) * 0.68f;
-        blob(canvas, w * 0.92f, h * 0.14f, r, PURPLE, 0.20f);
-        r = Math.min(w, h) * 0.78f;
-        blob(canvas, w * 0.48f, h * 0.58f, r, CYAN,   0.14f);
-        r = Math.min(w, h) * 1.05f;
-        blob(canvas, w * 0.50f, h * 1.06f, r, BLACK,  0.35f);
+        r = Math.min(w, h) * 0.70f;
+        blob(canvas, w*0.12f, h*0.08f, r, BLUE,   0.26f);
+        r = Math.min(w, h) * 0.62f;
+        blob(canvas, w*0.88f, h*0.18f, r, PURPLE, 0.22f);
+        r = Math.min(w, h) * 0.76f;
+        blob(canvas, w*0.45f, h*0.58f, r, CYAN,   0.20f);
+        r = Math.min(w, h) * 0.95f;
+        blob(canvas, w*0.50f, h*1.02f, r, WHITE,  0.28f);
+        r = Math.min(w, h) * 1.10f;
+        blob(canvas, w*0.50f, h*1.05f, r, VIGN,   0.10f);
     }
 
     private void blob(Canvas c, float x, float y, float r, int col, float a) {

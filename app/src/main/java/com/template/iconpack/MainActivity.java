@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity
         TextView navAppName = headerView.findViewById(R.id.nav_app_name);
         TextView navVersion = headerView.findViewById(R.id.nav_version);
         navAppName.setText(R.string.app_name);
-        navAppName.setTextColor(0xFFF9FAFB);
-        navVersion.setTextColor(0xFF8FA0B5);
+        navAppName.setTextColor(0xFF111827);
+        navVersion.setTextColor(0xFF5F6B7A);
 
         try {
             navVersion.setText(getPackageManager()
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // ═══════════════════════════════════════════════════════
-    // Edge-to-edge: transparent status bar, NO LIGHT_STATUS_BAR
+    // Edge-to-edge: transparent status bar, light icons (LIGHT_STATUS_BAR)
     // ═══════════════════════════════════════════════════════
     private void makeStatusBarTransparent() {
         Window window = getWindow();
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(0xFF02060B);
+            window.setNavigationBarColor(0xFFF5F8FF);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false);
@@ -104,7 +104,9 @@ public class MainActivity extends AppCompatActivity
         int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-        // NO LIGHT_STATUS_BAR — dark background, light icons
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        }
         decor.setSystemUiVisibility(flags);
     }
 

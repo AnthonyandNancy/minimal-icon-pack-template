@@ -175,46 +175,43 @@ public class LiquidGlassDrawable extends Drawable {
         return (a << 24) | (color & 0x00FFFFFF);
     }
 
-    // ── A / B / C grading ─────────────────────────────────
+    // ── Light-mode A / B / C grading ──────────────────────
 
-    private static int tint(int color, float a) {
-        return argb((int)(255 * a), color);
-    }
     private static final int TINT_BLUE   = 0xFF5EA8FF;
     private static final int TINT_PURPLE = 0xFF7C4DFF;
     private static final int TINT_CYAN   = 0xFF16D6C8;
 
-    // A-grade: hero, drawer, floating-bar
+    // A-grade: toolbar, hero, drawer, floating-bar (72-88% white)
     private static LiquidGlassDrawable gradeA(float d, float r, float a) {
         return new LiquidGlassDrawable(d, r,
-                argb((int)(255*a),0xFF,0xFF,0xFF), 0xA6FFFFFF,
-                0.42f, 0.26f, 0.18f, 0.025f, TINT_CYAN, 0.10f);
+                argb((int)(255*a),0xFF,0xFF,0xFF), 0xD9FFFFFF,
+                0.45f, 0.12f, 0.18f, 0.022f, TINT_CYAN, 0.08f);
     }
-    public static LiquidGlassDrawable toolbar(float d) { return gradeA(d, 38, 0.28f); }
-    public static LiquidGlassDrawable heroCard(float d) { return gradeA(d, 34, 0.24f); }
-    public static LiquidGlassDrawable floatingBar(float d) { return gradeA(d, 36, 0.32f); }
+    public static LiquidGlassDrawable toolbar(float d)     { return gradeA(d, 38, 0.75f); }
+    public static LiquidGlassDrawable heroCard(float d)    { return gradeA(d, 34, 0.72f); }
+    public static LiquidGlassDrawable floatingBar(float d) { return gradeA(d, 36, 0.80f); }
     public static LiquidGlassDrawable drawerBg(float d) {
         float r = d * 36;
-        return new LiquidGlassDrawable(d, 36, 0x38FFFFFF, 0xA6FFFFFF, 0.42f, 0.26f, 0.18f, 0.025f,
-                TINT_PURPLE, 0.08f, new float[]{0, 0, r, r, r, r, 0, 0});
+        return new LiquidGlassDrawable(d, 36, 0x72FFFFFF, 0xD9FFFFFF, 0.45f, 0.12f, 0.18f, 0.022f,
+                TINT_PURPLE, 0.06f, new float[]{0, 0, r, r, r, r, 0, 0});
     }
 
-    // B-grade: stat cards, feature cards, info/faq
+    // B-grade: stat/feature/info cards (55-70% white)
     private static LiquidGlassDrawable gradeB(float d, float r, float a) {
         return new LiquidGlassDrawable(d, r,
-                argb((int)(255*a),0xFF,0xFF,0xFF), 0x78FFFFFF,
-                0.32f, 0.20f, 0.12f, 0.018f, TINT_BLUE, 0.06f);
+                argb((int)(255*a),0xFF,0xFF,0xFF), 0xBFFFFFFF,
+                0.36f, 0.10f, 0.14f, 0.016f, TINT_BLUE, 0.05f);
     }
-    public static LiquidGlassDrawable statCard(float d)    { return gradeB(d, 30, 0.18f); }
-    public static LiquidGlassDrawable featureCard(float d) { return gradeB(d, 28, 0.16f); }
-    public static LiquidGlassDrawable aboutCard(float d)   { return gradeB(d, 26, 0.14f); }
+    public static LiquidGlassDrawable statCard(float d)    { return gradeB(d, 30, 0.60f); }
+    public static LiquidGlassDrawable featureCard(float d) { return gradeB(d, 28, 0.55f); }
+    public static LiquidGlassDrawable aboutCard(float d)   { return gradeB(d, 26, 0.50f); }
 
-    // C-grade: list items, chips, small buttons
+    // C-grade: list items, chips, small buttons (40-58% white)
     private static LiquidGlassDrawable gradeC(float d, float r, float a) {
         return new LiquidGlassDrawable(d, r,
-                argb((int)(255*a),0xFF,0xFF,0xFF), 0x4DFFFFFF,
-                0.22f, 0.12f, 0.08f, 0.012f, TINT_BLUE, 0.04f);
+                argb((int)(255*a),0xFF,0xFF,0xFF), 0x99FFFFFF,
+                0.26f, 0.08f, 0.10f, 0.012f, TINT_BLUE, 0.03f);
     }
-    public static LiquidGlassDrawable glassButton(float d) { return gradeC(d, 999, 0.16f); }
-    public static LiquidGlassDrawable listItem(float d)    { return gradeC(d, 22, 0.12f); }
+    public static LiquidGlassDrawable glassButton(float d) { return gradeC(d, 999, 0.50f); }
+    public static LiquidGlassDrawable listItem(float d)    { return gradeC(d, 22, 0.40f); }
 }
