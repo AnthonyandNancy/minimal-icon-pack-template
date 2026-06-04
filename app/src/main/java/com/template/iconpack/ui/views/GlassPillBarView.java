@@ -26,7 +26,7 @@ public class GlassPillBarView extends FrameLayout {
         super(context, attrs);
 
         float density = context.getResources().getDisplayMetrics().density;
-        setBackground(LiquidGlassDrawable.pillBar(density));
+        setBackground(LiquidGlassDrawable.toolbar(density));
         setElevation(12f * density);
         setOutlineProvider(new android.view.ViewOutlineProvider() {
             @Override

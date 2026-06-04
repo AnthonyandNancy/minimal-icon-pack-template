@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         return id > 0 ? getResources().getDimensionPixelSize(id) : 0;
     }
 
-    private int dp(int d) { return (int)(d * getResources().getDisplayMetrics().density); }
+    public int dp(int d) { return (int)(d * getResources().getDisplayMetrics().density); }
 
     // ═══════════════════════════════════════════════════════
     // Fragment navigation
