@@ -10,17 +10,19 @@ public final class GlassTheme {
     private GlassTheme() {}
 
     // ── Page background (darker, blue-grey to purple to cyan) ──
-    public static final int BG_TOP    = Color.parseColor("#CBD7EA");
-    public static final int BG_MID    = Color.parseColor("#DAD6EC");
-    public static final int BG_BOTTOM = Color.parseColor("#C9E3E9");
+    public static final int BG_TOP    = Color.parseColor("#C8D7EA");
+    public static final int BG_MID    = Color.parseColor("#D9D4EC");
+    public static final int BG_BOTTOM = Color.parseColor("#C6E1E7");
 
     // ── Background blobs (deeper, softer) ──────────────────
-    public static final int BLOB_BLUE   = Color.parseColor("#7DB7FF");
-    public static final int BLOB_PURPLE = Color.parseColor("#A989FF");
-    public static final int BLOB_CYAN   = Color.parseColor("#4EDDD2");
-    public static final float BLOB_BLUE_ALPHA   = 0.22f;
-    public static final float BLOB_PURPLE_ALPHA = 0.20f;
-    public static final float BLOB_CYAN_ALPHA   = 0.16f;
+    public static final int BLOB_BLUE   = Color.parseColor("#6AAEFF");
+    public static final int BLOB_PURPLE = Color.parseColor("#9C7CFF");
+    public static final int BLOB_CYAN   = Color.parseColor("#36D6C8");
+    public static final int BLOB_DARK   = Color.parseColor("#B8D7DD");
+    public static final float BLOB_BLUE_ALPHA   = 0.24f;
+    public static final float BLOB_PURPLE_ALPHA = 0.22f;
+    public static final float BLOB_CYAN_ALPHA   = 0.18f;
+    public static final float BLOB_DARK_ALPHA   = 0.12f;
 
     // ── Text ──────────────────────────────────────────────
     public static final int TEXT_PRIMARY   = Color.parseColor("#111827");

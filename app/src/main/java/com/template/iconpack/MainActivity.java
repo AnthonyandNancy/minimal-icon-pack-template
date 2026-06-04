@@ -1,10 +1,15 @@
 package com.template.iconpack;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,14 +53,11 @@ public class MainActivity extends AppCompatActivity
     private static final int NAV_ABOUT = 8;
 
     private int currentNavItem = NAV_HOME;
-
-    // Fragment references for refresh capability
     private DashboardFragment dashboardFragment;
     private IconsFragment iconsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Load dark mode preference before super.onCreate
         prefs = new PreferencesHelper(this);
         if (prefs.isDarkMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -64,13 +66,22 @@ public class MainActivity extends AppCompatActivity
         }
 
         super.onCreate(savedInstanceState);
+
+        // ── Immersive transparent status bar + navigation bar ──
+        makeStatusBarTransparent();
+
         setContentView(R.layout.activity_main);
 
-        // Setup toolbar
-        toolbar = findViewById(R.id.toolbar);
+        // ── Dynamic toolbar top margin = statusBarHeight + 16dp ──
+        if (toolbar == null) toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
+            lp.topMargin = getStatusBarHeight() + dp(16);
+            toolbar.setLayoutParams(lp);
+        }
+
         toolbar.setTitle(R.string.dashboard_title);
 
-        // Setup toolbar actions
         ImageButton btnRate = findViewById(R.id.btn_rate);
         ImageButton btnShare = findViewById(R.id.btn_share);
         ImageButton btnRefresh = findViewById(R.id.btn_refresh);
@@ -79,36 +90,76 @@ public class MainActivity extends AppCompatActivity
         btnShare.setOnClickListener(v -> shareApp());
         btnRefresh.setOnClickListener(v -> refreshCurrentPage());
 
-        // Setup drawer
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Setup navigation
+        // Set drawer scrim opacity
+        drawer.setScrimColor(0x33000000); // ~20% black
+
         navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
 
-        // Set nav header info
         View headerView = navView.getHeaderView(0);
         TextView navAppName = headerView.findViewById(R.id.nav_app_name);
         TextView navVersion = headerView.findViewById(R.id.nav_version);
         navAppName.setText(R.string.app_name);
 
         try {
-            String version = getPackageManager()
-                    .getPackageInfo(getPackageName(), 0).versionName;
-            navVersion.setText(version);
+            navVersion.setText(getPackageManager()
+                    .getPackageInfo(getPackageName(), 0).versionName);
         } catch (Exception e) {
             navVersion.setText(R.string.version_name);
         }
 
-        // Show dashboard by default
         showFragment(NAV_HOME);
         navView.setCheckedItem(R.id.nav_home);
     }
 
+    // ═══════════════════════════════════════════════════════
+    // Immersive status bar
+    // ═══════════════════════════════════════════════════════
+    private void makeStatusBarTransparent() {
+        Window window = getWindow();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
+
+        View decor = window.getDecorView();
+        int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        }
+
+        decor.setSystemUiVisibility(flags);
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resId > 0) result = getResources().getDimensionPixelSize(resId);
+        return result;
+    }
+
+    private int dp(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // Fragment navigation (unchanged logic)
+    // ═══════════════════════════════════════════════════════
     private void showFragment(int navId) {
         currentNavItem = navId;
         Fragment fragment = null;
@@ -118,7 +169,7 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(R.string.dashboard_title);
                 if (dashboardFragment == null) {
                     dashboardFragment = new DashboardFragment();
-                    dashboardFragment.setCallback(position -> onDashboardCardClicked(position));
+                    dashboardFragment.setCallback(this::onDashboardCardClicked);
                 }
                 fragment = dashboardFragment;
                 break;
@@ -128,9 +179,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case NAV_ICONS:
                 toolbar.setTitle(R.string.icons_title);
-                if (iconsFragment == null) {
-                    iconsFragment = new IconsFragment();
-                }
+                if (iconsFragment == null) iconsFragment = new IconsFragment();
                 fragment = iconsFragment;
                 break;
             case NAV_REQUEST:
@@ -148,11 +197,7 @@ public class MainActivity extends AppCompatActivity
             case NAV_SETTINGS:
                 toolbar.setTitle(R.string.settings_title);
                 SettingsFragment sf = new SettingsFragment();
-                sf.setCallback(() -> {
-                    // Recreate fragments on setting change
-                    iconsFragment = null;
-                    dashboardFragment = null;
-                });
+                sf.setCallback(() -> { iconsFragment = null; dashboardFragment = null; });
                 fragment = sf;
                 break;
             case NAV_FAQ:
@@ -166,20 +211,16 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, fragment).commit();
         }
     }
 
     private void onDashboardCardClicked(int position) {
-        // Quick actions
         if (position == -1) { openPlayStore(); return; }
         if (position == -2) { shareApp(); return; }
         if (position == -3) { refreshCurrentPage(); return; }
 
-        // Entry cards: DashboardFragment sends index+10
         int entryIdx = position - 10;
         if (entryIdx >= 0 && entryIdx <= 7) {
             switch (entryIdx) {
@@ -197,31 +238,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void refreshCurrentPage() {
-        switch (currentNavItem) {
-            case NAV_ICONS:
-                if (iconsFragment != null) iconsFragment.refresh();
-                break;
-            default:
-                // Recreate the current fragment
-                dashboardFragment = null;
-                iconsFragment = null;
-                showFragment(currentNavItem);
-                break;
+        if (currentNavItem == NAV_ICONS && iconsFragment != null) {
+            iconsFragment.refresh();
+        } else {
+            dashboardFragment = null;
+            iconsFragment = null;
+            showFragment(currentNavItem);
         }
         Toast.makeText(this, "已刷新", Toast.LENGTH_SHORT).show();
     }
 
     private void openPlayStore() {
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=" + getPackageName()));
-            startActivity(intent);
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + getPackageName())));
         } catch (Exception e) {
-            // If Play Store not available, open browser
             try {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()));
-                startActivity(intent);
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
             } catch (Exception ignored) {
                 Toast.makeText(this, "无法打开应用商店", Toast.LENGTH_SHORT).show();
             }
@@ -239,7 +273,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.nav_home) showFragment(NAV_HOME);
         else if (id == R.id.nav_apply) showFragment(NAV_APPLY);
         else if (id == R.id.nav_icons) showFragment(NAV_ICONS);

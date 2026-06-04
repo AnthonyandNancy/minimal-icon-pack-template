@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/page_margin"
     android:paddingEnd="@dimen/page_margin"
-    android:paddingTop="80dp">
+    android:paddingTop="100dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/faq_list"

@@ -12,11 +12,12 @@ import android.view.View;
 import com.template.iconpack.ui.GlassTheme;
 
 /**
- * Tiered glass background: dark-toned gradient bottom + soft blobs on top.
+ * Dark-toned layered background: gradient base + 4 soft light blobs.
+ * Colors are slightly muted so semi-transparent glass cards stand out.
  */
 public class LiquidBackgroundView extends View {
 
-    private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint bgPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     public LiquidBackgroundView(Context context) { super(context); }
@@ -28,33 +29,32 @@ public class LiquidBackgroundView extends View {
         int w = getWidth(), h = getHeight();
         if (w == 0 || h == 0) return;
 
-        // 1. Draw linear gradient background
-        LinearGradient lg = new LinearGradient(0, 0, 0, h,
-                GlassTheme.BG_TOP, GlassTheme.BG_BOTTOM, Shader.TileMode.CLAMP);
-        bgPaint.setShader(lg);
+        // 1. Linear gradient base (darker blue-grey → purple → cyan)
+        bgPaint.setShader(new LinearGradient(0, 0, 0, h,
+                GlassTheme.BG_TOP, GlassTheme.BG_BOTTOM, Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, w, h, bgPaint);
 
         float r;
 
         // 2. Blob: top-left (blue)
-        r = Math.min(w, h) * 0.55f;
-        drawBlob(canvas, w * 0.10f, h * 0.08f, r,
+        r = Math.min(w, h) * 0.60f;
+        drawBlob(canvas, w * 0.10f, h * 0.06f, r,
                 GlassTheme.BLOB_BLUE, GlassTheme.BLOB_BLUE_ALPHA);
 
         // 3. Blob: top-right (purple)
-        r = Math.min(w, h) * 0.50f;
-        drawBlob(canvas, w * 0.88f, h * 0.15f, r,
+        r = Math.min(w, h) * 0.55f;
+        drawBlob(canvas, w * 0.88f, h * 0.14f, r,
                 GlassTheme.BLOB_PURPLE, GlassTheme.BLOB_PURPLE_ALPHA);
 
-        // 4. Blob: bottom-centre (cyan)
+        // 4. Blob: centre-bottom (cyan)
         r = Math.min(w, h) * 0.65f;
-        drawBlob(canvas, w * 0.50f, h * 0.72f, r,
+        drawBlob(canvas, w * 0.48f, h * 0.68f, r,
                 GlassTheme.BLOB_CYAN, GlassTheme.BLOB_CYAN_ALPHA);
 
-        // 5. Soft mid-right (blue-purple blend)
-        r = Math.min(w, h) * 0.35f;
-        drawBlob(canvas, w * 0.78f, h * 0.50f, r,
-                GlassTheme.BLOB_PURPLE, GlassTheme.BLOB_PURPLE_ALPHA * 0.6f);
+        // 5. Soft dark shading bottom
+        r = Math.min(w, h) * 0.70f;
+        drawBlob(canvas, w * 0.50f, h * 0.90f, r,
+                GlassTheme.BLOB_DARK, GlassTheme.BLOB_DARK_ALPHA);
     }
 
     private void drawBlob(Canvas c, float cx, float cy, float r, int color, float alpha) {
@@ -64,7 +64,6 @@ public class LiquidBackgroundView extends View {
     }
 
     private static int argb(int color, float alpha) {
-        int a = (int) (255 * alpha);
-        return (a << 24) | (color & 0x00FFFFFF);
+        return ((int)(255 * alpha) << 24) | (color & 0x00FFFFFF);
     }
 }

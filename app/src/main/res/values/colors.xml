@@ -7,17 +7,17 @@
     <color name="accent">#FF7C5CFF</color>
 
     <!-- Background -->
-    <color name="bg_top">#FFF7FAFF</color>
-    <color name="bg_mid">#FFF2F5FF</color>
-    <color name="bg_bottom">#FFEDF8FF</color>
-    <color name="background">#FFF7FAFF</color>
+    <color name="bg_top">#FFC8D7EA</color>
+    <color name="bg_mid">#FFD9D4EC</color>
+    <color name="bg_bottom">#FFC6E1E7</color>
+    <color name="background">#FFC8D7EA</color>
     <color name="background_dark">#FF0F172A</color>
 
     <!-- Glass surfaces (80% = CC, 72% = B8, 60% = 99, 50% = 80) -->
     <color name="glass_card_primary">#B8FFFFFF</color>
     <color name="glass_card_secondary">#99FFFFFF</color>
     <color name="glass_card">#B8FFFFFF</color><!-- legacy alias -->
-    <color name="glass_toolbar">#D9FFFFFF</color>
+    <color name="glass_toolbar">#B0FFFFFF</color>
     <color name="glass_drawer">#E6FFFFFF</color>
     <color name="glass_dialog">#EFFFFFFF</color>
     <color name="glass_hero">#B8FFFFFF</color>

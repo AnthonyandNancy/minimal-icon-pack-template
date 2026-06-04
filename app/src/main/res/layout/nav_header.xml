@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/drawer_header_height"
+    android:layout_height="180dp"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
@@ -10,29 +10,33 @@
 
     <ImageView
         android:id="@+id/nav_logo"
-        android:layout_width="@dimen/nav_logo_size"
-        android:layout_height="@dimen/nav_logo_size"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         android:src="@mipmap/ic_launcher"
         android:scaleType="centerCrop"
-        android:background="@drawable/glass_circle_container"
-        android:layout_marginBottom="12dp" />
+        android:background="@drawable/glass_drawer_logo_bg"
+        android:layout_marginBottom="14dp" />
 
     <TextView
         android:id="@+id/nav_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textColor="@color/text_primary"
+        android:textColor="#111827"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <TextView
         android:id="@+id/nav_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/version_name"
-        android:textColor="@color/text_secondary"
+        android:textColor="#5F6B7A"
         android:textSize="12sp"
+        android:gravity="center"
         android:layout_marginTop="4dp" />
 
 </LinearLayout>
