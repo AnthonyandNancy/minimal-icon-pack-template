@@ -112,17 +112,12 @@ public class RequestFragment extends Fragment {
             });
         }
 
-        // Bottom bar actions
-        view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
-        view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
-
-        // Select All
+        // Bottom bar actions: select-all, export, share (no cancel)
         View btnSelectAll = view.findViewById(R.id.btn_select_all);
         if (btnSelectAll != null) btnSelectAll.setOnClickListener(v -> selectAll());
 
-        // Cancel selection
-        View btnCancel = view.findViewById(R.id.btn_cancel_sel);
-        if (btnCancel != null) btnCancel.setOnClickListener(v -> cancelSelection());
+        view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
+        view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
 
         return view;
     }
@@ -182,13 +177,6 @@ public class RequestFragment extends Fragment {
         adapter.notifyDataSetChanged();
         updateBottomBar();
         if (getContext() != null) Toast.makeText(getContext(), "全选 " + count + " 个未适配", Toast.LENGTH_SHORT).show();
-    }
-
-    private void cancelSelection() {
-        if (adapter == null) return;
-        for (AppInfo a : allApps) a.isSelected = false;
-        adapter.notifyDataSetChanged();
-        bottomBar.setVisibility(View.GONE);
     }
 
     private List<AppInfo> getSelectedMissing() {

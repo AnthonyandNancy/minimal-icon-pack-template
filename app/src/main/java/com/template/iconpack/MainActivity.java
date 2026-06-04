@@ -14,9 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -42,8 +40,8 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navView;
     private PreferencesHelper prefs;
 
-    // Home toolbar — lives inside DashboardFragment now
-    private Toolbar homeToolbar;
+    // Home toolbar (now a LinearLayout, not Toolbar)
+    private ViewGroup homeToolbar;
 
     private static final int NAV_HOME = 0, NAV_APPLY = 1, NAV_ICONS = 2,
             NAV_REQUEST = 3, NAV_WALLPAPERS = 4, NAV_PRESETS = 5,
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(Color.parseColor("#0B111D"));
+            window.setNavigationBarColor(0xFF0D1A1A);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false);
@@ -172,16 +170,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // Hook for fragments to register home toolbar (called from DashboardFragment)
-    public void registerHomeToolbar(Toolbar tb) {
+    // Hook for DashboardFragment to register home toolbar
+    public void registerHomeToolbar(ViewGroup tb) {
         this.homeToolbar = tb;
-        // Wire up drawer toggle
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, tb, R.string.drawer_open, R.string.drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        // Wire up toolbar action buttons
+        // Menu button opens drawer
+        View menuBtn = tb.findViewById(R.id.btn_menu_home);
+        if (menuBtn != null) {
+            menuBtn.setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
+        }
+        // Action buttons
         View rateBtn = tb.findViewById(R.id.btn_rate_home);
         View shareBtn = tb.findViewById(R.id.btn_share_home);
         View refreshBtn = tb.findViewById(R.id.btn_refresh_home);

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import android.widget.ScrollView;
-import androidx.appcompat.widget.Toolbar;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -61,7 +61,7 @@ public class DashboardFragment extends Fragment {
         float density = ctx.getResources().getDisplayMetrics().density;
 
         // Register home toolbar with MainActivity
-        Toolbar tb = rootView.findViewById(R.id.toolbar);
+        LinearLayout tb = rootView.findViewById(R.id.toolbar);
         if (tb != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).registerHomeToolbar(tb);
         }

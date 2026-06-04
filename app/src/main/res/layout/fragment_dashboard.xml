@@ -21,55 +21,53 @@
         <View android:layout_width="match_parent" android:layout_height="24dp"
             android:id="@+id/status_spacer" />
 
-        <!-- HOME TOOLBAR — inside ScrollView, scrolls with content -->
-        <androidx.appcompat.widget.Toolbar
+        <!-- HOME TOOLBAR — LinearLayout, not Toolbar (avoids toggle duplicate icon) -->
+        <LinearLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:background="@drawable/glass_toolbar_bg"
             android:elevation="8dp"
-            android:outlineProvider="background">
+            android:outlineProvider="background"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/btn_menu_home"
+                android:layout_width="44dp" android:layout_height="44dp"
+                android:background="@drawable/glass_btn_bg"
+                android:src="@drawable/ic_menu_glass" android:tint="#E5E7EB"
+                android:scaleType="centerInside" />
 
-                <ImageButton
-                    android:layout_width="42dp" android:layout_height="42dp"
-                    android:background="@drawable/glass_btn_bg"
-                    android:src="@drawable/ic_menu_glass" android:tint="#E5E7EB"
-                    android:scaleType="centerInside" android:id="@+id/btn_menu_home" />
+            <TextView
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:gravity="center"
+                android:text="@string/dashboard_title" android:textSize="22sp"
+                android:textStyle="bold" android:textColor="#F9FAFB"
+                android:paddingStart="8dp" android:paddingEnd="8dp" />
 
-                <TextView
-                    android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:gravity="center"
-                    android:text="@string/dashboard_title" android:textSize="22sp"
-                    android:textStyle="bold" android:textColor="#F9FAFB"
-                    android:paddingStart="8dp" android:paddingEnd="8dp" />
+            <ImageButton android:id="@+id/btn_rate_home"
+                android:layout_width="44dp" android:layout_height="44dp"
+                android:background="@drawable/glass_btn_bg"
+                android:src="@drawable/ic_rate" android:tint="#5EA8FF"
+                android:scaleType="centerInside" />
 
-                <ImageButton android:id="@+id/btn_rate_home"
-                    android:layout_width="42dp" android:layout_height="42dp"
-                    android:background="@drawable/glass_btn_bg"
-                    android:src="@drawable/ic_rate" android:tint="#5EA8FF"
-                    android:scaleType="centerInside" />
+            <ImageButton android:id="@+id/btn_share_home"
+                android:layout_width="44dp" android:layout_height="44dp"
+                android:background="@drawable/glass_btn_bg"
+                android:src="@drawable/ic_share" android:tint="#A78BFA"
+                android:scaleType="centerInside" android:layout_marginStart="4dp" />
 
-                <ImageButton android:id="@+id/btn_share_home"
-                    android:layout_width="42dp" android:layout_height="42dp"
-                    android:background="@drawable/glass_btn_bg"
-                    android:src="@drawable/ic_share" android:tint="#A78BFA"
-                    android:scaleType="centerInside" android:layout_marginStart="4dp" />
+            <ImageButton android:id="@+id/btn_refresh_home"
+                android:layout_width="44dp" android:layout_height="44dp"
+                android:background="@drawable/glass_btn_bg"
+                android:src="@drawable/ic_refresh" android:tint="#5EA8FF"
+                android:scaleType="centerInside" android:layout_marginStart="4dp" />
 
-                <ImageButton android:id="@+id/btn_refresh_home"
-                    android:layout_width="42dp" android:layout_height="42dp"
-                    android:background="@drawable/glass_btn_bg"
-                    android:src="@drawable/ic_refresh" android:tint="#5EA8FF"
-                    android:scaleType="centerInside" android:layout_marginStart="4dp" />
-
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
+        </LinearLayout>
 
         <!-- HERO CARD -->
         <FrameLayout
