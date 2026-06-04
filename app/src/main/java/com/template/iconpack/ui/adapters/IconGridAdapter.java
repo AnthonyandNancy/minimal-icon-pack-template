@@ -17,26 +17,32 @@ import java.util.List;
 
 public class IconGridAdapter extends RecyclerView.Adapter<IconGridAdapter.ViewHolder> {
 
-    private final List<DrawableInfo> icons;
-    private final List<DrawableInfo> filteredIcons;
-    private final boolean showName;
-    private String filterText = "";
+    private List<DrawableInfo> icons;
+    private List<DrawableInfo> filteredIcons;
+    private boolean showName;
 
     public IconGridAdapter(List<DrawableInfo> icons, boolean showName) {
-        this.icons = icons;
-        this.filteredIcons = new ArrayList<>(icons);
+        this.icons = icons != null ? icons : new ArrayList<>();
+        this.filteredIcons = new ArrayList<>(this.icons);
         this.showName = showName;
     }
 
-    public void filter(String text) {
-        filterText = text.toLowerCase();
+    public void updateData(List<DrawableInfo> newIcons) {
+        this.icons = newIcons != null ? newIcons : new ArrayList<>();
+        this.filteredIcons = new ArrayList<>(this.icons);
+        notifyDataSetChanged();
+    }
+
+    public void filter(String query) {
         filteredIcons.clear();
-        if (filterText.isEmpty()) {
+        if (query == null || query.isEmpty()) {
             filteredIcons.addAll(icons);
         } else {
-            for (DrawableInfo d : icons) {
-                if (d.name.toLowerCase().contains(filterText)) {
-                    filteredIcons.add(d);
+            String lowerQuery = query.toLowerCase();
+            for (DrawableInfo icon : icons) {
+                String searchText = (icon.label != null ? icon.label : icon.name).toLowerCase();
+                if (searchText.contains(lowerQuery) || icon.name.toLowerCase().contains(lowerQuery)) {
+                    filteredIcons.add(icon);
                 }
             }
         }
@@ -59,7 +65,7 @@ public class IconGridAdapter extends RecyclerView.Adapter<IconGridAdapter.ViewHo
         } catch (Exception e) {
             holder.image.setImageResource(android.R.drawable.ic_menu_gallery);
         }
-        holder.name.setText(icon.name);
+        holder.name.setText(icon.label != null ? icon.label : icon.name);
         holder.name.setVisibility(showName ? View.VISIBLE : View.GONE);
     }
 

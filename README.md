@@ -1,16 +1,16 @@
 # Blank Icon Pack Template
 
-极简 Android 图标包模板 APK 工程 — 专为 Electron 桌面端图标包生成器设计的 APK 模板。
+极简 Android 图标包模板 APK 工程。
 
 ## 为什么不用 CandyBar / React Native？
 
-| 对比维度 | CandyBar | React Native | 本模板 |
-|---------|----------|-------------|--------|
-| 依赖复杂度 | Blueprint 仪表盘库，大量第三方依赖 | Node 引擎 + Metro bundler | 仅 AndroidX + Material Design |
-| APK 大小 | 大（包含 CandyBar 所有资源） | 大（包含 RN 运行时） | 极小（< 3MB） |
-| apktool 兼容性 | 差（CandyBar 内部引用复杂，反编译后难以修改） | 极差（JS bundle 混淆） | 优（原生 Java，无混淆） |
-| 二次开发 | 需阅读 CandyBar 源码 | 需阅读 RN 桥接代码 | 直接修改 XML / Asset |
-| 自定义 UI | 受限（CandyBar 框架约束） | 灵活但复杂 | 完全自主（自绘 Material UI） |
+| 对比维度       | CandyBar                                      | React Native              | 本模板                        |
+| -------------- | --------------------------------------------- | ------------------------- | ----------------------------- |
+| 依赖复杂度     | Blueprint 仪表盘库，大量第三方依赖            | Node 引擎 + Metro bundler | 仅 AndroidX + Material Design |
+| APK 大小       | 大（包含 CandyBar 所有资源）                  | 大（包含 RN 运行时）      | 极小（< 3MB）                 |
+| apktool 兼容性 | 差（CandyBar 内部引用复杂，反编译后难以修改） | 极差（JS bundle 混淆）    | 优（原生 Java，无混淆）       |
+| 二次开发       | 需阅读 CandyBar 源码                          | 需阅读 RN 桥接代码        | 直接修改 XML / Asset          |
+| 自定义 UI      | 受限（CandyBar 框架约束）                     | 灵活但复杂                | 完全自主（自绘 Material UI）  |
 
 ## 项目结构
 
@@ -50,17 +50,17 @@ blank-icon-pack-template/
 
 ## 页面功能一览
 
-| 页面 | 描述 |
-|------|------|
-| 首页 Dashboard | 卡片网格：应用 / 捐赠 / 图标数量 / 自适应 / 申请统计 / 壁纸 / 更多 |
-| 应用图标 Apply | Launcher 列表（Nova, Lawnchair, Microsoft 等），点击提示手动应用 |
-| 图标 Icons | 读取 drawable.xml，网格展示 + 搜索，空状态提示 |
-| 申请图标 Request | 扫描已安装应用，appfilter 交叉匹配，筛选/导出/分享 |
-| 壁纸 Wallpapers | 读取 wallpapers.json，网格展示，预留设置/下载 |
-| 预设 Presets | 读取 presets.json，UI 预留（默认圆形/圆角矩形/深色/浅色） |
-| 设置 Settings | 深色模式 / 显示图标名 / 列数 / 清缓存 / 重载 |
-| 常见问题 FAQ | 4 个常见问题，展开/收起 |
-| 关于 About | 应用信息 + 开源许可 + 分享 |
+| 页面             | 描述                                                               |
+| ---------------- | ------------------------------------------------------------------ |
+| 首页 Dashboard   | 卡片网格：应用 / 捐赠 / 图标数量 / 自适应 / 申请统计 / 壁纸 / 更多 |
+| 应用图标 Apply   | Launcher 列表（Nova, Lawnchair, Microsoft 等），点击提示手动应用   |
+| 图标 Icons       | 读取 drawable.xml，网格展示 + 搜索，空状态提示                     |
+| 申请图标 Request | 扫描已安装应用，appfilter 交叉匹配，筛选/导出/分享                 |
+| 壁纸 Wallpapers  | 读取 wallpapers.json，网格展示，预留设置/下载                      |
+| 预设 Presets     | 读取 presets.json，UI 预留（默认圆形/圆角矩形/深色/浅色）          |
+| 设置 Settings    | 深色模式 / 显示图标名 / 列数 / 清缓存 / 重载                       |
+| 常见问题 FAQ     | 4 个常见问题，展开/收起                                            |
+| 关于 About       | 应用信息 + 开源许可 + 分享                                         |
 
 ## 通过 GitHub Actions 编译模板 APK
 
@@ -240,13 +240,13 @@ androidx.constraintlayout            (未使用，预留)
 
 ```json
 [
-    {
-        "id": "wall_001",
-        "title": "星空",
-        "thumbnailUrl": "https://example.com/thumb/star.jpg",
-        "downloadUrl": "https://example.com/full/star.jpg",
-        "author": "Photographer Name"
-    }
+  {
+    "id": "wall_001",
+    "title": "星空",
+    "thumbnailUrl": "https://example.com/thumb/star.jpg",
+    "downloadUrl": "https://example.com/full/star.jpg",
+    "author": "Photographer Name"
+  }
 ]
 ```
 
@@ -254,10 +254,20 @@ androidx.constraintlayout            (未使用，预留)
 
 ```json
 [
-    { "id": "default_circle", "name": "默认圆形", "iconShape": "circle" },
-    { "id": "rounded_square", "name": "圆角矩形", "iconShape": "rounded_square" },
-    { "id": "dark_bg", "name": "深色背景", "iconShape": "circle", "background": "dark" },
-    { "id": "light_bg", "name": "浅色背景", "iconShape": "circle", "background": "light" }
+  { "id": "default_circle", "name": "默认圆形", "iconShape": "circle" },
+  { "id": "rounded_square", "name": "圆角矩形", "iconShape": "rounded_square" },
+  {
+    "id": "dark_bg",
+    "name": "深色背景",
+    "iconShape": "circle",
+    "background": "dark"
+  },
+  {
+    "id": "light_bg",
+    "name": "浅色背景",
+    "iconShape": "circle",
+    "background": "light"
+  }
 ]
 ```
 

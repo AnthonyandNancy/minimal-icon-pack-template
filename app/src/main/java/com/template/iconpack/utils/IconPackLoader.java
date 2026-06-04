@@ -39,16 +39,21 @@ public class IconPackLoader {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG && "drawable".equals(parser.getName())) {
                     String name = parser.getAttributeValue(null, "name");
+                    String label = parser.getAttributeValue(null, "label");
                     if (name != null) {
-                        // Try to find the actual drawable resource
                         int drawableResId = context.getResources().getIdentifier(
                                 name, "drawable", context.getPackageName());
                         if (drawableResId == 0) {
-                            // Try in drawable-nodpi
                             drawableResId = context.getResources().getIdentifier(
-                                    name, "drawable", context.getPackageName());
+                                    name, "drawable-nodpi", context.getPackageName());
                         }
-                        list.add(new DrawableInfo(name, drawableResId != 0 ? drawableResId : android.R.drawable.ic_menu_gallery));
+                        if (label != null && !label.isEmpty()) {
+                            list.add(new DrawableInfo(name,
+                                    drawableResId != 0 ? drawableResId : android.R.drawable.ic_menu_gallery,
+                                    label));
+                        } else {
+                            list.add(new DrawableInfo(name, drawableResId != 0 ? drawableResId : android.R.drawable.ic_menu_gallery));
+                        }
                     }
                 }
                 eventType = parser.next();
