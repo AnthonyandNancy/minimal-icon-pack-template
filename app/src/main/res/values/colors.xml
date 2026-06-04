@@ -38,6 +38,7 @@
     <!-- Status -->
     <color name="status_themed">#FF34C759</color>
     <color name="status_unthemed">#FFFFB020</color>
+    <color name="error_red">#FFFF3B30</color>
     <color name="divider">#FFE5E7EB</color>
 
     <!-- Progress -->
