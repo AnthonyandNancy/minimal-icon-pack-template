@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.widget.ScrollView;
+
 import androidx.fragment.app.Fragment;
 
 import com.template.iconpack.R;
@@ -44,6 +46,7 @@ public class DashboardFragment extends Fragment {
     };
 
     public interface DashboardCallback { void onCardClicked(int position); }
+    public interface ScrollListener { void onScroll(int scrollY); }
     public void setCallback(DashboardCallback callback) { this.callback = callback; }
 
     @Override
@@ -74,6 +77,12 @@ public class DashboardFragment extends Fragment {
         setupQuickActions(ctx);
         buildStatCards(ctx, icons.size(), apps.size(), themedCount, unthemedCount, density);
         buildEntryCards(ctx, icons.size(), apps.size(), themedCount, wallpapers.size(), density);
+
+        // Toolbar scroll behavior
+        if (rootView instanceof ScrollView && getActivity() instanceof ScrollListener) {
+            ((ScrollView) rootView).setOnScrollChangeListener((v, sx, sy, ox, oy) ->
+                    ((ScrollListener) getActivity()).onScroll(sy));
+        }
 
         return rootView;
     }

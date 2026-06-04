@@ -10,25 +10,26 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Dark-toned liquid-glass background with 4 blobs.
- * Colors: #9FB5D1 → #91C7C9 → #7FB5C0
+ * Dark-toned background with 4-layer gradient + 4 soft blobs.
+ * Base: #8EA5C6 → #7398A8  (muted blue-grey → teal)
  */
 public class LiquidBackgroundView extends View {
 
     private final Paint bgPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    private static final int GRAD_TOP    = 0xFF9FB5D1;
-    private static final int GRAD_MID    = 0xFF91C7C9;
-    private static final int GRAD_BOTTOM = 0xFF7FB5C0;
+    private static final int TOP_COLOR     = 0xFF8EA5C6;
+    private static final int MID1_COLOR    = 0xFFA99FC9;
+    private static final int MID2_COLOR    = 0xFF8CBCC0;
+    private static final int BOTTOM_COLOR  = 0xFF7398A8;
 
     private static final int BLOB_BLUE   = 0xFF5EA8FF;
     private static final int BLOB_PURPLE = 0xFF8E6CFF;
-    private static final int BLOB_CYAN   = 0xFF25D6C8;
-    private static final int BLOB_DARK   = 0xFF3D6173;
+    private static final int BLOB_CYAN   = 0xFF3ED8C8;
+    private static final int BLOB_DARK   = 0xFF2D4B5D;
 
-    public LiquidBackgroundView(Context context) { super(context); }
-    public LiquidBackgroundView(Context context, AttributeSet attrs) { super(context, attrs); }
+    public LiquidBackgroundView(Context c) { super(c); }
+    public LiquidBackgroundView(Context c, AttributeSet a) { super(c, a); }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -36,28 +37,26 @@ public class LiquidBackgroundView extends View {
         int w = getWidth(), h = getHeight();
         if (w == 0 || h == 0) return;
 
-        // Linear gradient base
+        // 4-stop vertical gradient
         bgPaint.setShader(new LinearGradient(0, 0, 0, h,
-                GRAD_TOP, GRAD_BOTTOM, Shader.TileMode.CLAMP));
+                new int[]{TOP_COLOR, MID1_COLOR, MID2_COLOR, BOTTOM_COLOR},
+                new float[]{0f, 0.35f, 0.70f, 1f},
+                Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, w, h, bgPaint);
 
         float r;
 
-        // Blob 1: top-left blue
-        r = Math.min(w, h) * 0.65f;
-        blob(canvas, w * 0.18f, h * 0.10f, r, BLOB_BLUE, 0.30f);
+        r = Math.min(w, h) * 0.62f;
+        blob(canvas, w * 0.16f, h * 0.08f, r, BLOB_BLUE, 0.26f);
 
-        // Blob 2: top-right purple
-        r = Math.min(w, h) * 0.60f;
-        blob(canvas, w * 0.88f, h * 0.16f, r, BLOB_PURPLE, 0.28f);
+        r = Math.min(w, h) * 0.58f;
+        blob(canvas, w * 0.86f, h * 0.14f, r, BLOB_PURPLE, 0.24f);
 
-        // Blob 3: centre cyan
-        r = Math.min(w, h) * 0.70f;
-        blob(canvas, w * 0.45f, h * 0.55f, r, BLOB_CYAN, 0.22f);
+        r = Math.min(w, h) * 0.72f;
+        blob(canvas, w * 0.48f, h * 0.52f, r, BLOB_CYAN, 0.18f);
 
-        // Blob 4: bottom dark
-        r = Math.min(w, h) * 0.85f;
-        blob(canvas, w * 0.5f, h * 1.05f, r, BLOB_DARK, 0.18f);
+        r = Math.min(w, h) * 0.90f;
+        blob(canvas, w * 0.5f, h * 1.02f, r, BLOB_DARK, 0.16f);
     }
 
     private void blob(Canvas c, float cx, float cy, float r, int color, float alpha) {

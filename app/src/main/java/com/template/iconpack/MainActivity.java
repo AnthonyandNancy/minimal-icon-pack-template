@@ -35,7 +35,8 @@ import com.template.iconpack.ui.fragments.WallpapersFragment;
 import com.template.iconpack.utils.PreferencesHelper;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                   DashboardFragment.ScrollListener {
 
     private DrawerLayout drawer;
     private Toolbar toolbar;
@@ -167,6 +168,11 @@ public class MainActivity extends AppCompatActivity
     // ═══════════════════════════════════════════════════════
     private void showFragment(int navId) {
         currentNavItem = navId;
+        // Reset toolbar position
+        if (toolbar != null) {
+            toolbar.setTranslationY(0f);
+            toolbar.setAlpha(1f);
+        }
         Fragment fragment = null;
 
         switch (navId) {
@@ -290,6 +296,16 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // ── Dashboard scroll → toolbar animation ──
+    @Override
+    public void onScroll(int scrollY) {
+        if (toolbar == null) return;
+        int maxScroll = getStatusBarHeight() + dp(72);
+        float fraction = Math.min(1f, (float) scrollY / maxScroll);
+        toolbar.setTranslationY(-fraction * maxScroll);
+        toolbar.setAlpha(1f - fraction);
     }
 
     @Override
