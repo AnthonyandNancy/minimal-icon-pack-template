@@ -58,8 +58,12 @@
         android:elevation="14dp"
         android:visibility="visible">
 
-        <!-- Spacer to push buttons to center -->
-        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
         <TextView android:id="@+id/btn_select_all"
             android:layout_width="wrap_content" android:layout_height="36dp"
@@ -70,20 +74,22 @@
             android:visibility="gone" />
 
         <TextView android:id="@+id/btn_export"
-            android:layout_width="0dp" android:layout_weight="1"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content" android:layout_height="36dp"
+            android:minWidth="80dp"
             android:gravity="center" android:text="@string/request_export" android:textSize="12sp"
             android:textColor="@color/text_on_primary" android:background="@drawable/glass_chip_selected"
             android:paddingStart="14dp" android:paddingEnd="14dp" android:layout_marginEnd="8dp"
             android:clickable="true" android:focusable="true" />
 
         <TextView android:id="@+id/btn_share"
-            android:layout_width="0dp" android:layout_weight="1"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content" android:layout_height="36dp"
+            android:minWidth="80dp"
             android:gravity="center" android:text="@string/request_share" android:textSize="12sp"
             android:textColor="@color/text_on_primary" android:background="@drawable/glass_chip_selected"
             android:paddingStart="14dp" android:paddingEnd="14dp"
             android:clickable="true" android:focusable="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

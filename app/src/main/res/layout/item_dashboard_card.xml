@@ -19,21 +19,21 @@
         android:gravity="center_vertical"
         android:paddingStart="14dp"
         android:paddingEnd="14dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/card_icon"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="6dp" />
 
         <!-- Stat number -->
         <TextView
             android:id="@+id/card_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:includeFontPadding="false"
             android:textColor="#3B82F6" />
@@ -43,10 +43,10 @@
             android:id="@+id/card_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textColor="#5F6B7A"
             android:includeFontPadding="false"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="6dp" />
 
         <!-- Optional description (hidden by default) -->
         <TextView
