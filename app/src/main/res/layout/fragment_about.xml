@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:paddingTop="20dp"
-    <include layout="@layout/include_backbar" />
     android:paddingBottom="24dp">
+
+    <include layout="@layout/include_backbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
