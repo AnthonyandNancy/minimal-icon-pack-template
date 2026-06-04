@@ -129,7 +129,6 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof AppHolder) {
             AppInfo app = filteredApps.get(pos - 2);
             AppHolder h = (AppHolder) holder;
-            h.icon.setImageDrawable(app.icon);
             h.name.setText(app.appName);
             h.pkg.setText(app.packageName);
             h.checkbox.setVisibility(showCheckboxes && !app.isThemed ? View.VISIBLE : View.GONE);
