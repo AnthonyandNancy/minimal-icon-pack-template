@@ -7,78 +7,97 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- Main content -->
-    <LinearLayout
+    <!-- Root: Liquid background + content -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!-- Toolbar -->
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            app:titleTextColor="@android:color/white"
-            app:navigationIcon="@drawable/ic_home"
-            app:navigationIconTint="@android:color/white">
-
-            <!-- Quick actions on the right -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btn_rate"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/action_rate"
-                    android:src="@drawable/ic_rate"
-                    android:tint="@android:color/white"
-                    android:scaleType="centerInside" />
-
-                <ImageButton
-                    android:id="@+id/btn_share"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/action_share"
-                    android:src="@drawable/ic_share"
-                    android:tint="@android:color/white"
-                    android:scaleType="centerInside" />
-
-                <ImageButton
-                    android:id="@+id/btn_refresh"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/action_refresh"
-                    android:src="@drawable/ic_refresh"
-                    android:tint="@android:color/white"
-                    android:scaleType="centerInside" />
-            </LinearLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
-
-        <!-- Content frame for fragments -->
-        <FrameLayout
-            android:id="@+id/content_frame"
+        <!-- Liquid blob background -->
+        <com.template.iconpack.ui.views.LiquidBackgroundView
+            android:id="@+id/liquid_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </LinearLayout>
+        <!-- Scrollable content area -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <!-- Navigation Drawer -->
+            <!-- Floating Glass Toolbar -->
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginEnd="@dimen/page_margin"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/glass_toolbar_bg"
+                android:elevation="10dp"
+                app:titleTextColor="@color/text_primary"
+                app:navigationIcon="@drawable/ic_menu_glass"
+                app:navigationIconTint="@color/text_secondary"
+                app:contentInsetStartWithNavigation="12dp"
+                app:contentInsetEndWithActions="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btn_rate"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/glass_btn_bg"
+                        android:contentDescription="@string/action_rate"
+                        android:src="@drawable/ic_rate"
+                        android:tint="@color/primary"
+                        android:scaleType="centerInside" />
+
+                    <ImageButton
+                        android:id="@+id/btn_share"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/glass_btn_bg"
+                        android:contentDescription="@string/action_share"
+                        android:src="@drawable/ic_share"
+                        android:tint="@color/accent"
+                        android:scaleType="centerInside"
+                        android:layout_marginStart="6dp" />
+
+                    <ImageButton
+                        android:id="@+id/btn_refresh"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/glass_btn_bg"
+                        android:contentDescription="@string/action_refresh"
+                        android:src="@drawable/ic_refresh"
+                        android:tint="@color/primary"
+                        android:scaleType="centerInside"
+                        android:layout_marginStart="6dp" />
+                </LinearLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+
+            <!-- Fragment content -->
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- Navigation Drawer (unchanged logic, glass-styled via NavigationView) -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="@color/drawer_background"
+        android:background="@drawable/glass_drawer_bg"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu"
         app:itemIconTint="@color/drawer_text"

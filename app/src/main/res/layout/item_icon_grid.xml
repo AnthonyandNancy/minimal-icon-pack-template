@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:layout_height="@dimen/icon_grid_item"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="#99FFFFFF"
+    app:strokeColor="@color/glass_stroke_dim"
+    app:strokeWidth="0.5dp"
+    android:clickable="true"
+    android:focusable="true">
 
-    <ImageView
-        android:id="@+id/icon_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:scaleType="centerInside"
-        android:layout_marginBottom="4dp" />
-
-    <TextView
-        android:id="@+id/icon_name"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center"
-        android:textSize="11sp"
-        android:textColor="@color/text_secondary"
-        android:maxLines="1"
-        android:ellipsize="end" />
+        android:padding="8dp">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/icon_image"
+            android:layout_width="@dimen/icon_image_size"
+            android:layout_height="@dimen/icon_image_size"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:id="@+id/icon_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="11sp"
+            android:textColor="@color/text_secondary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,80 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/page_margin"
+    android:paddingEnd="@dimen/page_margin"
+    android:paddingTop="80dp">
 
+    <!-- Stats card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/request_stats_card"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/glass_card"
+        app:strokeColor="@color/glass_stroke_bright"
+        app:strokeWidth="1dp"
+        android:layout_marginBottom="@dimen/card_spacing">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/card_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/stat_total" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/primary" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="已安装" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/stat_themed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/status_themed" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="已适配" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/stat_unthemed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/status_unthemed" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="未适配" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/request_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:progressDrawable="@drawable/glass_progress" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Filter chips -->
     <LinearLayout
-        android:id="@+id/request_stats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:background="@color/surface"
-        android:elevation="2dp">
+        android:layout_marginBottom="@dimen/card_spacing">
 
         <TextView
-            android:id="@+id/stat_total"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary" />
-
-        <TextView
-            android:id="@+id/stat_themed"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/status_themed" />
-
-        <TextView
-            android:id="@+id/stat_unthemed"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/status_unthemed" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center">
-
-        <com.google.android.material.button.MaterialButton
             android:id="@+id/filter_all"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/request_all"
-            android:layout_marginEnd="4dp" />
+            android:textSize="13sp"
+            android:textColor="@color/text_on_primary"
+            android:background="@drawable/glass_chip_selected"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/filter_themed"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/request_themed_filter"
-            android:layout_marginEnd="4dp" />
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:background="@drawable/glass_chip_unselected"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/filter_unthemed"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_weight="1"
-            android:text="@string/request_unthemed_filter" />
+            android:gravity="center"
+            android:text="@string/request_unthemed_filter"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:background="@drawable/glass_chip_unselected"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
 
@@ -82,31 +131,60 @@
         android:id="@+id/request_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp" />
 
+    <!-- Floating bottom bar -->
     <LinearLayout
+        android:id="@+id/request_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/glass_floating_bar"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:elevation="12dp"
+        android:visibility="gone">
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
+            android:id="@+id/request_selected_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary" />
+
+        <TextView
             android:id="@+id/btn_export"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:gravity="center"
             android:text="@string/request_export"
-            android:layout_marginEnd="8dp" />
+            android:textSize="13sp"
+            android:textColor="@color/text_on_primary"
+            android:background="@drawable/glass_chip_selected"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/btn_share"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/request_share" />
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:gravity="center"
+            android:text="@string/request_share"
+            android:textSize="13sp"
+            android:textColor="@color/text_on_primary"
+            android:background="@drawable/glass_chip_selected"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
 

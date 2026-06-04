@@ -174,31 +174,45 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onDashboardCardClicked(int position) {
+        // Quick actions
+        if (position == -1) { openPlayStore(); return; }
+        if (position == -2) { shareApp(); return; }
+        if (position == -3) { refreshCurrentPage(); return; }
+
+        // Entry cards (offset by 1 from DashboardFragment)
+        // 0=Apply, 1=Icons, 2=Request, 3=Wallpapers, 4=Presets, 5=Settings, 6=FAQ, 7=About
         switch (position) {
-            case 0: // Apply
-                showFragment(NAV_APPLY);
-                navView.setCheckedItem(R.id.nav_apply);
-                break;
-            case 1: // Donate
-                Toast.makeText(this, "捐赠功能预留", Toast.LENGTH_SHORT).show();
-                break;
-            case 2: // Icons count
+            case 1: // Icons list (first entry card)
                 showFragment(NAV_ICONS);
                 navView.setCheckedItem(R.id.nav_icons);
                 break;
-            case 3: // Adaptive icon
-                Toast.makeText(this, "自适应图标示例", Toast.LENGTH_SHORT).show();
+            case 2: // Apply (now second card)
+                showFragment(NAV_APPLY);
+                navView.setCheckedItem(R.id.nav_apply);
                 break;
-            case 4: // Request
+            case 3: // Request
                 showFragment(NAV_REQUEST);
                 navView.setCheckedItem(R.id.nav_request);
                 break;
-            case 5: // Wallpapers
+            case 4: // Wallpapers
                 showFragment(NAV_WALLPAPERS);
                 navView.setCheckedItem(R.id.nav_wallpapers);
                 break;
-            case 6: // More apps
-                Toast.makeText(this, "更多应用功能预留", Toast.LENGTH_SHORT).show();
+            case 5: // Presets
+                showFragment(NAV_PRESETS);
+                navView.setCheckedItem(R.id.nav_presets);
+                break;
+            case 6: // Settings
+                showFragment(NAV_SETTINGS);
+                navView.setCheckedItem(R.id.nav_settings);
+                break;
+            case 7: // FAQ
+                showFragment(NAV_FAQ);
+                navView.setCheckedItem(R.id.nav_faq);
+                break;
+            case 8: // About
+                showFragment(NAV_ABOUT);
+                navView.setCheckedItem(R.id.nav_about);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);

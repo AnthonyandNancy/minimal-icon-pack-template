@@ -1,64 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:padding="12dp"
-    android:background="?attr/selectableItemBackground"
-    android:minHeight="56dp">
-
-    <CheckBox
-        android:id="@+id/request_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/request_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:scaleType="centerInside"
-        android:layout_marginEnd="12dp" />
+    android:layout_height="72dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="1dp"
+    app:cardBackgroundColor="@color/glass_card"
+    app:strokeColor="@color/glass_stroke_bright"
+    app:strokeWidth="0.5dp"
+    android:layout_marginBottom="6dp"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <CheckBox
+            android:id="@+id/request_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/request_icon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:scaleType="centerInside"
+            android:layout_marginEnd="12dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/request_app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/request_package_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="@color/text_hint"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/request_app_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@color/text_primary"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-        <TextView
-            android:id="@+id/request_package_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            android:id="@+id/request_status"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:textSize="11sp"
+            android:textColor="@android:color/white"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:background="@drawable/glass_badge_green" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/request_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:background="@drawable/status_badge"
-        android:textColor="@android:color/white" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

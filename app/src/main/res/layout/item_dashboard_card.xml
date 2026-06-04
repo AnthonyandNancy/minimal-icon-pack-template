@@ -5,7 +5,6 @@
     style="@style/DashboardCard"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -14,43 +13,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:padding="8dp">
+        android:padding="4dp">
 
-        <ImageView
-            android:id="@+id/card_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="8dp" />
+        <LinearLayout
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:gravity="center"
+            android:background="@drawable/glass_circle_container"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/card_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/card_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/card_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            android:layout_marginTop="2dp" />
 
         <TextView
             android:id="@+id/card_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_hint"
             android:textSize="11sp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_marginTop="4dp" />
-
-        <ProgressBar
-            android:id="@+id/card_progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -2,9 +2,13 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/DashboardCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="68dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/glass_card"
+    app:strokeColor="@color/glass_stroke_bright"
+    app:strokeWidth="0.5dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
     android:focusable="true"
@@ -12,32 +16,62 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <ImageView
-            android:id="@+id/launcher_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_apply_card" />
+        <LinearLayout
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:background="@drawable/glass_circle_container"
+            android:layout_marginEnd="14dp">
 
-        <TextView
-            android:id="@+id/launcher_name"
+            <ImageView
+                android:id="@+id/launcher_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_apply_card"
+                android:tint="@color/primary" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
-            android:textColor="@color/text_primary" />
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_apply"
-            android:tint="@color/primary" />
+            <TextView
+                android:id="@+id/launcher_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击查看应用方式"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:gravity="center"
+            android:text="应用"
+            android:textSize="12sp"
+            android:textColor="@color/text_on_primary"
+            android:background="@drawable/glass_chip_selected"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp" />
 
     </LinearLayout>
 
