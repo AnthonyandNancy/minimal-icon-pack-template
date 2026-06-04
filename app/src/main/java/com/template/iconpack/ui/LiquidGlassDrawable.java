@@ -174,61 +174,61 @@ public class LiquidGlassDrawable extends Drawable {
         return (a << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
-    // ── Factory presets ────────────────────────────────────
+    // ── Dark-mode factory presets ──────────────────────────
 
-    /** Toolbar / pill bar — strongest glass, cool white */
-    public static LiquidGlassDrawable pillBar(float density) {
+    /** Home toolbar pill — largest, most opaque */
+    public static LiquidGlassDrawable toolbar(float density) {
         return new LiquidGlassDrawable(density, 36,
-                0x80F4F7FF, 0xBFFFFFFF, 0.36f, 0.10f, 0.025f);
+                0x40FFFFFF, 0x80FFFFFF, 0.34f, 0.20f, 0.022f);
     }
 
-    /** Hero card — floating capsule panel */
+    /** Hero card */
     public static LiquidGlassDrawable heroCard(float density) {
         return new LiquidGlassDrawable(density, 32,
-                0x68F2F6FF, 0xBFFFFFFF, 0.42f, 0.14f, 0.028f);
+                0x30FFFFFF, 0x8AFFFFFF, 0.38f, 0.22f, 0.025f);
     }
 
-    /** Stat card — translucent minipanel */
+    /** Stat card */
     public static LiquidGlassDrawable statCard(float density) {
         return new LiquidGlassDrawable(density, 28,
-                0x55EFF3FF, 0xA8FFFFFF, 0.44f, 0.16f, 0.022f);
+                0x26FFFFFF, 0x70FFFFFF, 0.34f, 0.24f, 0.020f);
     }
 
     /** Feature / entry card */
     public static LiquidGlassDrawable featureCard(float density) {
         return new LiquidGlassDrawable(density, 26,
-                0x5AF0F5FF, 0xA0FFFFFF, 0.40f, 0.14f, 0.020f);
+                0x28FFFFFF, 0x66FFFFFF, 0.32f, 0.22f, 0.018f);
     }
 
-    /** Drawer background — right-rounded, tinted */
+    /** Drawer background */
     public static LiquidGlassDrawable drawerBg(float density) {
         float r = density * 34;
         return new LiquidGlassDrawable(density, 34,
-                0xB0F6FAFF, 0xC0FFFFFF, 0.38f, 0.12f, 0.022f,
+                0x55FFFFFF, 0x88FFFFFF, 0.36f, 0.22f, 0.020f,
                 new float[]{0, 0, r, r, r, r, 0, 0});
     }
 
-    /** Floating action bar (like mini player) */
+    /** Floating action bar */
     public static LiquidGlassDrawable floatingBar(float density) {
         return new LiquidGlassDrawable(density, 35,
-                0x70F2F6FF, 0xAFFFFFFF, 0.40f, 0.12f, 0.025f);
+                0x4AFFFFFF, 0x90FFFFFF, 0.40f, 0.26f, 0.025f);
     }
 
-    /** Quick action / filter button */
+    /** Quick action button */
     public static LiquidGlassDrawable glassButton(float density) {
         return new LiquidGlassDrawable(density, 999,
-                0x75F0F5FF, 0xA0FFFFFF, 0.34f, 0.08f, 0.015f);
+                0x30FFFFFF, 0x66FFFFFF, 0.30f, 0.12f, 0.012f);
     }
 
     /** About / info card */
     public static LiquidGlassDrawable aboutCard(float density) {
         return new LiquidGlassDrawable(density, 24,
-                0x58EFF4FF, 0x96FFFFFF, 0.36f, 0.12f, 0.018f);
+                0x28FFFFFF, 0x60FFFFFF, 0.30f, 0.18f, 0.016f);
     }
 
-    /** Selected pill inside another glass layer */
+    /** Selected pill inside pill bar */
     public static LiquidGlassDrawable selectedPill(float density) {
         return new LiquidGlassDrawable(density, 22,
-                0x88FFFFFF, 0xCCFFFFFF, 0.50f, 0.06f, 0.030f);
+                0x60FFFFFF, 0xAAFFFFFF, 0.44f, 0.08f, 0.028f);
     }
 }

@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Liquid Glass light theme -->
-    <style name="Theme.IconPackTemplate" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <!-- Dark liquid glass theme -->
+    <style name="Theme.IconPackTemplate" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/background_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/background_dark</item>
         <item name="android:windowBackground">@color/background</item>
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <!-- Liquid Glass dark theme -->
-    <style name="Theme.IconPackTemplate.Dark" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">@color/primary_light</item>
-        <item name="colorPrimaryDark">@color/background_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:statusBarColor">@color/background_dark</item>
-        <item name="android:navigationBarColor">@color/surface_dark</item>
-        <item name="android:windowBackground">@color/background_dark</item>
-    </style>
-
-    <!-- Glass card style — NO contentPadding to avoid white-rect issue -->
+    <!-- Legacy glass card style (kept for reference in non-critical cards) -->
     <style name="DashboardCard" parent="Widget.MaterialComponents.CardView">
         <item name="cardElevation">4dp</item>
         <item name="cardCornerRadius">24dp</item>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
+import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.ui.LiquidGlassDrawable;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
@@ -70,6 +72,20 @@ public class RequestFragment extends Fragment {
         filterThemed  = view.findViewById(R.id.filter_themed);
         filterUnthemed = view.findViewById(R.id.filter_unthemed);
         filterSelected = (TextView) view.findViewById(R.id.filter_selected);
+
+        // Back button
+        ImageButton btnBack = view.findViewById(R.id.btn_back_req);
+        if (btnBack != null) btnBack.setOnClickListener(v -> {
+            if (getActivity() != null) getActivity().onBackPressed();
+        });
+
+        // Status spacer
+        View spacer = view.findViewById(R.id.status_spacer_req);
+        if (spacer != null && getActivity() instanceof MainActivity) {
+            MainActivity ma = (MainActivity) getActivity();
+            spacer.getLayoutParams().height = ma.getStatusBarHeight() + ma.dp(8);
+            spacer.requestLayout();
+        }
 
         allApps = AppScanner.scanInstalledApps(ctx);
         updateStats();

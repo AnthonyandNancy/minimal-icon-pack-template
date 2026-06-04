@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:paddingTop="100dp"
+    android:paddingTop="20dp"
     android:paddingBottom="24dp">
 
     <LinearLayout
@@ -60,7 +60,7 @@
                 android:lineSpacingExtra="4dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:paddingTop="18dp"
+                android:paddingTop="20dp"
                 android:paddingBottom="18dp"
                 android:background="#00000000" />
 
@@ -84,7 +84,7 @@
                 android:lineSpacingExtra="3dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:paddingTop="18dp"
+                android:paddingTop="20dp"
                 android:paddingBottom="18dp"
                 android:background="#00000000" />
 

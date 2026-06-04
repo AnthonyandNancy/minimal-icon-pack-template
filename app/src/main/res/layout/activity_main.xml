@@ -7,88 +7,24 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- Root: Liquid background + content -->
+    <!-- Content: dark background + fragments (no floating toolbar here) -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Liquid blob background -->
         <com.template.iconpack.ui.views.LiquidBackgroundView
             android:id="@+id/liquid_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <!-- Scrollable content area -->
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <!-- Floating Glass Toolbar -->
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="0dp"
-                android:background="@drawable/glass_toolbar_bg"
-                android:elevation="6dp"
-                app:titleTextColor="#111827"
-                app:navigationIcon="@drawable/ic_menu_glass"
-                app:navigationIconTint="#374151"
-                app:contentInsetStartWithNavigation="12dp"
-                app:contentInsetEndWithActions="12dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/btn_rate"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/glass_btn_bg"
-                        android:contentDescription="@string/action_rate"
-                        android:src="@drawable/ic_rate"
-                        android:tint="@color/primary"
-                        android:scaleType="centerInside" />
-
-                    <ImageButton
-                        android:id="@+id/btn_share"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/glass_btn_bg"
-                        android:contentDescription="@string/action_share"
-                        android:src="@drawable/ic_share"
-                        android:tint="@color/accent"
-                        android:scaleType="centerInside" />
-
-                    <ImageButton
-                        android:id="@+id/btn_refresh"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/glass_btn_bg"
-                        android:contentDescription="@string/action_refresh"
-                        android:src="@drawable/ic_refresh"
-                        android:tint="@color/primary"
-                        android:scaleType="centerInside" />
-                </LinearLayout>
-            </com.google.android.material.appbar.MaterialToolbar>
-
-            <!-- Fragment content -->
-            <FrameLayout
-                android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
-    <!-- Navigation Drawer: glass-styled, max 300dp width -->
+    <!-- Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="300dp"

@@ -11,10 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import android.widget.ScrollView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.fragment.app.Fragment;
 
 import com.template.iconpack.R;
+import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
@@ -57,6 +59,20 @@ public class DashboardFragment extends Fragment {
         if (ctx == null) return rootView;
 
         float density = ctx.getResources().getDisplayMetrics().density;
+
+        // Register home toolbar with MainActivity
+        Toolbar tb = rootView.findViewById(R.id.toolbar);
+        if (tb != null && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).registerHomeToolbar(tb);
+        }
+
+        // Set status bar spacer height
+        View spacer = rootView.findViewById(R.id.status_spacer);
+        if (spacer != null && getActivity() != null) {
+            int sbh = ((MainActivity)getActivity()).getStatusBarHeight();
+            spacer.getLayoutParams().height = sbh + ((MainActivity)getActivity()).dp(8);
+            spacer.requestLayout();
+        }
 
         // Apply LiquidGlassDrawable to Hero card
         View hero = rootView.findViewById(R.id.hero_card);
