@@ -26,4 +26,21 @@
     <color name="status_themed">#FF22C55E</color>
     <color name="status_unthemed">#FFEF4444</color>
     <color name="error_red">#FFEF4444</color>
+
+    <color name="container_blue">#334D96FF</color>
+    <color name="container_purple">#33A78BFA</color>
+    <color name="surface">#FFF8F4F0</color>
+    <color name="surface_dark">#FFF5E6F0</color>
+    <color name="divider">#E0D8D0</color>
+    <color name="progress_bg">#FFE8E0D8</color>
+    <color name="progress_fill">#FF4D96FF</color>
+    <color name="nav_item_selected_text">#FF4D96FF</color>
+    <color name="drawer_background">#66FFFFFF</color>
+    <color name="drawer_item_selected">#70FFFFFF</color>
+    <color name="drawer_item_ripple">#30FFFFFF</color>
+    <color name="drawer_text">#FF1A1A2E</color>
+    <color name="drawer_text_secondary">#FF4A4A6A</color>
+    <color name="card_background">#66FFFFFF</color>
+    <color name="card_background_dark">#40FFFFFF</color>
+    <color name="card_stroke">#88FFFFFF</color>
 </resources>
