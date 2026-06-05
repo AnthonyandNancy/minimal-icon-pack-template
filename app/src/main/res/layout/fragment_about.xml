@@ -2,29 +2,37 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingTop="20dp"
+    android:paddingBottom="24dp">
+
+    <include layout="@layout/include_backbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         android:gravity="center_horizontal">
 
+        <!-- App icon -->
         <ImageView
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
             android:src="@mipmap/ic_launcher"
-            android:layout_marginBottom="16dp" />
+            android:background="@drawable/glass_circle_container"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginBottom="4dp" />
+            android:textColor="#1A1A2E" />
 
         <TextView
             android:id="@+id/about_version"
@@ -32,48 +40,73 @@
             android:layout_height="wrap_content"
             android:text="@string/version_name"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="#4A4A6A"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="24dp" />
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/DashboardCard"
+        <!-- Info card: FrameLayout, NO MaterialCardView -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp">
+            android:background="@drawable/glass_card_entry"
+            android:elevation="3dp"
+            android:layout_marginBottom="12dp"
+            android:outlineProvider="background">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_description"
                 android:textSize="14sp"
-                android:textColor="@color/text_secondary"
-                android:lineSpacingExtra="4dp" />
+                android:textColor="#3F4A5A"
+                android:lineSpacingExtra="4dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="18dp"
+                android:background="#00000000" />
 
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/DashboardCard"
+        <!-- OSS card: FrameLayout, NO MaterialCardView -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp">
+            android:background="@drawable/glass_card_entry"
+            android:elevation="3dp"
+            android:layout_marginBottom="20dp"
+            android:outlineProvider="background">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_oss"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary"
-                android:lineSpacingExtra="4dp" />
+                android:textSize="13sp"
+                android:textColor="#3F4A5A"
+                android:lineSpacingExtra="3dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="18dp"
+                android:background="#00000000" />
 
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <!-- Share button -->
+        <TextView
             android:id="@+id/btn_about_share"
-            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:gravity="center"
             android:text="@string/about_share"
-            android:icon="@drawable/ic_share" />
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/glass_chip_selected"
+            android:elevation="2dp"
+            android:outlineProvider="background"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,133 +21,102 @@ import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
 import com.template.iconpack.utils.AppScanner;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RequestFragment extends Fragment {
+public class RequestFragment extends Fragment implements RequestAppAdapter.FilterClickListener {
 
     private RecyclerView requestList;
-    private TextView statTotal, statThemed, statUnthemed;
+    private View bottomBar;
+    private View btnSelectAll;
     private RequestAppAdapter adapter;
     private List<AppInfo> allApps;
+    private String currentFilter = "all";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_request, container, false);
+        Context ctx = getContext();
+        if (ctx == null) return view;
 
-        statTotal = view.findViewById(R.id.stat_total);
-        statThemed = view.findViewById(R.id.stat_themed);
-        statUnthemed = view.findViewById(R.id.stat_unthemed);
+        float density = ctx.getResources().getDisplayMetrics().density;
+        bottomBar = view.findViewById(R.id.request_bottom_bar);
+        btnSelectAll = view.findViewById(R.id.btn_select_all);
+        bottomBar.setBackgroundResource(R.drawable.glass_floating_bar);
 
         requestList = view.findViewById(R.id.request_list);
-        requestList.setLayoutManager(new LinearLayoutManager(getContext()));
+        requestList.setLayoutManager(new LinearLayoutManager(ctx));
 
-        // Load apps
-        if (getContext() != null) {
-            allApps = AppScanner.scanInstalledApps(getContext());
-            updateStats();
-            adapter = new RequestAppAdapter(allApps);
-            requestList.setAdapter(adapter);
-        }
+        allApps = AppScanner.scanInstalledApps(ctx);
+        int total = allApps.size(), themed = 0;
+        for (AppInfo a : allApps) if (a.isThemed) themed++;
 
-        // Filter buttons
-        view.findViewById(R.id.filter_all).setOnClickListener(v -> {
-            if (adapter != null) adapter.setFilter("all");
-            updateFilterButtons(view, "all");
-        });
-        view.findViewById(R.id.filter_themed).setOnClickListener(v -> {
-            if (adapter != null) adapter.setFilter("themed");
-            updateFilterButtons(view, "themed");
-        });
-        view.findViewById(R.id.filter_unthemed).setOnClickListener(v -> {
-            if (adapter != null) {
-                adapter.setFilter("unthemed");
-                adapter.setShowCheckboxes(true);
-            }
-            updateFilterButtons(view, "unthemed");
-        });
+        adapter = new RequestAppAdapter(allApps);
+        adapter.setStats(total, themed, total - themed);
+        adapter.setFilterListener(this);
+        adapter.setAppClickListener((app, pos) -> {});
+        requestList.setAdapter(adapter);
 
-        // Export
+        btnSelectAll.setOnClickListener(v -> selectAll());
         view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
         view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
 
         return view;
     }
 
-    private void updateStats() {
-        int total = allApps.size();
-        int themed = 0;
-        for (AppInfo app : allApps) {
-            if (app.isThemed) themed++;
-        }
-        int unthemed = total - themed;
-
-        statTotal.setText("总计: " + total);
-        statThemed.setText("已适配: " + themed);
-        statUnthemed.setText("未适配: " + unthemed);
+    @Override
+    public void onFilterClicked(String filter) {
+        currentFilter = filter;
+        btnSelectAll.setVisibility(filter.equals("unthemed") ? View.VISIBLE : View.GONE);
     }
 
-    private void updateFilterButtons(View view, String active) {
-        view.findViewById(R.id.filter_all).setSelected(active.equals("all"));
-        view.findViewById(R.id.filter_themed).setSelected(active.equals("themed"));
-        view.findViewById(R.id.filter_unthemed).setSelected(active.equals("unthemed"));
-
-        if (!active.equals("unthemed") && adapter != null) {
-            adapter.setShowCheckboxes(false);
+    private void selectAll() {
+        if (adapter == null) return;
+        int count = 0;
+        for (AppInfo a : allApps) {
+            if (!a.isThemed) { a.isSelected = true; count++; }
         }
+        adapter.notifyDataChanged();
+        if (getContext() != null)
+            Toast.makeText(getContext(), "全选 " + count + " 个未适配", Toast.LENGTH_SHORT).show();
+    }
+
+    private List<AppInfo> getSelectedMissing() {
+        List<AppInfo> sel = new ArrayList<>();
+        for (AppInfo a : allApps) if (!a.isThemed && a.isSelected) sel.add(a);
+        if (sel.isEmpty()) for (AppInfo a : allApps) if (!a.isThemed) sel.add(a);
+        return sel;
+    }
+
+    private String buildRequestText(List<AppInfo> apps) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("图标适配申请\n\n");
+        for (AppInfo a : apps) {
+            sb.append("应用名称：").append(a.appName).append("\n");
+            sb.append("包名：").append(a.packageName).append("\n");
+            sb.append("Activity：").append(a.componentName).append("\n");
+            sb.append("Component：").append(a.getComponentInfo()).append("\n\n");
+        }
+        sb.append("共 ").append(apps.size()).append(" 个应用\n");
+        return sb.toString();
     }
 
     private void exportList() {
-        if (adapter == null) return;
-        List<AppInfo> selected = adapter.getSelectedApps();
-        if (selected.isEmpty()) {
-            // If nothing selected, export all unthemed
-            for (AppInfo app : allApps) {
-                if (!app.isThemed) selected.add(app);
-            }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("图标包适配申请列表\n");
-        sb.append("==================\n\n");
-        for (AppInfo app : selected) {
-            sb.append("应用名: ").append(app.appName).append("\n");
-            sb.append("包名: ").append(app.packageName).append("\n");
-            sb.append("Component: ").append(app.getComponentInfo()).append("\n");
-            sb.append("---\n");
-        }
-
-        if (getContext() != null) {
-            ClipboardManager clipboard = (ClipboardManager)
-                    getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("request_list", sb.toString());
-            clipboard.setPrimaryClip(clip);
-            Toast.makeText(getContext(), "申请列表已复制到剪贴板", Toast.LENGTH_SHORT).show();
-        }
+        if (adapter == null || getContext() == null) return;
+        String text = buildRequestText(getSelectedMissing());
+        ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        cm.setPrimaryClip(ClipData.newPlainText("Icon Request", text));
+        Toast.makeText(getContext(), "已复制申请列表", Toast.LENGTH_SHORT).show();
     }
 
     private void shareList() {
-        if (adapter == null) return;
-        List<AppInfo> selected = adapter.getSelectedApps();
-        if (selected.isEmpty()) {
-            for (AppInfo app : allApps) {
-                if (!app.isThemed) selected.add(app);
-            }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("图标包适配申请列表\n\n");
-        for (AppInfo app : selected) {
-            sb.append(app.appName).append(" | ")
-              .append(app.getComponentInfo()).append("\n");
-        }
-
-        if (getContext() != null) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_request_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-            startActivity(Intent.createChooser(intent, "分享申请列表"));
-        }
+        if (adapter == null || getContext() == null) return;
+        String text = buildRequestText(getSelectedMissing());
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Icon Request");
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(intent, "分享图标适配申请"));
     }
 }

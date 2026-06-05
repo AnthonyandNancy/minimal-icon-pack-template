@@ -1,113 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/request_stats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:background="@color/surface"
-        android:elevation="2dp">
-
-        <TextView
-            android:id="@+id/stat_total"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary" />
-
-        <TextView
-            android:id="@+id/stat_themed"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/status_themed" />
-
-        <TextView
-            android:id="@+id/stat_unthemed"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/status_unthemed" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/filter_all"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="@string/request_all"
-            android:layout_marginEnd="4dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/filter_themed"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="@string/request_themed_filter"
-            android:layout_marginEnd="4dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/filter_unthemed"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="@string/request_unthemed_filter" />
-
-    </LinearLayout>
-
+    <!-- RecyclerView: drawn first, below top bar in z-order -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/request_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="80dp"
+        android:paddingBottom="90dp" />
 
-    <LinearLayout
+    <!-- Top bar: shared include_backbar, elevated over RecyclerView -->
+    <include
+        android:id="@+id/request_backbar"
+        layout="@layout/include_backbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center">
+        android:elevation="10dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_export"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/request_export"
-            android:layout_marginEnd="8dp" />
+    <!-- Bottom bar: fixed, highest elevation -->
+    <LinearLayout android:id="@+id/request_bottom_bar"
+        android:layout_width="match_parent" android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="20dp" android:layout_marginEnd="20dp"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/glass_floating_bar"
+        android:gravity="center_vertical" android:orientation="horizontal"
+        android:paddingStart="12dp" android:paddingEnd="12dp"
+        android:elevation="14dp"
+        android:visibility="visible">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_share"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/request_share" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+        <TextView android:id="@+id/btn_select_all"
+            android:layout_width="wrap_content" android:layout_height="36dp"
+            android:gravity="center" android:text="全选" android:textSize="12sp"
+            android:textColor="#3D3D5C" android:background="@drawable/glass_chip_unselected"
+            android:paddingStart="14dp" android:paddingEnd="14dp" android:layout_marginEnd="8dp"
+            android:clickable="true" android:focusable="true"
+            android:visibility="gone" />
+
+        <TextView android:id="@+id/btn_export"
+            android:layout_width="wrap_content" android:layout_height="36dp"
+            android:minWidth="80dp"
+            android:gravity="center" android:text="@string/request_export" android:textSize="12sp"
+            android:textColor="@color/text_on_primary" android:background="@drawable/glass_chip_selected"
+            android:paddingStart="14dp" android:paddingEnd="14dp" android:layout_marginEnd="8dp"
+            android:clickable="true" android:focusable="true" />
+
+        <TextView android:id="@+id/btn_share"
+            android:layout_width="wrap_content" android:layout_height="36dp"
+            android:minWidth="80dp"
+            android:gravity="center" android:text="@string/request_share" android:textSize="12sp"
+            android:textColor="@color/text_on_primary" android:background="@drawable/glass_chip_selected"
+            android:paddingStart="14dp" android:paddingEnd="14dp"
+            android:clickable="true" android:focusable="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

@@ -3,7 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/page_margin"
+    android:paddingEnd="@dimen/page_margin"
+    android:paddingTop="20dp">
+
+    <include layout="@layout/include_backbar" />
 
     <EditText
         android:id="@+id/icons_search"
@@ -13,11 +18,13 @@
         android:inputType="text"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/search_background"
+        android:layout_marginBottom="@dimen/card_spacing"
+        android:background="@drawable/glass_search_bg"
         android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:maxLines="1" />
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/text_hint"
+        android:maxLines="1"
+        android:textColorHint="@color/text_hint" />
 
     <TextView
         android:id="@+id/icons_empty"
@@ -26,13 +33,16 @@
         android:gravity="center"
         android:text="@string/icons_empty"
         android:textColor="@color/text_hint"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/icons_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:clipToPadding="false"
+        android:paddingStart="20dp" android:paddingEnd="20dp"
+        android:paddingBottom="24dp" />
 
 </LinearLayout>

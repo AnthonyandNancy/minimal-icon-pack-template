@@ -1,122 +1,150 @@
 package com.template.iconpack.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ScrollView;
 
 import androidx.fragment.app.Fragment;
 
 import com.template.iconpack.R;
+import com.template.iconpack.MainActivity;
+import com.template.iconpack.ui.anim.GlassAnimations;
+import com.template.iconpack.utils.AppScanner;
+import com.template.iconpack.utils.IconPackLoader;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
-import com.template.iconpack.utils.AppScanner;
-import com.template.iconpack.utils.IconPackLoader;
 
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
 
-    private static final int[] CARD_ICONS = {
-            R.drawable.ic_apply_card,
-            R.drawable.ic_donate,
-            R.drawable.ic_icons_card,
-            R.drawable.ic_adaptive,
-            R.drawable.ic_request_card,
-            R.drawable.ic_wallpapers_card,
-            R.drawable.ic_more_apps
-    };
+    public interface ScrollListener { void onScroll(int sy); }
+    public interface CardCallback { void onCardClicked(int pos); }
 
-    private static final int[] CARD_TITLES = {
-            R.string.card_apply_title,
-            R.string.card_donate_title,
-            R.string.card_icons_title,
-            R.string.card_adaptive_title,
-            R.string.card_request_title,
-            R.string.card_wallpapers_title,
-            R.string.card_more_apps_title
-    };
+    private CardCallback callback;
+    private View rootView;
 
-    private GridLayout grid;
-    private DashboardCallback callback;
-
-    public interface DashboardCallback {
-        void onCardClicked(int position);
-    }
-
-    public void setCallback(DashboardCallback callback) {
-        this.callback = callback;
-    }
+    public void setCallback(CardCallback cb) { this.callback = cb; }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        grid = view.findViewById(R.id.dashboard_grid);
-        buildCards();
-        return view;
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        Context ctx = getContext();
+        if (ctx == null) return rootView;
 
-    private void buildCards() {
-        grid.removeAllViews();
-        if (getContext() == null) return;
+        // Brand header
+        setupBrand(ctx);
 
-        // Load stats
-        List<DrawableInfo> icons = IconPackLoader.loadDrawables(getContext());
-        List<AppInfo> apps = AppScanner.scanInstalledApps(getContext());
-        List<WallpaperInfo> wallpapers = IconPackLoader.loadWallpapers(getContext());
-
-        int themedCount = 0;
-        int unthemedCount = 0;
-        for (AppInfo app : apps) {
-            if (app.isThemed) themedCount++;
-            else unthemedCount++;
+        // Menu button
+        View menuBtn = rootView.findViewById(R.id.btn_menu_home);
+        if (menuBtn != null && getActivity() instanceof MainActivity) {
+            menuBtn.setOnClickListener(v -> ((MainActivity) getActivity()).openDrawer());
         }
 
-        String[] descs = new String[]{
-                "应用此图标包到启动器",
-                "支持图标包的开发工作",
-                icons.size() + " 个图标已就绪",
-                "自适应图标示例",
-                "已安装: " + apps.size() + " | 已适配: " + themedCount + " | 未适配: " + unthemedCount,
-                wallpapers.size() + " 张壁纸可用",
-                "查看更多应用"
+        // Apply button
+        View applyBtn = rootView.findViewById(R.id.btn_apply);
+        if (applyBtn != null) {
+            applyBtn.setOnClickListener(v -> {
+                if (callback != null) callback.onCardClicked(10); // NAV_APPLY
+            });
+        }
+
+        // Data
+        List<DrawableInfo> icons = IconPackLoader.loadDrawables(ctx);
+        List<AppInfo> apps = AppScanner.scanInstalledApps(ctx);
+        List<WallpaperInfo> wallpapers = IconPackLoader.loadWallpapers(ctx);
+        int themedCount = 0;
+        for (AppInfo a : apps) if (a.isThemed) themedCount++;
+
+        // Stats
+        TextView statIcons = rootView.findViewById(R.id.stat_icons);
+        TextView statWallpapers = rootView.findViewById(R.id.stat_wallpapers);
+        if (statIcons != null) statIcons.setText(String.valueOf(icons.size()));
+        if (statWallpapers != null) statWallpapers.setText(String.valueOf(wallpapers.size()));
+
+        // Quick action cards
+        buildQuickCards(ctx, icons.size(), apps.size(), themedCount, apps.size() - themedCount);
+
+        // Feature entry cards
+        buildEntryCards(ctx, icons.size(), apps.size(), themedCount, wallpapers.size());
+
+        // Scroll listener
+        if (rootView instanceof ScrollView && getActivity() instanceof ScrollListener) {
+            ((ScrollView) rootView).setOnScrollChangeListener(
+                    (v, sx, sy, ox, oy) -> ((ScrollListener) getActivity()).onScroll(sy));
+        }
+        return rootView;
+    }
+
+    private void setupBrand(Context ctx) {
+        TextView nameView = rootView.findViewById(R.id.hero_app_name);
+        nameView.setText(getString(R.string.app_name));
+        try {
+            TextView verView = rootView.findViewById(R.id.hero_version);
+            verView.setText("v" + ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName);
+        } catch (Exception ignored) {}
+    }
+
+    private void buildQuickCards(Context ctx, int iconCount, int totalApps, int themed, int unthemed) {
+        GridLayout grid = rootView.findViewById(R.id.dashboard_stats);
+        grid.removeAllViews();
+
+        String[][] data = {
+                {"Icons", String.valueOf(iconCount), String.valueOf(iconCount)},
+                {"Themed", String.valueOf(themed), String.valueOf(themed)},
+                {"Missing", String.valueOf(unthemed), String.valueOf(unthemed)},
+                {"Apps", String.valueOf(totalApps), String.valueOf(totalApps)},
         };
+        int[] colors = {R.color.primary, R.color.status_themed, R.color.status_unthemed, R.color.accent};
+        int[] icons = {R.drawable.ic_rate, R.drawable.ic_rate, R.drawable.ic_rate, R.drawable.ic_rate};
 
-        for (int i = 0; i < 7; i++) {
-            View card = LayoutInflater.from(getContext()).inflate(R.layout.item_dashboard_card, grid, false);
-            android.widget.ImageView icon = card.findViewById(R.id.card_icon);
-            TextView title = card.findViewById(R.id.card_title);
-            TextView desc = card.findViewById(R.id.card_desc);
-            ProgressBar progress = card.findViewById(R.id.card_progress);
+        for (int i = 0; i < 4; i++) {
+            View card = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_card, grid, false);
+            card.setBackgroundResource(R.drawable.bg_card_surface);
+            ((TextView) card.findViewById(R.id.card_icon)).setText(data[i][0]);
+            ((TextView) card.findViewById(R.id.card_value)).setText(data[i][1]);
+            ((TextView) card.findViewById(R.id.card_value)).setTextColor(ctx.getResources().getColor(colors[i]));
+            ((TextView) card.findViewById(R.id.card_title)).setText(data[i][2]);
 
-            icon.setImageResource(CARD_ICONS[i]);
-            title.setText(CARD_TITLES[i]);
-            desc.setText(descs[i]);
+            GridLayout.LayoutParams p = new GridLayout.LayoutParams();
+            p.width = 0; p.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
+            p.setMargins(6, 6, 6, 6);
+            card.setLayoutParams(p);
+            grid.addView(card);
+        }
+    }
 
-            // Progress bar for request card
-            if (i == 4 && apps.size() > 0) {
-                progress.setVisibility(View.VISIBLE);
-                progress.setMax(apps.size());
-                progress.setProgress(themedCount);
-            }
+    private void buildEntryCards(Context ctx, int iconCount, int totalApps, int themed, int wallpaperCount) {
+        LinearLayout container = rootView.findViewById(R.id.dashboard_entries);
+        container.removeAllViews();
 
-            final int idx = i;
+        String[] titles = {"Apply Icons", "Icon Gallery", "Request Icons", "Wallpapers"};
+        String[] descs = {"Choose a launcher", iconCount + " icons", themed + " themed", wallpaperCount + " wallpapers"};
+
+        for (int i = 0; i < 4; i++) {
+            View card = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, container, false);
+            card.setBackgroundResource(R.drawable.bg_card_surface);
+            ((TextView) card.findViewById(R.id.launcher_name)).setText(titles[i]);
+            ((TextView) card.findViewById(R.id.entry_desc)).setText(descs[i]);
+
+            int idx = i;
             card.setOnClickListener(v -> {
-                if (callback != null) callback.onCardClicked(idx);
+                if (callback != null) callback.onCardClicked(10 + idx);
             });
 
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            params.setMargins(4, 4, 4, 4);
-            card.setLayoutParams(params);
-
-            grid.addView(card);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 0, 0, (int)(12 * ctx.getResources().getDisplayMetrics().density));
+            card.setLayoutParams(lp);
+            container.addView(card);
         }
     }
 }

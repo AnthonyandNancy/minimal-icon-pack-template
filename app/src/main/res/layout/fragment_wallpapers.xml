@@ -4,16 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/wallpapers_title"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_primary"
-        android:layout_marginBottom="16dp" />
+    android:paddingStart="@dimen/page_margin"
+    android:paddingEnd="@dimen/page_margin"
+    android:paddingTop="20dp">
+    <include layout="@layout/include_backbar" />
 
     <TextView
         android:id="@+id/wallpapers_empty"
@@ -22,12 +16,14 @@
         android:gravity="center"
         android:text="@string/wallpapers_empty"
         android:textColor="@color/text_hint"
-        android:textSize="16sp" />
+        android:textSize="15sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wallpapers_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp" />
 
 </LinearLayout>
