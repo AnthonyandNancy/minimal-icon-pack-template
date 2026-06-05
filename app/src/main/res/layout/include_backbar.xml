@@ -23,7 +23,7 @@
         <ImageButton android:id="@+id/btn_back"
             android:layout_width="44dp" android:layout_height="44dp"
             android:background="@drawable/glass_btn_bg"
-            android:src="@drawable/ic_back_arrow" android:tint="#243044"
+            android:src="@drawable/ic_back_arrow" android:tint="#E5E7EB"
             android:scaleType="centerInside"
             android:clickable="true" android:focusable="true" />
 
@@ -31,6 +31,6 @@
             android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp" android:textStyle="bold"
-            android:textColor="#111827" android:layout_marginStart="10dp" />
+            android:textColor="#F9FAFB" android:layout_marginStart="10dp" />
     </LinearLayout>
 </LinearLayout>

@@ -23,27 +23,27 @@
                 android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/stat_total"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textSize="24sp" android:textStyle="bold" android:textColor="#2F7DFF" />
+                    android:textSize="24sp" android:textStyle="bold" android:textColor="#5EA8FF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="已安装" android:textSize="11sp" android:textColor="#8A96A8" />
+                    android:text="已安装" android:textSize="11sp" android:textColor="#8FA0B5" />
             </LinearLayout>
 
             <LinearLayout android:layout_width="0dp" android:layout_weight="1"
                 android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/stat_themed"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textSize="24sp" android:textStyle="bold" android:textColor="#22C55E" />
+                    android:textSize="24sp" android:textStyle="bold" android:textColor="#34D399" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="已适配" android:textSize="11sp" android:textColor="#8A96A8" />
+                    android:text="已适配" android:textSize="11sp" android:textColor="#8FA0B5" />
             </LinearLayout>
 
             <LinearLayout android:layout_width="0dp" android:layout_weight="1"
                 android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/stat_unthemed"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textSize="24sp" android:textStyle="bold" android:textColor="#F59E0B" />
+                    android:textSize="24sp" android:textStyle="bold" android:textColor="#FDBA3B" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="未适配" android:textSize="11sp" android:textColor="#8A96A8" />
+                    android:text="未适配" android:textSize="11sp" android:textColor="#8FA0B5" />
             </LinearLayout>
         </LinearLayout>
 
