@@ -26,6 +26,9 @@ public class ApplyFragment extends Fragment {
         launcherList = view.findViewById(R.id.launcher_list);
         launcherList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.apply_title));
+
         LauncherAdapter adapter = new LauncherAdapter(launcherName -> {
             if (getContext() != null) {
                 Toast.makeText(getContext(),
