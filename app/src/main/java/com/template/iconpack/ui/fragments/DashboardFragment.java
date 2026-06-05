@@ -98,10 +98,20 @@ public class DashboardFragment extends Fragment {
         buildStatCards(ctx, icons.size(), apps.size(), themedCount, unthemedCount, density);
         buildEntryCards(ctx, icons.size(), apps.size(), themedCount, wallpapers.size(), density);
 
-        // Toolbar scroll behavior
-        if (rootView instanceof ScrollView && getActivity() instanceof ScrollListener) {
-            ((ScrollView) rootView).setOnScrollChangeListener((v, sx, sy, ox, oy) ->
-                    ((ScrollListener) getActivity()).onScroll(sy));
+        // Toolbar scroll behavior + continuous glass refresh
+        if (rootView instanceof ScrollView) {
+            View hero = rootView.findViewById(R.id.hero_card);
+            ScrollView sv = (ScrollView) rootView;
+            sv.setOnScrollChangeListener((v, sx, sy, ox, oy) -> {
+                if (getActivity() instanceof ScrollListener)
+                    ((ScrollListener) getActivity()).onScroll(sy);
+                // Refresh glass on scroll → samples new bg region
+                if (hero != null) hero.invalidate();
+                View grid = rootView.findViewById(R.id.dashboard_stats);
+                if (grid != null) grid.invalidate();
+                View entries = rootView.findViewById(R.id.dashboard_entries);
+                if (entries != null) entries.invalidate();
+            });
         }
 
         return rootView;
