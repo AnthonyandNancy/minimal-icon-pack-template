@@ -123,7 +123,7 @@ public class IconsFragment extends Fragment {
         ImageView iv = new ImageView(getContext());
         iv.setImageResource(icon.resId);
         iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        iv.setBackgroundColor(0x88000000);
+        iv.setBackgroundColor(0x80000000);
         iv.setPadding(32,32,32,32);
         iv.setOnClickListener(v -> d.dismiss());
 
