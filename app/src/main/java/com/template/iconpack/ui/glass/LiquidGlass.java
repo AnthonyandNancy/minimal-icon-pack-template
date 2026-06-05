@@ -48,7 +48,7 @@ public final class LiquidGlass {
 
     public static LiquidGlassView bottomBar(Context ctx) {
         LiquidGlassView v = new LiquidGlassView(ctx);
-        v.setConfig(GlassMaterialFactory.bottomActionBar());
+        v.setConfig(GlassMaterialFactory.bottomBar());
         return v;
     }
 
