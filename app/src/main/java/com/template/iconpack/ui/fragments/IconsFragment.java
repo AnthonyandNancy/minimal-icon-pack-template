@@ -25,6 +25,7 @@ public class IconsFragment extends Fragment {
 
     private RecyclerView iconsGrid;
     private TextView emptyView;
+    private TextView noResultsView;
     private EditText searchInput;
     private IconGridAdapter adapter;
     private PreferencesHelper prefs;
@@ -39,6 +40,7 @@ public class IconsFragment extends Fragment {
 
         iconsGrid = view.findViewById(R.id.icons_grid);
         emptyView = view.findViewById(R.id.icons_empty);
+        noResultsView = view.findViewById(R.id.icons_no_results);
         searchInput = view.findViewById(R.id.icons_search);
 
         List<DrawableInfo> icons = IconPackLoader.loadDrawables(getContext());
@@ -62,7 +64,13 @@ public class IconsFragment extends Fragment {
             searchInput.addTextChangedListener(new TextWatcher() {
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (adapter != null) adapter.filter(s.toString());
+                    if (adapter != null) {
+                        int count2 = adapter.filter(s.toString());
+                        if (noResultsView != null)
+                            noResultsView.setVisibility(count2 == 0 ? View.VISIBLE : View.GONE);
+                        if (iconsGrid != null)
+                            iconsGrid.setVisibility(count2 == 0 ? View.GONE : View.VISIBLE);
+                    }
                 }
                 @Override public void afterTextChanged(Editable s) {}
             });
@@ -77,14 +85,25 @@ public class IconsFragment extends Fragment {
         if (icons.isEmpty()) {
             if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
             if (iconsGrid != null) iconsGrid.setVisibility(View.GONE);
+            if (searchInput != null) searchInput.setVisibility(View.GONE);
+            if (noResultsView != null) noResultsView.setVisibility(View.GONE);
         } else {
             if (emptyView != null) emptyView.setVisibility(View.GONE);
+            if (searchInput != null) searchInput.setVisibility(View.VISIBLE);
             if (iconsGrid != null) {
                 iconsGrid.setVisibility(View.VISIBLE);
                 int columns = prefs.getIconColumns();
                 iconsGrid.setLayoutManager(new GridLayoutManager(getContext(), columns));
                 adapter = new IconGridAdapter(icons, prefs.isShowIconName());
                 iconsGrid.setAdapter(adapter);
+                if (searchInput != null) {
+                    String q = searchInput.getText() != null ? searchInput.getText().toString() : "";
+                    if (!q.isEmpty()) {
+                        int count2 = adapter.filter(q);
+                        if (noResultsView != null)
+                            noResultsView.setVisibility(count2 == 0 ? View.VISIBLE : View.GONE);
+                    }
+                }
             }
         }
     }

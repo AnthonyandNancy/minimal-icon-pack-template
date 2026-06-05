@@ -34,7 +34,17 @@
         android:text="@string/icons_empty"
         android:textColor="@color/text_hint"
         android:textSize="15sp"
-        android:visibility="visible" />
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/icons_no_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No matching icons"
+        android:textColor="@color/text_hint"
+        android:textSize="15sp"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/icons_grid"

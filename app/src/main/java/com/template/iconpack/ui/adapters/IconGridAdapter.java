@@ -34,7 +34,7 @@ public class IconGridAdapter extends RecyclerView.Adapter<IconGridAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void filter(String query) {
+    public int filter(String query) {
         filteredIcons.clear();
         if (query == null || query.isEmpty()) {
             filteredIcons.addAll(icons);
@@ -48,6 +48,7 @@ public class IconGridAdapter extends RecyclerView.Adapter<IconGridAdapter.ViewHo
             }
         }
         notifyDataSetChanged();
+        return filteredIcons.size();
     }
 
     @NonNull

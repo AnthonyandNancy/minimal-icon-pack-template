@@ -33,10 +33,12 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:orientation="vertical">
                 <TextView android:id="@+id/hero_app_name"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="#181821" android:textSize="22sp"
                     android:textStyle="bold" android:maxLines="1"
                     android:ellipsize="end" />
                 <TextView android:id="@+id/hero_version"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="#6E6A78" android:textSize="13sp"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
@@ -70,13 +72,19 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="horizontal" android:gravity="center"
                     android:layout_marginBottom="16dp">
-                    <TextView android:id="@+id/stat_icons" android:textColor="#181821"
+                    <TextView android:id="@+id/stat_icons"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="#181821"
                         android:textStyle="bold" android:textSize="16sp" android:text="0" />
-                    <TextView android:text="  Icons" android:textColor="#6E6A78"
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="  Icons" android:textColor="#6E6A78"
                         android:textSize="14sp" android:layout_marginEnd="24dp" />
-                    <TextView android:id="@+id/stat_wallpapers" android:textColor="#181821"
+                    <TextView android:id="@+id/stat_wallpapers"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="#181821"
                         android:textStyle="bold" android:textSize="16sp" android:text="0" />
-                    <TextView android:text="  Wallpapers" android:textColor="#6E6A78"
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="  Wallpapers" android:textColor="#6E6A78"
                         android:textSize="14sp" />
                 </LinearLayout>
 
