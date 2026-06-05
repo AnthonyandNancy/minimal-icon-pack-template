@@ -2,6 +2,7 @@
 <resources>
     <color name="primary">#FF5EA8FF</color>
     <color name="primary_dark">#FF3B82F6</color>
+    <color name="primary_light">#FF7AA2FF</color>
     <color name="accent">#FFA78BFA</color>
     <color name="bg_top">#FF0B1020</color>
     <color name="bg_mid">#FF111E46</color>
@@ -37,5 +38,6 @@
     <color name="drawer_text">#FFCBD5E1</color>
     <color name="drawer_text_secondary">#FF8FA0B5</color>
     <color name="card_background">#1AFFFFFF</color>
+    <color name="card_background_dark">#0CFFFFFF</color>
     <color name="card_stroke">#50FFFFFF</color>
 </resources>
