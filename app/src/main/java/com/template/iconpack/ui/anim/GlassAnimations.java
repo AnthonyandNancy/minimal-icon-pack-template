@@ -8,12 +8,16 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.template.iconpack.ui.GlassTheme;
-
 /**
- * Reusable animation helpers for Liquid Glass UI.
+ * Reusable animation helpers.
  */
 public final class GlassAnimations {
+
+    private static final float ANIM_PRESS_SCALE    = 0.97f;
+    private static final long  ANIM_CARD_CLICK     = 120L;
+    private static final long  ANIM_PAGE_TRANSITION = 220L;
+    private static final long  ANIM_CARD_STAGGER   = 60L;
+    private static final long  ANIM_DRAWER_OPEN    = 260L;
 
     private GlassAnimations() {}
 
@@ -25,9 +29,9 @@ public final class GlassAnimations {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.animate()
-                            .scaleX(GlassTheme.ANIM_PRESS_SCALE)
-                            .scaleY(GlassTheme.ANIM_PRESS_SCALE)
-                            .setDuration(GlassTheme.ANIM_CARD_CLICK)
+                            .scaleX(ANIM_PRESS_SCALE)
+                            .scaleY(ANIM_PRESS_SCALE)
+                            .setDuration(ANIM_CARD_CLICK)
                             .start();
                     break;
                 case MotionEvent.ACTION_UP:
@@ -35,7 +39,7 @@ public final class GlassAnimations {
                     v.animate()
                             .scaleX(1f)
                             .scaleY(1f)
-                            .setDuration(GlassTheme.ANIM_CARD_CLICK)
+                            .setDuration(ANIM_CARD_CLICK)
                             .start();
                     break;
             }
@@ -52,7 +56,7 @@ public final class GlassAnimations {
         view.animate()
                 .alpha(1f)
                 .translationY(0f)
-                .setDuration(GlassTheme.ANIM_PAGE_TRANSITION)
+                .setDuration(ANIM_PAGE_TRANSITION)
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
     }
@@ -67,7 +71,7 @@ public final class GlassAnimations {
                 .alpha(1f)
                 .translationY(0f)
                 .setDuration(220)
-                .setStartDelay(index * GlassTheme.ANIM_CARD_STAGGER)
+                .setStartDelay(index * ANIM_CARD_STAGGER)
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
     }
@@ -94,7 +98,7 @@ public final class GlassAnimations {
     public static void animateDrawerScrim(View scrim, boolean show) {
         scrim.animate()
                 .alpha(show ? 1f : 0f)
-                .setDuration(GlassTheme.ANIM_DRAWER_OPEN)
+                .setDuration(ANIM_DRAWER_OPEN)
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
     }
