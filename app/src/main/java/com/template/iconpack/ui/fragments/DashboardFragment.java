@@ -72,10 +72,6 @@ public class DashboardFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.stat_icons)).setText(String.valueOf(iconCount));
         ((TextView) rootView.findViewById(R.id.stat_wallpapers)).setText(String.valueOf(wpCount));
         ((TextView) rootView.findViewById(R.id.stat_themed)).setText(String.valueOf(themed));
-
-        rootView.findViewById(R.id.btn_apply).setOnClickListener(v -> nav(10));
-        View req = rootView.findViewById(R.id.btn_request);
-        if (req != null) req.setOnClickListener(v -> nav(12));
     }
 
     private void nav(int pos) {

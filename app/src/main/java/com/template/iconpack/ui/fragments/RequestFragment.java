@@ -28,7 +28,7 @@ public class RequestFragment extends Fragment {
     private List<AppInfo> allApps;
     private String currentFilter = "all";
 
-    private View pillAll, pillThemed, pillUnthemed, pillSelected;
+    private View pillAll, pillThemed, pillUnthemed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,12 +44,10 @@ public class RequestFragment extends Fragment {
         pillAll = view.findViewById(R.id.filter_all);
         pillThemed = view.findViewById(R.id.filter_themed);
         pillUnthemed = view.findViewById(R.id.filter_unthemed);
-        pillSelected = view.findViewById(R.id.filter_selected);
 
         pillAll.setOnClickListener(v -> applyFilter("all"));
         pillThemed.setOnClickListener(v -> applyFilter("themed"));
         pillUnthemed.setOnClickListener(v -> applyFilter("unthemed"));
-        pillSelected.setOnClickListener(v -> applyFilter("selected"));
 
         bottomBar = view.findViewById(R.id.request_bottom_bar);
         btnSelectAll = view.findViewById(R.id.btn_select_all);
@@ -88,13 +86,13 @@ public class RequestFragment extends Fragment {
     }
 
     private void updatePillState(String f) {
-        View[] pills = {pillAll, pillThemed, pillUnthemed, pillSelected};
-        String[] keys = {"all","themed","unthemed","selected"};
+        View[] pills = {pillAll, pillThemed, pillUnthemed};
+        String[] keys = {"all","themed","unthemed"};
         for (int i = 0; i < pills.length; i++) {
             View p = pills[i];
             if (p == null) continue;
             boolean sel = keys[i].equals(f);
-            p.setBackgroundColor(sel ? 0xFF6750A4 : 0xFFFEF7FF);
+            p.setBackgroundResource(sel ? R.drawable.bg_chip_selected : R.drawable.bg_surface_card);
             ((TextView)p).setTextColor(sel ? 0xFFFFFFFF : 0xFF49454F);
         }
     }

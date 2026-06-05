@@ -2,6 +2,7 @@ package com.template.iconpack.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -99,6 +100,14 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
         AppInfo app = filteredApps.get(pos);
         h.name.setText(app.appName);
         h.pkg.setText(app.packageName);
+        // Load actual app icon
+        try {
+            Drawable icon = h.itemView.getContext().getPackageManager()
+                    .getApplicationIcon(app.packageName);
+            h.icon.setImageDrawable(icon);
+        } catch (Exception e) {
+            h.icon.setImageResource(android.R.drawable.sym_def_app_icon);
+        }
         h.checkbox.setVisibility(showCheckboxes && !app.isThemed ? View.VISIBLE : View.GONE);
         h.checkbox.setChecked(app.isSelected);
 
