@@ -48,6 +48,12 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
         fireSelectionChanged();
     }
 
+    public void deselectAll() {
+        for (AppInfo a : filteredApps) a.isSelected = false;
+        notifyDataSetChanged();
+        fireSelectionChanged();
+    }
+
     private void fireSelectionChanged() {
         if (selectionListener != null) selectionListener.onSelectionChanged(getSelectedCount());
     }

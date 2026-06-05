@@ -69,7 +69,13 @@ public class RequestFragment extends Fragment {
         adapter.setSelectionListener(c -> updateBottomBar());
         requestList.setAdapter(adapter);
 
-        btnSelectAll.setOnClickListener(v -> adapter.selectAllUnthemed());
+        btnSelectAll.setOnClickListener(v -> {
+            if ("反选".equals(((TextView) btnSelectAll).getText().toString())) {
+                adapter.deselectAll();
+            } else {
+                adapter.selectAllUnthemed();
+            }
+        });
         view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
         view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
 
@@ -103,7 +109,13 @@ public class RequestFragment extends Fragment {
         if (show) {
             int c = adapter.getSelectedCount();
             selectedCountText.setText("已选 " + c + " 个");
-            btnSelectAll.setVisibility(currentFilter.equals("unthemed") ? View.VISIBLE : View.GONE);
+            boolean showSelect = currentFilter.equals("unthemed");
+            btnSelectAll.setVisibility(showSelect ? View.VISIBLE : View.GONE);
+            if (showSelect) {
+                int unthemed = 0;
+                for (AppInfo a : allApps) if (!a.isThemed) unthemed++;
+                ((TextView) btnSelectAll).setText(c >= unthemed ? "反选" : "全选");
+            }
         }
     }
 

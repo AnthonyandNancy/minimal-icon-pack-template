@@ -36,6 +36,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        if (getContext() == null) return view;
 
         prefs = new PreferencesHelper(getContext());
 
