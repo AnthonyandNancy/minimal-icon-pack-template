@@ -144,7 +144,7 @@ public class RequestFragment extends Fragment {
         StringBuilder sb = new StringBuilder();
         for (AppInfo a : selected) {
             sb.append(a.appName).append(" | ").append(a.packageName)
-                    .append(" | ").append(a.activityName).append("\n");
+                    .append(" | ").append(a.componentName).append("\n");
         }
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
