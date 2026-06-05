@@ -28,6 +28,8 @@ public class RequestFragment extends Fragment {
     private List<AppInfo> allApps;
     private String currentFilter = "all";
 
+    private View pillAll, pillThemed, pillUnthemed, pillSelected;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,15 +40,20 @@ public class RequestFragment extends Fragment {
         TextView tv = view.findViewById(R.id.page_title);
         if (tv != null) tv.setText(getString(R.string.request_title));
 
+        // Cache pill views
+        pillAll = view.findViewById(R.id.filter_all);
+        pillThemed = view.findViewById(R.id.filter_themed);
+        pillUnthemed = view.findViewById(R.id.filter_unthemed);
+        pillSelected = view.findViewById(R.id.filter_selected);
+
+        pillAll.setOnClickListener(v -> applyFilter("all"));
+        pillThemed.setOnClickListener(v -> applyFilter("themed"));
+        pillUnthemed.setOnClickListener(v -> applyFilter("unthemed"));
+        pillSelected.setOnClickListener(v -> applyFilter("selected"));
+
         bottomBar = view.findViewById(R.id.request_bottom_bar);
         btnSelectAll = view.findViewById(R.id.btn_select_all);
         selectedCountText = view.findViewById(R.id.selected_count_text);
-
-        // Filter pills
-        view.findViewById(R.id.filter_all).setOnClickListener(v -> applyFilter("all"));
-        view.findViewById(R.id.filter_themed).setOnClickListener(v -> applyFilter("themed"));
-        view.findViewById(R.id.filter_unthemed).setOnClickListener(v -> applyFilter("unthemed"));
-        view.findViewById(R.id.filter_selected).setOnClickListener(v -> applyFilter("selected"));
 
         // List
         requestList = view.findViewById(R.id.request_list);
@@ -81,10 +88,7 @@ public class RequestFragment extends Fragment {
     }
 
     private void updatePillState(String f) {
-        View[] pills = {getView().findViewById(R.id.filter_all),
-                getView().findViewById(R.id.filter_themed),
-                getView().findViewById(R.id.filter_unthemed),
-                getView().findViewById(R.id.filter_selected)};
+        View[] pills = {pillAll, pillThemed, pillUnthemed, pillSelected};
         String[] keys = {"all","themed","unthemed","selected"};
         for (int i = 0; i < pills.length; i++) {
             View p = pills[i];
