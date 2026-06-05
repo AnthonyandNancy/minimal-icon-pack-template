@@ -47,14 +47,14 @@ public class WallpapersFragment extends Fragment {
                         @Override
                         public void onWallpaperClick(WallpaperInfo wallpaper) {
                             Toast.makeText(getContext(),
-                                    "预览: " + wallpaper.title + "\n(需 Electron 扩展实现完整预览)",
+                                    "预览: " + wallpaper.title,
                                     Toast.LENGTH_LONG).show();
                         }
 
                         @Override
                         public void onApplyClick(WallpaperInfo wallpaper) {
                             Toast.makeText(getContext(),
-                                    "设置壁纸功能预留\n(需 Electron 扩展实现)",
+                                    "壁纸功能开发中",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });

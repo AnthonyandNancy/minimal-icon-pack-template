@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="14dp"
-        android:paddingEnd="12dp">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp">
 
         <ImageView
             android:id="@+id/launcher_icon"

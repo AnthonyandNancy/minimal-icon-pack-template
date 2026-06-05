@@ -49,7 +49,7 @@
 
     <!-- Icons -->
     <string name="icons_title">图标</string>
-    <string name="icons_empty">暂无图标\n等待 Electron 注入资源</string>
+    <string name="icons_empty">暂无图标\n请通过图标包管理工具导入图标资源</string>
     <string name="icons_search_hint">搜索图标名称...</string>
 
     <!-- Request -->
@@ -98,7 +98,7 @@
 
     <!-- About -->
     <string name="about_title">关于</string>
-    <string name="about_description">这是一个由 Electron 工具生成的 Android 图标包模板。\n\n本模板为开发者提供了一个快速创建自定义图标包的基础框架，配合 Electron 桌面工具可以批量注入图标资源和配置。</string>
+    <string name="about_description">这是一款精美的 Android 图标包应用。\n\n通过高质量图标设计为你的主屏幕带来全新视觉体验，支持主流启动器，持续更新更多图标适配。</string>
     <string name="about_oss">开源许可</string>
     <string name="about_oss_desc">本应用使用了以下开源组件：\n- AndroidX (Apache 2.0)\n- Google Material Design (Apache 2.0)\n\n本模板工程本身采用 MIT 许可。</string>
     <string name="about_share">分享此应用</string>
