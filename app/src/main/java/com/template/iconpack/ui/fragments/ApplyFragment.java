@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
-import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.ui.adapters.LauncherAdapter;
 
 public class ApplyFragment extends Fragment {
@@ -34,7 +33,6 @@ public class ApplyFragment extends Fragment {
         });
 
         launcherList.setAdapter(adapter);
-        BackBarHelper.setup(view, getActivity(), getString(R.string.apply_title));
         return view;
     }
 }

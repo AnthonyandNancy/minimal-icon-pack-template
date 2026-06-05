@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
-import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.models.WallpaperInfo;
 import com.template.iconpack.ui.adapters.WallpaperAdapter;
 import com.template.iconpack.utils.IconPackLoader;
@@ -60,7 +59,6 @@ public class WallpapersFragment extends Fragment {
             grid.setAdapter(adapter);
         }
 
-        BackBarHelper.setup(view, getActivity(), getString(R.string.wallpapers_title));
         return view;
     }
 }

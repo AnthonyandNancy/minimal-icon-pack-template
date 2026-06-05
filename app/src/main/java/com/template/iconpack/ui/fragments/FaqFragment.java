@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
-import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.ui.adapters.FaqAdapter;
 
 import java.util.Arrays;
@@ -49,7 +48,6 @@ public class FaqFragment extends Fragment {
         adapter.setItems(items);
         faqList.setAdapter(adapter);
 
-        BackBarHelper.setup(view, getActivity(), getString(R.string.faq_title));
         return view;
     }
 }

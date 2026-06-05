@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
-import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.ui.adapters.IconGridAdapter;
 import com.template.iconpack.utils.IconPackLoader;
@@ -69,7 +68,6 @@ public class IconsFragment extends Fragment {
             });
         }
 
-        BackBarHelper.setup(view, getActivity(), getString(R.string.icons_title));
         return view;
     }
 

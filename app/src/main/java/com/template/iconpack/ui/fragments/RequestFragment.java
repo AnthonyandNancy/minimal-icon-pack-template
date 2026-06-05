@@ -18,9 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
 import com.template.iconpack.models.AppInfo;
-import com.template.iconpack.ui.BackBarHelper;
-import com.template.iconpack.ui.glass.GlassMaterialFactory;
-import com.template.iconpack.ui.glass.LiquidGlassDrawable;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
 import com.template.iconpack.utils.AppScanner;
 
@@ -46,13 +43,10 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
         float density = ctx.getResources().getDisplayMetrics().density;
         bottomBar = view.findViewById(R.id.request_bottom_bar);
         btnSelectAll = view.findViewById(R.id.btn_select_all);
-        bottomBar.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.bottomBar(), density));
+        bottomBar.setBackgroundResource(R.drawable.glass_floating_bar);
 
         requestList = view.findViewById(R.id.request_list);
         requestList.setLayoutManager(new LinearLayoutManager(ctx));
-
-        // Shared back bar setup (matches all sub-pages)
-        BackBarHelper.setup(view, getActivity(), getString(R.string.request_title));
 
         allApps = AppScanner.scanInstalledApps(ctx);
         int total = allApps.size(), themed = 0;

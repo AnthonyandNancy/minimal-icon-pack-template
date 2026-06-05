@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
-import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.models.PresetInfo;
 import com.template.iconpack.ui.adapters.PresetAdapter;
 import com.template.iconpack.utils.IconPackLoader;
@@ -34,7 +33,6 @@ public class PresetsFragment extends Fragment {
             presetsList.setAdapter(adapter);
         }
 
-        BackBarHelper.setup(view, getActivity(), getString(R.string.presets_title));
         return view;
     }
 }

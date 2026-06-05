@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.template.iconpack.R;
-import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.utils.PreferencesHelper;
 
 public class SettingsFragment extends Fragment {
@@ -79,7 +78,6 @@ public class SettingsFragment extends Fragment {
             Toast.makeText(getContext(), "图标数据已重新加载", Toast.LENGTH_SHORT).show();
         });
 
-        BackBarHelper.setup(view, getActivity(), getString(R.string.settings_title));
         return view;
     }
 }
