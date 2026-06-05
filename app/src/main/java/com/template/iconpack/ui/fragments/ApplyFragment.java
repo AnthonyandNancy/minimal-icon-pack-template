@@ -34,7 +34,7 @@ public class ApplyFragment extends Fragment {
         });
 
         launcherList.setAdapter(adapter);
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.apply_title));
         return view;
     }
 }

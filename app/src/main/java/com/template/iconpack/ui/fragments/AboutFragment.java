@@ -28,7 +28,7 @@ public class AboutFragment extends Fragment {
             }
         });
 
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.about_title));
         return view;
     }
 }

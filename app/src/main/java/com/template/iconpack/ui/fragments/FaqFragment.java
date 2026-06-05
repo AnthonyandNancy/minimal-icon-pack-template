@@ -49,7 +49,7 @@ public class FaqFragment extends Fragment {
         adapter.setItems(items);
         faqList.setAdapter(adapter);
 
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.faq_title));
         return view;
     }
 }

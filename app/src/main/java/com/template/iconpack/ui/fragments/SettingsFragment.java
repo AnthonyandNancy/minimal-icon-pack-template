@@ -79,7 +79,7 @@ public class SettingsFragment extends Fragment {
             Toast.makeText(getContext(), "图标数据已重新加载", Toast.LENGTH_SHORT).show();
         });
 
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.settings_title));
         return view;
     }
 }

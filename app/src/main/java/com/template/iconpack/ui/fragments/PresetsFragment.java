@@ -34,7 +34,7 @@ public class PresetsFragment extends Fragment {
             presetsList.setAdapter(adapter);
         }
 
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.presets_title));
         return view;
     }
 }

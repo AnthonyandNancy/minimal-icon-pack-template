@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
-import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
+import com.template.iconpack.ui.BackBarHelper;
 import com.template.iconpack.ui.glass.GlassMaterialFactory;
 import com.template.iconpack.ui.glass.LiquidGlassDrawable;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
@@ -51,17 +51,8 @@ public class RequestFragment extends Fragment implements RequestAppAdapter.Filte
         requestList = view.findViewById(R.id.request_list);
         requestList.setLayoutManager(new LinearLayoutManager(ctx));
 
-        ImageButton btnBack = view.findViewById(R.id.btn_back_req);
-        if (btnBack != null) btnBack.setOnClickListener(v -> {
-            if (getActivity() != null) getActivity().onBackPressed();
-        });
-
-        View spacer = view.findViewById(R.id.status_spacer_req);
-        if (spacer != null && getActivity() instanceof MainActivity) {
-            MainActivity ma = (MainActivity) getActivity();
-            spacer.getLayoutParams().height = ma.getStatusBarHeight() + ma.dp(8);
-            spacer.requestLayout();
-        }
+        // Shared back bar setup (matches all sub-pages)
+        BackBarHelper.setup(view, getActivity(), getString(R.string.request_title));
 
         allApps = AppScanner.scanInstalledApps(ctx);
         int total = allApps.size(), themed = 0;

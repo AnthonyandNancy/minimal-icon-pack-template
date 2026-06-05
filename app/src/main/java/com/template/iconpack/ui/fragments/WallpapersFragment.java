@@ -60,7 +60,7 @@ public class WallpapersFragment extends Fragment {
             grid.setAdapter(adapter);
         }
 
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.wallpapers_title));
         return view;
     }
 }

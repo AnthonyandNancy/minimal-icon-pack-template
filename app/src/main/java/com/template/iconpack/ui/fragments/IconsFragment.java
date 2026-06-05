@@ -69,7 +69,7 @@ public class IconsFragment extends Fragment {
             });
         }
 
-        BackBarHelper.setup(view, getActivity());
+        BackBarHelper.setup(view, getActivity(), getString(R.string.icons_title));
         return view;
     }
 
