@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -19,6 +20,7 @@ import android.widget.FrameLayout;
 import java.util.Random;
 
 import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderEffectBlur;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class LiquidGlassLayout extends FrameLayout {
@@ -27,6 +29,7 @@ public class LiquidGlassLayout extends FrameLayout {
     private GlassOverlay overlay;
     private float cornerRadiusPx;
     private float d;
+    private boolean blurReady;
 
     public LiquidGlassLayout(Context context) { super(context); init(); }
     public LiquidGlassLayout(Context context, AttributeSet attrs) { super(context, attrs); init(); }
@@ -36,8 +39,7 @@ public class LiquidGlassLayout extends FrameLayout {
         cornerRadiusPx = 28f * d;
         setClipToOutline(true);
         setOutlineProvider(new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View v, Outline o) {
+            @Override public void getOutline(View v, Outline o) {
                 o.setRoundRect(0, 0, v.getWidth(), v.getHeight(), cornerRadiusPx);
             }
         });
@@ -52,14 +54,28 @@ public class LiquidGlassLayout extends FrameLayout {
     }
 
     public void bindBlur(FrameLayout root) {
-        blurView.setupWith(root, new RenderScriptBlur(getContext()))
-                .setFrameClearDrawable(null)
-                .setBlurRadius(18f)
-                .setOverlayColor(0x00000000)
-                .setBlurAutoUpdate(true);
+        if (root == null || blurReady) return;
+        try {
+            // Use RenderEffect on API 31+, RenderScript on older
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                blurView.setupWith(root, new RenderEffectBlur())
+                        .setFrameClearDrawable(null)
+                        .setBlurRadius(16f)
+                        .setOverlayColor(0x00000000)
+                        .setBlurAutoUpdate(true);
+            } else {
+                blurView.setupWith(root, new RenderScriptBlur(getContext()))
+                        .setFrameClearDrawable(null)
+                        .setBlurRadius(16f)
+                        .setOverlayColor(0x00000000)
+                        .setBlurAutoUpdate(true);
+            }
+            blurReady = true;
+        } catch (Exception e) {
+            // BlurView failed silently — glass overlay still works
+            blurView.setVisibility(GONE);
+        }
     }
-
-    public void setBlurRadius(float r) { blurView.setBlurRadius(r); }
 
     @Override protected void onSizeChanged(int w, int h, int ow, int oh) {
         super.onSizeChanged(w, h, ow, oh);
@@ -98,10 +114,10 @@ public class LiquidGlassLayout extends FrameLayout {
             canvas.drawRoundRect(rect, rr, rr, p);
 
             p.reset(); p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(1.2f * d); p.setColor(0x80FFFFFF);
+            p.setStrokeWidth(1.2f*d); p.setColor(0x80FFFFFF);
             canvas.drawRoundRect(rect, rr, rr, p);
 
-            p.setStrokeWidth(0.45f * d); p.setColor(0x30FF6666);
+            p.setStrokeWidth(0.45f*d); p.setColor(0x30FF6666);
             canvas.drawRoundRect(new RectF(rect.left-d*0.5f,rect.top-d*0.5f,rect.right-d*0.5f,rect.bottom-d*0.5f), rr, rr, p);
             p.setColor(0x206666FF);
             canvas.drawRoundRect(new RectF(rect.left+d*0.5f,rect.top+d*0.5f,rect.right+d*0.5f,rect.bottom+d*0.5f), rr, rr, p);
