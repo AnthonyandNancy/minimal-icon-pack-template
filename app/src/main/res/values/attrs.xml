@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LiquidGlassView">
+        <attr name="cornerRadius" format="dimension"/>
+        <attr name="blurRadius" format="dimension"/>
+        <attr name="tintColor" format="color"/>
+        <attr name="tintAlpha" format="float"/>
+        <attr name="refractionStrength" format="float"/>
+        <attr name="borderAlpha" format="float"/>
+        <attr name="highlightAlpha" format="float"/>
+        <attr name="glassPadding" format="dimension"/>
+        <attr name="enableChromatic" format="boolean"/>
+    </declare-styleable>
+</resources>
