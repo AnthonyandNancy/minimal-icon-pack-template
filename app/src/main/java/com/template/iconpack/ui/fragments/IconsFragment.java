@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -119,8 +123,18 @@ public class IconsFragment extends Fragment {
         ImageView iv = new ImageView(getContext());
         iv.setImageResource(icon.resId);
         iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        iv.setBackgroundColor(0xCC000000);
+        iv.setBackgroundColor(0x88000000);
+        iv.setPadding(32,32,32,32);
         iv.setOnClickListener(v -> d.dismiss());
+
+        ScaleAnimation anim = new ScaleAnimation(
+                0.7f, 1.0f, 0.7f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(250);
+        anim.setFillAfter(true);
+        iv.startAnimation(anim);
+
         d.setContentView(iv);
         d.show();
     }
