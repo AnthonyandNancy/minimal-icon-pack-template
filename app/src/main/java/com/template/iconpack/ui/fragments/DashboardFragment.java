@@ -21,6 +21,8 @@ import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
+import com.template.iconpack.ui.glass.GlassMaterialFactory;
+import com.template.iconpack.ui.glass.LiquidGlassDrawable;
 import com.template.iconpack.ui.glass.LiquidGlassLayout;
 import com.template.iconpack.ui.anim.GlassAnimations;
 import com.template.iconpack.utils.AppScanner;
