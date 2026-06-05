@@ -21,12 +21,17 @@ public class IconGridAdapter extends RecyclerView.Adapter<IconGridAdapter.ViewHo
     private List<DrawableInfo> icons;
     private List<DrawableInfo> filteredIcons;
     private boolean showName;
+    private OnIconClickListener listener;
+
+    public interface OnIconClickListener { void onIconClick(DrawableInfo icon); }
 
     public IconGridAdapter(List<DrawableInfo> icons, boolean showName) {
         this.icons = icons != null ? icons : new ArrayList<>();
         this.filteredIcons = new ArrayList<>(this.icons);
         this.showName = showName;
     }
+
+    public void setOnIconClickListener(OnIconClickListener l) { this.listener = l; }
 
     public void updateData(List<DrawableInfo> newIcons) {
         this.icons = newIcons != null ? newIcons : new ArrayList<>();
@@ -70,6 +75,9 @@ public class IconGridAdapter extends RecyclerView.Adapter<IconGridAdapter.ViewHo
         }
         holder.name.setText(icon.label != null ? icon.label : icon.name);
         holder.name.setVisibility(showName ? View.VISIBLE : View.GONE);
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onIconClick(icon);
+        });
     }
 
     @Override

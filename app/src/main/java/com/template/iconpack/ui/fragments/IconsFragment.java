@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.Dialog;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -61,6 +63,7 @@ public class IconsFragment extends Fragment {
 
             boolean showName = prefs.isShowIconName();
             adapter = new IconGridAdapter(icons, showName);
+            adapter.setOnIconClickListener(icon -> showIconZoom(icon));
             iconsGrid.setAdapter(adapter);
 
             searchInput.addTextChangedListener(new TextWatcher() {
@@ -97,6 +100,7 @@ public class IconsFragment extends Fragment {
                 int columns = prefs.getIconColumns();
                 iconsGrid.setLayoutManager(new GridLayoutManager(getContext(), columns));
                 adapter = new IconGridAdapter(icons, prefs.isShowIconName());
+                adapter.setOnIconClickListener(icon -> showIconZoom(icon));
                 iconsGrid.setAdapter(adapter);
                 if (searchInput != null) {
                     String q = searchInput.getText() != null ? searchInput.getText().toString() : "";
@@ -108,5 +112,16 @@ public class IconsFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void showIconZoom(DrawableInfo icon) {
+        Dialog d = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        ImageView iv = new ImageView(getContext());
+        iv.setImageResource(icon.resId);
+        iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        iv.setBackgroundColor(0xCC000000);
+        iv.setOnClickListener(v -> d.dismiss());
+        d.setContentView(iv);
+        d.show();
     }
 }
