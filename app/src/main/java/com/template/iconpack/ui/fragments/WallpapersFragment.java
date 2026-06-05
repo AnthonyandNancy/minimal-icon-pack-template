@@ -61,8 +61,6 @@ public class WallpapersFragment extends Fragment {
             grid.setAdapter(adapter);
         }
 
-                TextView tv = view.findViewById(R.id.page_title);
-        if (tv != null) tv.setText(getString(R.string.wallpapers_title));
         return view;
     }
 }

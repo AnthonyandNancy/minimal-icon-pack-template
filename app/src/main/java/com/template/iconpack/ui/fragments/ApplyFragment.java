@@ -38,9 +38,6 @@ public class ApplyFragment extends Fragment {
         });
 
         launcherList.setAdapter(adapter);
-        
-        TextView tv = view.findViewById(R.id.page_title);
-        if (tv != null) tv.setText(getString(R.string.apply_title));
-return view;
+        return view;
     }
 }

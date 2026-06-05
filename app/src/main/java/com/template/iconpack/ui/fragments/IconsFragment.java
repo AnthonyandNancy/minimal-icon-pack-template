@@ -78,8 +78,6 @@ public class IconsFragment extends Fragment {
             });
         }
 
-                TextView tv = view.findViewById(R.id.page_title);
-        if (tv != null) tv.setText(getString(R.string.icons_title));
         return view;
     }
 
