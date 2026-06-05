@@ -62,4 +62,7 @@ public class GlassMaterialConfig {
     public GlassMaterialConfig elasticity(float e) { this.elasticity = e; return this; }
     public GlassMaterialConfig corners(float[] c) { this.cornerRadii = c; return this; }
     public GlassMaterialConfig aberration(boolean a) { this.enableChromaticAberration = a; return this; }
+    public GlassMaterialConfig saturation(float s) { this.saturation = s; return this; }
+    public GlassMaterialConfig displacementScale(float ds) { this.displacementScale = ds; return this; }
+    public GlassMaterialConfig innerGlow(float ig) { this.innerGlowIntensity = ig; return this; }
 }

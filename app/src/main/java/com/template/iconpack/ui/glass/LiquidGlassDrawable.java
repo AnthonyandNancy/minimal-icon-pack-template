@@ -223,10 +223,10 @@ public class LiquidGlassDrawable extends Drawable {
     // ── background blur capture ──────────────────────
     private void captureBg() {
         View v = detectView();
-        if (v == null) return;
-        float blurDp = cfg.blurAmount * 45f; // maps 0.25→~11dp
+        if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) return;
+        float blurDp = cfg.blurAmount * 45f;
         blurredBg = BlurUtils.captureAndBlur(v, blurDp, d);
-        bgCaptured = true;
+        if (blurredBg != null) bgCaptured = true; // only mark captured if successful
     }
 
     // ── draw helpers ─────────────────────────────────
