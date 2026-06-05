@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Multi-layer: base + highlight + edge + stroke -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape><solid android:color="#F1F5F9"/><corners android:radius="26dp"/></shape>
-    </item>
-    <item>
-        <shape>
-            <gradient android:startColor="#60FFFFFF" android:endColor="#00FFFFFF"
-                android:angle="135" android:type="linear"/>
-            <corners android:radius="26dp"/>
-        </shape>
-    </item>
-    <item>
-        <shape>
-            <stroke android:width="0.5dp" android:color="#90FFFFFF"/>
-            <solid android:color="#00000000"/>
-            <corners android:radius="26dp"/>
-        </shape>
-    </item>
+    <item><shape><solid android:color="#20FFFFFF"/><corners android:radius="26dp"/></shape></item>
+    <item><shape><gradient android:startColor="#30FFFFFF" android:endColor="#00FFFFFF" android:angle="135"/><corners android:radius="26dp"/></shape></item>
+    <item><shape><stroke android:width="0.5dp" android:color="#60FFFFFF"/><solid android:color="#00000000"/><corners android:radius="26dp"/></shape></item>
 </layer-list>

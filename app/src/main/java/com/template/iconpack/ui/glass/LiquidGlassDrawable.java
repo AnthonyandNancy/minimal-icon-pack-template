@@ -45,12 +45,6 @@ public class LiquidGlassDrawable extends Drawable {
     /** Attach a host View for background blur sampling. */
     public void attachTo(View view) { this.hostView = view; }
 
-    /** Auto-attach when set as background on a View. */
-    @Override public void setCallback(android.graphics.drawable.Drawable.Callback cb) {
-        super.setCallback(cb);
-        if (cb instanceof View && hostView == null) hostView = (View) cb;
-    }
-
     @Override protected void onBoundsChange(android.graphics.Rect b) {
         super.onBoundsChange(b);
         float h = sp / 2f;
