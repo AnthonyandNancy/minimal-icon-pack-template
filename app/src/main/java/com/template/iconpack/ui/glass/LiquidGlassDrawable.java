@@ -207,7 +207,7 @@ public class LiquidGlassDrawable extends Drawable {
         int sy = viewLoc[1] - rootLoc[1];
         int sw = v.getWidth(), sh = v.getHeight();
 
-        float scale = 0.25f;
+        float scale = 0.5f;
         int bmW = Math.max(1, (int)(sw * scale));
         int bmH = Math.max(1, (int)(sh * scale));
 
@@ -220,8 +220,8 @@ public class LiquidGlassDrawable extends Drawable {
         bgCanvas.scale((float)bmW / sw, (float)bmH / sh);
         renderer.drawRegion(bgCanvas, sx, sy, sw, sh, rootW, rootH);
 
-        // Apply blur to the sampled region
-        BlurUtils.boxBlurOnly(sampledBg, 6, 2);
+        // Strong Gaussian-like blur via multi-pass box blur
+        BlurUtils.boxBlurOnly(sampledBg, 12, 4);
     }
 
     private void strokeRR(Canvas c, RectF r, float rr) {
