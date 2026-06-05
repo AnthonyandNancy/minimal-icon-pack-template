@@ -78,7 +78,12 @@ public class DashboardFragment extends Fragment {
         if (req != null) req.setOnClickListener(v -> nav(12));
     }
 
-    private void nav(int pos) { if (callback != null) callback.onCardClicked(pos); }
+    private void nav(int pos) {
+        if (callback != null) { callback.onCardClicked(pos); return; }
+        // Fallback: call MainActivity directly
+        if (getActivity() instanceof MainActivity)
+            ((com.template.iconpack.MainActivity) getActivity()).onDashboardCardClicked(pos);
+    }
 
     private void buildQuickCards(Context ctx, int icons, int apps, int themed) {
         GridLayout g = rootView.findViewById(R.id.dashboard_stats);
@@ -107,19 +112,20 @@ public class DashboardFragment extends Fragment {
     private void buildEntryCards(Context ctx, int icons, int apps, int themed, int wp) {
         LinearLayout c = rootView.findViewById(R.id.dashboard_entries);
         c.removeAllViews();
-        String[] t = {"浏览图标","申请图标","应用启动器","壁纸"};
-        String[] ds = {icons+" 个图标", themed+" / "+apps+" 已适配","选择并应用启动器",wp+" 张云端壁纸"};
-        int[] is = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_apply_card, R.drawable.ic_wallpaper};
+        String[] t = {"浏览图标","申请图标","壁纸"};
+        String[] ds = {icons+" 个图标", themed+" / "+apps+" 已适配", wp+" 张云端壁纸"};
+        int[] is = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_wallpaper};
+        int[] navs = {11, 12, 13};
         float dp = ctx.getResources().getDisplayMetrics().density;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             View v = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, c, false);
             v.setBackgroundResource(R.drawable.bg_surface_card);
             ((TextView) v.findViewById(R.id.launcher_name)).setText(t[i]);
             ((TextView) v.findViewById(R.id.entry_desc)).setText(ds[i]);
             ImageView iv = v.findViewById(R.id.launcher_icon);
             if (iv != null) iv.setImageResource(is[i]);
-            int idx = i;
-            v.setOnClickListener(vv -> { if (callback != null) callback.onCardClicked(10+idx); });
+            int target = navs[i];
+            v.setOnClickListener(vv -> nav(target));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(0,0,0,(int)(12*dp));

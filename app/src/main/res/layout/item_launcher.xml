@@ -1,44 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ENTRY CARD: FrameLayout + glass drawable — NO MaterialCardView -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
-    android:background="@drawable/bg_card_surface"
-    android:elevation="3dp"
-    android:clipChildren="false"
+    android:layout_height="72dp"
+    android:background="@drawable/bg_surface_card"
+    android:elevation="1dp"
     android:clickable="true"
     android:focusable="true"
-    android:outlineProvider="background"
-    android:foreground="?attr/selectableItemBackground"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="14dp"
+        android:paddingEnd="12dp">
 
-        <!-- Icon circle -->
-        <LinearLayout
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:background="@drawable/glass_circle_container"
-            android:layout_marginEnd="14dp">
+        <ImageView
+            android:id="@+id/launcher_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_apply_card"
+            android:tint="@color/primary"
+            android:scaleType="centerInside"
+            android:layout_marginEnd="14dp"/>
 
-            <ImageView
-                android:id="@+id/launcher_icon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_apply_card"
-                android:tint="#4D96FF" />
-
-        </LinearLayout>
-
-        <!-- Title + description -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,9 +36,9 @@
                 android:id="@+id/launcher_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/text_primary"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/entry_desc"
@@ -60,18 +46,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
-                android:layout_marginTop="2dp" />
-
+                android:layout_marginTop="2dp"/>
         </LinearLayout>
 
-        <!-- Arrow -->
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:src="@drawable/ic_info"
             android:tint="@color/text_hint"
-            android:rotation="180" />
-
+            android:rotation="180"/>
     </LinearLayout>
-
 </FrameLayout>

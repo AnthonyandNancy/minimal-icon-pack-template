@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void onDashboardCardClicked(int pos) {
+    public void onDashboardCardClicked(int pos) {
         int idx = pos - 10;
         if (idx >= 0 && idx <= 7) {
             switch (idx) {
