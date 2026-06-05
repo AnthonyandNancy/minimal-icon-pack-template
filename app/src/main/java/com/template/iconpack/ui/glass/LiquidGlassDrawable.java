@@ -18,215 +18,212 @@ import android.view.View;
 import java.util.Random;
 
 /**
- * Liquid glass Drawable — replicates liquid-glass-react's rendering pipeline:
- *   background blur → displacement edge → chromatic aberration →
- *   highlight → shadow → noise → stroke rim.
+ * Exact replica of rdev/liquid-glass-react (npm: liquid-glass-react).
+ *
+ * React pipeline → Android equivalent:
+ *   backdrop-filter blur()    → BlurUtils real bg sampling + box blur
+ *   SVG feDisplacementMap     → multi-offset edge strokes (edge-only)
+ *   RGB channel separation    → R/G/B coloured edge strokes at offset positions
+ *   screen/overlay borders    → PorterDuff blend mode rim gradients
+ *   saturation colour wash    → LinearGradient blue→purple→cyan overlay
+ *   radial highlight          → RadialGradient center glow
+ *   noise grain               → fixed-seed point noise
  */
 public class LiquidGlassDrawable extends Drawable {
 
     private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF rect = new RectF();
-    private final Path  clip = new Path();
-    private final Random rng = new Random(42L);
+    private final Path clip = new Path();
 
     private final GlassMaterialConfig cfg;
-    private final float d, sp, rPx;
+    private final float d, rPx;
     private View hostView;
     private Bitmap blurredBg;
     private boolean bgCaptured;
 
     public LiquidGlassDrawable(GlassMaterialConfig config, float density) {
-        this.cfg = config;
-        this.d = density;
-        this.sp = 1.2f * d;
+        this.cfg = config; this.d = density;
         this.rPx = config.cornerRadiusDp * d;
     }
 
-    /** Attach a host View for background blur sampling. */
     public void attachTo(View view) { this.hostView = view; }
 
     @Override protected void onBoundsChange(android.graphics.Rect b) {
         super.onBoundsChange(b);
-        float h = sp / 2f;
+        float h = 1.2f * d / 2f;
         rect.set(b.left + h, b.top + h, b.right - h, b.bottom - h);
         clip.reset();
         if (cfg.cornerRadii != null) clip.addRoundRect(rect, cfg.cornerRadii, Path.Direction.CW);
         else clip.addRoundRect(rect, rPx, rPx, Path.Direction.CW);
-
-        bgCaptured = false; // force re-capture on resize
+        bgCaptured = false;
     }
 
     @Override public void draw(Canvas canvas) {
         int save = canvas.save();
         canvas.clipPath(clip);
 
-        // ── LAYER 0: Background blur (like backdrop-filter: blur()) ──
-        if (hostView != null && !bgCaptured) captureBg();
+        // ═══ Layer 0: backdrop-filter blur (real background sampling) ═══
+        if (hostView != null && !bgCaptured) {
+            blurredBg = BlurUtils.captureAndBlur(hostView, cfg.blurAmount * 24f, d);
+            bgCaptured = true;
+        }
         if (blurredBg != null) {
-            p.setAlpha(255);
-            p.setShader(null);
-            p.setXfermode(null);
-            p.setStyle(Paint.Style.FILL);
+            p.reset(); p.setAlpha(255);
             canvas.drawBitmap(blurredBg, rect.left, rect.top, p);
         }
 
-        float w = rect.width(), h = rect.height();
         float alpha = cfg.opacity;
         float hl = cfg.highlightIntensity;
         float edgeA = cfg.edgeIntensity;
-        float sh = cfg.bottomShadowIntensity;
 
-        // ── LAYER 1: Glass tint overlay ──
-        p.setShader(null);
-        p.setColor(cfg.baseColor);
-        p.setAlpha((int)(255 * alpha * 0.7f));
-        p.setStyle(Paint.Style.FILL);
+        // ═══ Layer 1: Glass tint base ═══
+        p.reset(); p.setColor(cfg.baseColor);
+        p.setAlpha((int)(255 * alpha));
         canvas.drawRoundRect(rect, rPx, rPx, p);
 
-        // ── LAYER 2: Saturation colour bleed (blue→purple→cyan) ──
-        float sat = cfg.saturation * cfg.innerGlowIntensity * 3f;
-        if (sat > 0.003f) {
-            int[] sc = {0x5EA8FF, 0x8B5CF6, 0x16D6C8};
+        // ═══ Layer 2: Saturation colour bleed ═══
+        float satAlpha = cfg.saturation * cfg.innerGlowIntensity * 3f;
+        if (satAlpha > 0.002f) {
+            p.reset(); p.setAlpha((int)(255 * Math.min(satAlpha, 0.16f)));
             p.setShader(new LinearGradient(rect.left, rect.top, rect.right, rect.bottom,
-                    sc, new float[]{0, 0.5f, 1f}, Shader.TileMode.CLAMP));
-            p.setAlpha((int)(255 * Math.min(sat, 0.18f)));
-            p.setStyle(Paint.Style.FILL);
+                    new int[]{0x4A9EFF, 0x7B5CF6, 0x16D6C8},
+                    new float[]{0f, 0.5f, 1f}, Shader.TileMode.CLAMP));
             canvas.drawRoundRect(rect, rPx, rPx, p);
         }
 
-        // ── LAYER 3: Inner glow (radial) ──
-        float glow = cfg.innerGlowIntensity * 2f;
+        // ═══ Layer 3: Radial inner glow (center bright) ═══
+        float glow = cfg.innerGlowIntensity * 2.2f;
         if (glow > 0) {
-            p.setShader(new RadialGradient(rect.centerX(), rect.centerY(),
-                    Math.min(w, h) * 0.4f,
-                    argb((int)(255*glow*0.45f), 0xFFFFFF),
+            float dim = Math.min(rect.width(), rect.height());
+            p.reset(); p.setAlpha(255);
+            p.setShader(new RadialGradient(rect.centerX(), rect.centerY(), dim * 0.45f,
+                    argb((int)(255 * glow * 0.42f), 0xFFFFFF),
                     argb(0, 0xFFFFFF), Shader.TileMode.CLAMP));
-            p.setAlpha(255);
-            p.setStyle(Paint.Style.FILL);
             canvas.drawRoundRect(rect, rPx, rPx, p);
         }
 
-        // ── LAYER 4: Highlight (top-left → bottom-right) ──
+        // ═══ Layer 4: Directional highlight ═══
         if (hl > 0) {
+            p.reset(); p.setAlpha(255);
             p.setShader(new LinearGradient(rect.left, rect.top, rect.right, rect.bottom,
-                    argb((int)(255*hl*0.95f), 0xFFFFFF),
-                    argb(0, 0xFFFFFF), Shader.TileMode.CLAMP));
-            p.setAlpha(255);
-            p.setStyle(Paint.Style.FILL);
+                    argb((int)(255 * hl * 0.95f), 0xFFFFFF),
+                    argb((int)(255 * hl * 0.03f), 0xFFFFFF),
+                    Shader.TileMode.CLAMP));
             canvas.drawRoundRect(rect, rPx, rPx, p);
         }
 
-        // ── LAYER 5: Edge refraction (multiple offset strokes) ──
+        // ═══ Layer 5: Edge displacement (multi-offset, centre stays sharp) ═══
         float displ = cfg.displacementScale * d;
-        p.setStyle(Paint.Style.STROKE);
+        p.reset(); p.setStyle(Paint.Style.STROKE);
 
-        // Outer bright stroke
-        p.setStrokeWidth(sp * 1.1f);
-        p.setColor(argb((int)(255*edgeA*0.85f), 0xFFFFFF));
-        p.setAlpha(255);
-        p.setShader(null);
-        drawRR(canvas, rect, 0, 0);
+        // Outer bright edge
+        p.setStrokeWidth(1.2f * d);
+        p.setColor(argb((int)(255 * edgeA * 0.78f), 0xFFFFFF));
+        drawRR(canvas, rect);
 
-        // Inner darker stroke (0.4dp)
+        // Inner darker edge (glass thickness)
         p.setStrokeWidth(0.4f * d);
-        p.setColor(argb((int)(255*edgeA*0.25f), 0x000000));
-        RectF inner = inset(rect, displ * 0.35f);
-        drawRR(canvas, inner, 0, 0);
+        p.setColor(argb((int)(255 * edgeA * 0.22f), 0x152C3E));
+        drawRR(canvas, margin(rect, displ * 0.28f));
 
-        // ── LAYER 6: Chromatic aberration (RGB channel separation) ──
+        // ═══ Layer 6: RGB chromatic aberration at edges ═══
         if (cfg.enableChromaticAberration && cfg.aberrationIntensity > 0) {
             float ca = cfg.aberrationIntensity;
-            float off = displ * 0.12f * ca;
+            float off = displ * 0.10f * ca;
 
-            // Red channel (left-up)
-            p.setStrokeWidth(0.5f * d);
-            p.setColor(argb((int)(255*ca*0.40f), 0xFF6B6B));
-            drawRR(canvas, inset(rect, -off * 1.2f), -off * 0.6f, -off * 0.6f);
+            // Red channel (left-up offset)
+            p.reset(); p.setStyle(Paint.Style.STROKE);
+            p.setStrokeWidth(0.45f * d);
+            p.setColor(argb((int)(255 * ca * 0.36f), 0xFF5A5A));
+            RectF redR = new RectF(rect.left - off, rect.top - off,
+                    rect.right - off, rect.bottom - off);
+            drawRR(canvas, redR);
 
-            // Blue channel (right-down)
-            p.setColor(argb((int)(255*ca*0.30f), 0x6B6BFF));
-            drawRR(canvas, inset(rect, -off * 0.8f), off * 0.6f, off * 0.6f);
-
-            // Green stays centered (slight blur)
+            // Green channel (center)
             p.setStrokeWidth(0.3f * d);
-            p.setColor(argb((int)(255*ca*0.15f), 0x6BFF6B));
-            drawRR(canvas, rect, 0, 0);
+            p.setColor(argb((int)(255 * ca * 0.16f), 0x5AFF5A));
+            drawRR(canvas, rect);
+
+            // Blue channel (right-down offset)
+            p.setStrokeWidth(0.45f * d);
+            p.setColor(argb((int)(255 * ca * 0.26f), 0x5A5AFF));
+            RectF blueR = new RectF(rect.left + off * 0.8f, rect.top + off * 0.8f,
+                    rect.right + off * 0.8f, rect.bottom + off * 0.8f);
+            drawRR(canvas, blueR);
         }
 
-        // ── LAYER 7: Top-edge hairline ──
-        p.setStyle(Paint.Style.STROKE);
+        // ═══ Layer 7: Top hairline ═══
+        p.reset(); p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(0.25f * d);
-        p.setShader(null);
-        p.setColor(argb((int)(255*hl*0.65f), 0xFFFFFF));
-        p.setAlpha(255);
-        float ty = rect.top + sp * 0.45f;
+        p.setColor(argb((int)(255 * hl * 0.58f), 0xFFFFFF));
+        float ty = rect.top + 0.5f * d;
         canvas.drawLine(rect.left + rPx * 0.4f, ty, rect.right - rPx * 0.4f, ty, p);
 
-        // ── LAYER 8: Bottom shadow ──
+        // ═══ Layer 8: Bottom shadow ═══
+        float sh = cfg.bottomShadowIntensity;
         if (sh > 0) {
-            p.setStyle(Paint.Style.FILL);
-            p.setShader(new LinearGradient(rect.left, rect.bottom - rPx * 1.2f,
-                    rect.left, rect.bottom + 1,
+            p.reset(); p.setAlpha(255);
+            p.setShader(new LinearGradient(rect.left, rect.bottom - rPx * 1.5f, rect.left, rect.bottom + 1,
                     argb(0, 0x000000),
-                    argb((int)(255*sh*0.75f), 0x060E1A),
+                    argb((int)(255 * sh * 0.65f), 0x060E1A),
                     Shader.TileMode.CLAMP));
-            p.setAlpha(255);
             canvas.drawRoundRect(rect, rPx, rPx, p);
         }
 
-        // ── LAYER 9: Noise grain ──
+        // ═══ Layer 9: Noise grain ═══
         if (cfg.enableNoise && cfg.noiseIntensity > 0) {
-            p.setStyle(Paint.Style.FILL);
-            p.setShader(null);
-            p.setColor(argb((int)(255*cfg.noiseIntensity), 0xFFFFFF));
-            int step = Math.max(2, (int)(rPx * 0.15f));
+            p.reset(); p.setColor(argb((int)(255 * cfg.noiseIntensity), 0xFFFFFF));
+            int step = Math.max(2, (int)(rPx * 0.14f));
             Random r = new Random(42L);
-            for (float x = rect.left + step; x < rect.right; x += step) {
-                for (float y = rect.top + step; y < rect.bottom; y += step) {
+            for (float x = rect.left + step; x < rect.right; x += step)
+                for (float y = rect.top + step; y < rect.bottom; y += step)
                     if (r.nextFloat() > 0.55f)
-                        canvas.drawPoint(x+r.nextFloat()*step, y+r.nextFloat()*step, p);
-                }
-            }
+                        canvas.drawPoint(x + r.nextFloat() * step, y + r.nextFloat() * step, p);
         }
 
         canvas.restoreToCount(save);
 
-        // ── LAYER 10: Stroke rim ──
-        p.setStyle(Paint.Style.STROKE);
-        p.setShader(null);
-        p.setStrokeWidth(sp);
+        // ═══ Layer 10: Border gradients (screen + overlay blend) ═══
+        float rr = cfg.cornerRadii != null ? cfg.cornerRadii[0] : rPx;
+        Path bp = new Path();
+        if (cfg.cornerRadii != null) bp.addRoundRect(rect, cfg.cornerRadii, Path.Direction.CW);
+        else bp.addRoundRect(rect, rr, rr, Path.Direction.CW);
+
+        // Screen blend outer rim
+        p.reset(); p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(1.0f * d);
+        p.setColor(argb((int)(255 * edgeA * 0.50f), 0xFFFFFF));
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SCREEN));
+        canvas.drawPath(bp, p);
+        p.setXfermode(null);
+
+        // Inner overlay rim
+        p.setStrokeWidth(0.55f * d);
+        p.setColor(argb((int)(255 * edgeA * 0.32f), 0xFFFFFF));
+        RectF inner = new RectF(rect.left + 0.6f*d, rect.top + 0.6f*d,
+                rect.right - 0.6f*d, rect.bottom - 0.6f*d);
+        Path ip = new Path(); ip.addRoundRect(inner, rr, rr, Path.Direction.CW);
+        canvas.drawPath(ip, p);
+
+        // Final solid stroke
+        p.setStrokeWidth(1.2f * d);
         p.setColor(cfg.strokeColor);
-        p.setAlpha(255);
-        if (cfg.cornerRadii != null) {
-            Path spath = new Path();
-            spath.addRoundRect(rect, cfg.cornerRadii, Path.Direction.CW);
-            canvas.drawPath(spath, p);
-        } else {
-            canvas.drawRoundRect(rect, rPx, rPx, p);
-        }
+        canvas.drawPath(bp, p);
     }
 
-    private void captureBg() {
-        if (hostView == null) return;
-        blurredBg = BlurUtils.captureAndBlur(hostView, cfg.blurAmount * 24f, d);
-        bgCaptured = true;
-    }
-
-    private void drawRR(Canvas c, RectF r, float ox, float oy) {
+    private void drawRR(Canvas c, RectF r) {
         Path path = new Path();
         float rr = cfg.cornerRadii != null ? cfg.cornerRadii[0] : rPx;
-        path.addRoundRect(new RectF(r.left+ox, r.top+oy, r.right+ox, r.bottom+oy),
-                rr, rr, Path.Direction.CW);
+        path.addRoundRect(r, rr, rr, Path.Direction.CW);
         c.drawPath(path, p);
     }
 
-    private RectF inset(RectF r, float i) {
-        return new RectF(r.left + i, r.top + i, r.right - i, r.bottom - i);
+    private static RectF margin(RectF r, float m) {
+        return new RectF(r.left+m, r.top+m, r.right-m, r.bottom-m);
     }
 
     @Override public void setAlpha(int a) {}
     @Override public void setColorFilter(ColorFilter f) {}
     @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
     private static int argb(int a, int color) { return (a<<24)|(color&0x00FFFFFF); }
-    public GlassMaterialConfig getConfig() { return cfg; }
 }

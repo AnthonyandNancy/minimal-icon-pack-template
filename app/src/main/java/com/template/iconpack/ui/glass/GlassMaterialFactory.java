@@ -1,42 +1,37 @@
 package com.template.iconpack.ui.glass;
 
 /**
- * Glass presets tuned for the 9-layer LiquidGlassDrawable.
- * Inspired by liquid-glass-react: layered transparency + edge highlights + saturation.
+ * Light-mode glass presets — high opacity makes glass pop against prismatic bg.
  */
 public final class GlassMaterialFactory {
 
     private GlassMaterialFactory() {}
 
-    // ── Core modes ──────────────────────────────
-
     public static GlassMaterialConfig clear(float r) {
         return new GlassMaterialConfig().mode(0).radius(r).elevation(3f)
-                .base(0xFFF8FAFC).stroke(0x60FFFFFF)
-                .opacity(0.10f).highlight(0.20f).edge(0.28f).shadow(0.18f)
-                .noise(0.008f).elasticity(0.18f);
+                .base(0x55FFFFFF).stroke(0x88FFFFFF)
+                .opacity(0.30f).highlight(0.28f).edge(0.38f).shadow(0.08f)
+                .noise(0.006f).elasticity(0.20f);
     }
 
     public static GlassMaterialConfig regular(float r) {
         return new GlassMaterialConfig().mode(1).radius(r).elevation(6f)
-                .base(0xFFF1F5F9).stroke(0x90FFFFFF)
-                .opacity(0.16f).highlight(0.34f).edge(0.46f).shadow(0.24f)
-                .noise(0.012f).elasticity(0.24f);
+                .base(0x72FFFFFF).stroke(0xBFFFFFFF)
+                .opacity(0.45f).highlight(0.38f).edge(0.52f).shadow(0.10f)
+                .noise(0.010f).elasticity(0.26f);
     }
 
     public static GlassMaterialConfig prominent(float r) {
         return new GlassMaterialConfig().mode(2).radius(r).elevation(12f)
-                .base(0xFFE2E8F0).stroke(0xCCFFFFFF)
-                .opacity(0.24f).highlight(0.52f).edge(0.72f).shadow(0.30f)
-                .noise(0.016f).elasticity(0.32f).aberration(true);
+                .base(0x88FFFFFF).stroke(0xD9FFFFFF)
+                .opacity(0.60f).highlight(0.52f).edge(0.72f).shadow(0.13f)
+                .noise(0.014f).elasticity(0.32f).aberration(true);
     }
-
-    // ── Named presets ───────────────────────────
 
     public static GlassMaterialConfig toolbar()  { return prominent(38f); }
     public static GlassMaterialConfig hero()     { return prominent(34f); }
-    public static GlassMaterialConfig drawer()   { return prominent(36f).shadow(0.34f); }
-    public static GlassMaterialConfig bottomBar(){ return prominent(36f).opacity(0.28f); }
+    public static GlassMaterialConfig drawer()   { return prominent(36f).opacity(0.55f).shadow(0.15f); }
+    public static GlassMaterialConfig bottomBar(){ return prominent(36f).opacity(0.65f); }
 
     public static GlassMaterialConfig statCard()   { return regular(28f); }
     public static GlassMaterialConfig featureCard(){ return regular(26f); }

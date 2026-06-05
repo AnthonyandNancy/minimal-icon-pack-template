@@ -1,48 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#FF5EA8FF</color>
-    <color name="primary_dark">#FF3B82F6</color>
-    <color name="primary_light">#FF7AA2FF</color>
+    <color name="primary">#FF4D96FF</color>
+    <color name="primary_dark">#FF2D7AFF</color>
+    <color name="primary_light">#FF8DBBFF</color>
     <color name="accent">#FFA78BFA</color>
 
-    <color name="bg_top">#FF0B1020</color>
-    <color name="bg_mid">#FF111E46</color>
-    <color name="bg_bottom">#FF172554</color>
-    <color name="background">#FF0B1020</color>
-    <color name="background_dark">#FF0B1020</color>
+    <color name="bg_top">#FFF8F4F0</color>
+    <color name="bg_mid">#FFFAE8E0</color>
+    <color name="bg_bottom">#FFF5E6F0</color>
+    <color name="background">#FFF8F4F0</color>
+    <color name="background_dark">#FFF5E6F0</color>
 
-    <color name="glass_card_primary">#30FFFFFF</color>
-    <color name="glass_card_secondary">#22FFFFFF</color>
-    <color name="glass_card">#30FFFFFF</color>
-    <color name="glass_toolbar">#30FFFFFF</color>
-    <color name="glass_drawer">#30FFFFFF</color>
-    <color name="glass_selected">#40FFFFFF</color>
-    <color name="glass_stroke_bright">#88FFFFFF</color>
-    <color name="glass_stroke_dim">#44FFFFFF</color>
+    <color name="glass_card_primary">#66FFFFFF</color>
+    <color name="glass_card_secondary">#40FFFFFF</color>
+    <color name="glass_card">#55FFFFFF</color>
+    <color name="glass_selected">#70FFFFFF</color>
+    <color name="glass_stroke_bright">#D9FFFFFF</color>
+    <color name="glass_stroke_dim">#88FFFFFF</color>
 
-    <color name="text_primary">#FFF9FAFB</color>
-    <color name="text_secondary">#FFB6C2D2</color>
-    <color name="text_hint">#FF8FA0B5</color>
+    <color name="text_primary">#FF1A1A2E</color>
+    <color name="text_secondary">#FF4A4A6A</color>
+    <color name="text_hint">#FF8A8AAA</color>
     <color name="text_on_primary">#FFFFFFFF</color>
 
-    <color name="status_themed">#FF34D399</color>
-    <color name="status_unthemed">#FFFDBA3B</color>
+    <color name="status_themed">#FF22C55E</color>
+    <color name="status_unthemed">#FFEF4444</color>
     <color name="error_red">#FFEF4444</color>
-
-    <color name="surface">#FF111E46</color>
-    <color name="surface_dark">#FF0B1020</color>
-    <color name="divider"            >#FF2D3748</color>
-    <color name="progress_bg"         >#FF334155</color>
-    <color name="progress_fill"       >#FF5EA8FF</color>
-    <color name="nav_item_selected_text">#FF5EA8FF</color>
-    <color name="drawer_background"   >#30FFFFFF</color>
-    <color name="drawer_item_selected">#40FFFFFF</color>
-    <color name="drawer_item_ripple"  >#20FFFFFF</color>
-    <color name="drawer_text"         >#FFCBD5E1</color>
-    <color name="drawer_text_secondary">#FF8FA0B5</color>
-    <color name="card_background"     >#30FFFFFF</color>
-    <color name="card_background_dark">#22FFFFFF</color>
-    <color name="card_stroke"         >#60FFFFFF</color>
-    <color name="container_blue" >#333B82F6</color>
-    <color name="container_purple">#33A78BFA</color>
 </resources>

@@ -36,7 +36,7 @@
             android:textSize="28sp"
             android:textStyle="bold"
             android:includeFontPadding="false"
-            android:textColor="#3B82F6" />
+            android:textColor="#4D96FF" />
 
         <!-- Label -->
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="#B6C2D2"
+            android:textColor="#4A4A6A"
             android:includeFontPadding="false"
             android:layout_marginTop="6dp" />
 

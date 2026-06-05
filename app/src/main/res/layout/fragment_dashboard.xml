@@ -34,7 +34,7 @@
                 android:layout_width="44dp" android:layout_height="44dp"
                 android:layout_gravity="center"
                 android:background="@drawable/glass_btn_bg"
-                android:src="@drawable/ic_menu_glass" android:tint="#E5E7EB"
+                android:src="@drawable/ic_menu_glass" android:tint="#3D3D5C"
                 android:scaleType="centerInside" />
         </FrameLayout>
 
@@ -70,18 +70,18 @@
 
                     <TextView android:id="@+id/hero_app_name"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="@string/app_name" android:textColor="#F9FAFB"
+                        android:text="@string/app_name" android:textColor="#1A1A2E"
                         android:textSize="22sp" android:textStyle="bold"
                         android:maxLines="1" android:ellipsize="end" />
 
                     <TextView android:id="@+id/hero_version"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="@string/version_name" android:textColor="#B6C2D2"
+                        android:text="@string/version_name" android:textColor="#4A4A6A"
                         android:textSize="13sp" android:layout_marginTop="6dp" />
 
                     <TextView android:id="@+id/hero_icon_count"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textColor="#5EA8FF" android:textSize="13sp"
+                        android:textColor="#4D96FF" android:textSize="13sp"
                         android:textStyle="bold" android:layout_marginTop="6dp" />
 
                 </LinearLayout>
@@ -99,7 +99,7 @@
         <!-- Stats section -->
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="概述" android:textSize="18sp" android:textStyle="bold"
-            android:textColor="#F9FAFB" android:layout_marginBottom="14dp" />
+            android:textColor="#1A1A2E" android:layout_marginBottom="14dp" />
         <GridLayout android:id="@+id/dashboard_stats"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:columnCount="2" android:orientation="horizontal"
@@ -108,7 +108,7 @@
         <!-- Features section -->
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="功能" android:textSize="18sp" android:textStyle="bold"
-            android:textColor="#F9FAFB" android:layout_marginBottom="14dp" />
+            android:textColor="#1A1A2E" android:layout_marginBottom="14dp" />
         <LinearLayout android:id="@+id/dashboard_entries"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical" android:clipChildren="false" />
