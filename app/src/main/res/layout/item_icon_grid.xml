@@ -3,12 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/icon_grid_item"
-    android:layout_margin="4dp"
+    android:layout_margin="5dp"
     android:background="@drawable/bg_surface_card"
-    android:elevation="2dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:outlineProvider="background">
+    android:elevation="1dp"
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +19,8 @@
             android:id="@+id/icon_image"
             android:layout_width="@dimen/icon_image_size"
             android:layout_height="@dimen/icon_image_size"
-            android:scaleType="centerInside" />
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="6dp" />
 
         <TextView
             android:id="@+id/icon_name"
