@@ -80,11 +80,11 @@ public class DashboardFragment extends Fragment {
             spacer.requestLayout();
         }
 
-        // Hero card is LiquidGlassLayout with BlurView
+        // Hero card uses LiquidGlassLayout with BlurView 3.x
         View hero = rootView.findViewById(R.id.hero_card);
         if (hero instanceof LiquidGlassLayout && getActivity() != null) {
-            FrameLayout root = getActivity().findViewById(R.id.root_container);
-            ((LiquidGlassLayout) hero).bindBlur(root);
+            View rootContainer = getActivity().findViewById(R.id.root_container);
+            if (rootContainer != null) ((LiquidGlassLayout) hero).setupBlur(rootContainer);
         }
         hero.setElevation(8f);
 
