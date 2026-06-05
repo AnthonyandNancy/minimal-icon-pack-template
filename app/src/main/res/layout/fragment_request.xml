@@ -8,7 +8,7 @@
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="20dp" android:paddingEnd="20dp"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
         android:elevation="4dp"
         android:background="@color/background">
 
