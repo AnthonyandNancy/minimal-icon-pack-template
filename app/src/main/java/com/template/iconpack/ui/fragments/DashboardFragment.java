@@ -79,9 +79,11 @@ public class DashboardFragment extends Fragment {
             spacer.requestLayout();
         }
 
-        // Hero card — using new GlassMaterialFactory
+        // Hero card — using new GlassMaterialFactory with bg blur
         View hero = rootView.findViewById(R.id.hero_card);
-        hero.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.hero(), density));
+        LiquidGlassDrawable heroGlass = new LiquidGlassDrawable(GlassMaterialFactory.hero(), density);
+        heroGlass.attachTo(hero);
+        hero.setBackground(heroGlass);
         hero.setElevation(8f);
 
         // Stat & entry cards have backgrounds set in their XML/layout builders
