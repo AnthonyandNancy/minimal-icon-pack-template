@@ -54,12 +54,10 @@ public class LiquidGlassLayout extends FrameLayout {
 
     /** Bind to the root ViewGroup containing the background to blur. Call after setContentView. */
     public void setupBlur(View root) {
-        if (root instanceof FrameLayout) {
-            blurView.setupWith((FrameLayout) root)
-                    .setBlurRadius(16f)
-                    .setBlurAutoUpdate(true)
-                    .setOverlayColor(0x00000000);
-        }
+        blurView.setupWith(root)
+                .setBlurRadius(16f)
+                .setBlurAutoUpdate(true)
+                .setOverlayColor(0x00000000);
     }
 
     /** Glass overlay: tint / highlights / edges / chromatic aberration. */
