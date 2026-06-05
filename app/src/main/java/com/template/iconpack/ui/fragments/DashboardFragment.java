@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,7 +63,7 @@ public class DashboardFragment extends Fragment {
         float density = ctx.getResources().getDisplayMetrics().density;
 
         // Register home toolbar with MainActivity + apply glass background
-        LinearLayout tb = rootView.findViewById(R.id.toolbar);
+        FrameLayout tb = rootView.findViewById(R.id.toolbar);
         if (tb != null) {
             tb.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.toolbar(), density));
             if (getActivity() instanceof MainActivity) {
