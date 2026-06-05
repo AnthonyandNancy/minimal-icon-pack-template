@@ -1,29 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#FF6C63FF</color>
-    <color name="primary_dark">#FF5A52E0</color>
-    <color name="primary_light">#FF8EC5FF</color>
-    <color name="accent">#FFFFB6C8</color>
-    <color name="background">#FFF7F4EE</color>
-    <color name="background_dark">#FFF7F4EE</color>
-    <color name="surface">#FFFFFFFF</color>
-    <color name="surface_dark">#FFF1EEF8</color>
-    <color name="text_primary">#FF181821</color>
-    <color name="text_secondary">#FF6E6A78</color>
-    <color name="text_hint">#FF9E9AAA</color>
+    <color name="primary">#FF6750A4</color>
+    <color name="primary_dark">#FF4F378B</color>
+    <color name="primary_light">#FFEADDFF</color>
+    <color name="accent">#FFB58392</color>
+
+    <color name="background">#FFF6EDFF</color>
+    <color name="background_dark">#FFE8DEF8</color>
+    <color name="surface">#FFFEF7FF</color>
+    <color name="surface_dark">#FFF7F2FA</color>
+
+    <color name="text_primary">#FF1C1B1F</color>
+    <color name="text_secondary">#FF49454F</color>
+    <color name="text_hint">#FF787680</color>
     <color name="text_on_primary">#FFFFFFFF</color>
-    <color name="status_themed">#FF22C55E</color>
-    <color name="status_unthemed">#FFEF4444</color>
-    <color name="error_red">#FFEF4444</color>
-    <color name="divider">#FFE7E1EF</color>
-    <color name="drawer_text">#FF181821</color>
-    <color name="drawer_text_secondary">#FF6E6A78</color>
-    <color name="drawer_background">#FFFFFFFF</color>
-    <color name="drawer_item_selected">#FFF1EEF8</color>
-    <color name="glass_card">#FFFFFFFF</color>
-    <color name="glass_stroke_bright">#E7E1EF</color>
-    <color name="container_blue">#338EC5FF</color>
-    <color name="container_purple">#336C63FF</color>
-    <color name="progress_bg">#FFE7E1EF</color>
-    <color name="card_stroke">#E7E1EF</color>
+
+    <color name="status_themed">#FF81C784</color>
+    <color name="status_themed_bg">#FFE8F5E9</color>
+    <color name="status_unthemed">#FFE57373</color>
+    <color name="status_unthemed_bg">#FFFFEBEE</color>
+    <color name="status_selected">#FFCE93D8</color>
+    <color name="status_selected_bg">#FFF3E5F5</color>
+
+    <color name="outline">#FFCAC4D0</color>
+    <color name="outline_variant">#FFE7E0EC</color>
+    <color name="divider">#FFE7E0EC</color>
+
+    <color name="drawer_text">#FF1C1B1F</color>
+    <color name="drawer_text_secondary">#FF49454F</color>
+    <color name="drawer_background">#FFFEF7FF</color>
+    <color name="drawer_item_selected">#FFEADDFF</color>
+    <color name="drawer_item_ripple">#40EADDFF</color>
+
+    <color name="chip_bg">#FFEADDFF</color>
+    <color name="chip_text">#FF6750A4</color>
+
+    <color name="container_blue">#33BBDEFB</color>
+    <color name="container_purple">#33CE93D8</color>
+    <color name="progress_bg">#FFE7E0EC</color>
+    <color name="progress_fill">#FF6750A4</color>
+
+    <color name="glass_card">#FFFEF7FF</color>
+    <color name="glass_stroke_bright">#FFCAC4D0</color>
+    <color name="card_background">#FFFEF7FF</color>
+    <color name="card_background_dark">#FFF7F2FA</color>
+    <color name="card_stroke">#FFCAC4D0</color>
+
+    <color name="hero_start">#FFEADDFF</color>
+    <color name="hero_end">#FFD0BCFF</color>
 </resources>

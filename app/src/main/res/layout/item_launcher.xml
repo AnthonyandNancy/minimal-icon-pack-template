@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="#1A1A2E"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:textColor="#9CA3AF"
+                android:textColor="@color/text_secondary"
                 android:layout_marginTop="2dp" />
 
         </LinearLayout>
@@ -69,7 +69,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_info"
-            android:tint="#9CA3AF"
+            android:tint="@color/text_hint"
             android:rotation="180" />
 
     </LinearLayout>

@@ -10,9 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ScrollView;
-
 import androidx.fragment.app.Fragment;
-
 import com.template.iconpack.R;
 import com.template.iconpack.MainActivity;
 import com.template.iconpack.utils.AppScanner;
@@ -20,7 +18,6 @@ import com.template.iconpack.utils.IconPackLoader;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
-
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
@@ -41,128 +38,99 @@ public class DashboardFragment extends Fragment {
         if (ctx == null) return rootView;
 
         setupBrand(ctx);
-        setupMenuButton();
-        setupApplyButton();
+        setupMenu();
 
         List<DrawableInfo> icons = IconPackLoader.loadDrawables(ctx);
         List<AppInfo> apps = AppScanner.scanInstalledApps(ctx);
-        List<WallpaperInfo> wallpapers = IconPackLoader.loadWallpapers(ctx);
-        int themedCount = 0;
-        for (AppInfo a : apps) if (a.isThemed) themedCount++;
+        List<WallpaperInfo> wps = IconPackLoader.loadWallpapers(ctx);
+        int themed = 0;
+        for (AppInfo a : apps) if (a.isThemed) themed++;
 
-        setupStats(icons.size(), wallpapers.size());
-        buildQuickCards(ctx, icons.size(), apps.size(), themedCount);
-        buildEntryCards(ctx, icons.size(), apps.size(), themedCount, wallpapers.size());
-        setupScrollListener();
+        setupHero(ctx, icons.size(), wps.size(), themed);
+        buildQuickCards(ctx, icons.size(), apps.size(), themed);
+        buildEntryCards(ctx, icons.size(), apps.size(), themed, wps.size());
+        setupScroll();
 
         return rootView;
     }
 
     private void setupBrand(Context ctx) {
-        ((TextView) rootView.findViewById(R.id.hero_app_name))
-                .setText(getString(R.string.app_name));
+        ((TextView) rootView.findViewById(R.id.hero_app_name)).setText(getString(R.string.app_name));
         try {
             String v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
             ((TextView) rootView.findViewById(R.id.hero_version)).setText("v" + v);
         } catch (Exception ignored) {}
     }
 
-    private void setupMenuButton() {
-        View btn = rootView.findViewById(R.id.btn_menu_home);
-        if (btn != null && getActivity() instanceof MainActivity) {
-            btn.setOnClickListener(v -> ((MainActivity) getActivity()).openDrawer());
-        }
+    private void setupMenu() {
+        View b = rootView.findViewById(R.id.btn_menu_home);
+        if (b != null && getActivity() instanceof MainActivity)
+            b.setOnClickListener(v -> ((MainActivity) getActivity()).openDrawer());
     }
 
-    private void setupApplyButton() {
-        View btn = rootView.findViewById(R.id.btn_apply);
-        if (btn != null) {
-            btn.setOnClickListener(v -> {
-                if (callback != null) callback.onCardClicked(10);
-            });
-        }
-    }
-
-    private void setupStats(int iconCount, int wallpaperCount) {
+    private void setupHero(Context ctx, int iconCount, int wpCount, int themed) {
         ((TextView) rootView.findViewById(R.id.stat_icons)).setText(String.valueOf(iconCount));
-        ((TextView) rootView.findViewById(R.id.stat_wallpapers)).setText(String.valueOf(wallpaperCount));
+        ((TextView) rootView.findViewById(R.id.stat_wallpapers)).setText(String.valueOf(wpCount));
+        ((TextView) rootView.findViewById(R.id.stat_themed)).setText(String.valueOf(themed));
+
+        rootView.findViewById(R.id.btn_apply).setOnClickListener(v -> nav(10));
+        View req = rootView.findViewById(R.id.btn_request);
+        if (req != null) req.setOnClickListener(v -> nav(12));
     }
 
-    private void buildQuickCards(Context ctx, int iconCount, int totalApps, int themed) {
-        GridLayout grid = rootView.findViewById(R.id.dashboard_stats);
-        grid.removeAllViews();
+    private void nav(int pos) { if (callback != null) callback.onCardClicked(pos); }
 
-        int unthemed = totalApps - themed;
-        String[][] data = {
-                {"Icons", String.valueOf(iconCount), iconCount + " icons"},
-                {"Themed", String.valueOf(themed), themed + " themed"},
-                {"Missing", String.valueOf(unthemed), unthemed + " pending"},
-                {"Apps", String.valueOf(totalApps), totalApps + " installed"},
-        };
-        int[] colors = {R.color.primary, R.color.status_themed, R.color.status_unthemed, R.color.accent};
-
-        float density = ctx.getResources().getDisplayMetrics().density;
+    private void buildQuickCards(Context ctx, int icons, int apps, int themed) {
+        GridLayout g = rootView.findViewById(R.id.dashboard_stats);
+        g.removeAllViews();
+        int unthemed = apps - themed;
+        String[][] d = {{"图标",String.valueOf(icons),"已打包图标"},{"应用",String.valueOf(apps),"已安装应用"},
+                {"已适配",String.valueOf(themed),"适配累计"},{"未适配",String.valueOf(unthemed),"待适配"}};
+        int[] cs = {R.color.primary, R.color.text_primary, R.color.status_themed, R.color.status_unthemed};
+        float dp = ctx.getResources().getDisplayMetrics().density;
         for (int i = 0; i < 4; i++) {
-            View card = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_card, grid, false);
-            card.setBackgroundResource(R.drawable.bg_card_surface);
-
-            ((TextView) card.findViewById(R.id.card_icon)).setText(data[i][0]);
-            TextView val = card.findViewById(R.id.card_value);
-            val.setText(data[i][1]);
-            val.setTextColor(ctx.getResources().getColor(colors[i]));
-            ((TextView) card.findViewById(R.id.card_title)).setText(data[i][2]);
-
+            View c = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_card, g, false);
+            c.setBackgroundResource(R.drawable.bg_surface_card);
+            ((TextView) c.findViewById(R.id.card_icon)).setText(d[i][0]);
+            TextView vv = c.findViewById(R.id.card_value);
+            vv.setText(d[i][1]);
+            vv.setTextColor(ctx.getResources().getColor(cs[i]));
+            ((TextView) c.findViewById(R.id.card_title)).setText(d[i][2]);
             GridLayout.LayoutParams p = new GridLayout.LayoutParams();
             p.width = 0; p.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            p.setMargins((int)(6 * density), (int)(6 * density),
-                    (int)(6 * density), (int)(6 * density));
-            card.setLayoutParams(p);
-            grid.addView(card);
+            p.setMargins((int)(6*dp),(int)(6*dp),(int)(6*dp),(int)(6*dp));
+            c.setLayoutParams(p);
+            g.addView(c);
         }
     }
 
-    private void buildEntryCards(Context ctx, int iconCount, int totalApps, int themed, int wpCount) {
-        LinearLayout container = rootView.findViewById(R.id.dashboard_entries);
-        container.removeAllViews();
-
-        String[] titles = {"Apply Icons", "Icon Gallery", "Request Icons", "Wallpapers"};
-        String[] descs = {
-                "Choose a launcher to apply",
-                iconCount + " beautiful icons",
-                themed + " apps themed so far",
-                wpCount + " cloud wallpapers"
-        };
-        int[] icons = {R.drawable.ic_apply_card, R.drawable.ic_rate,
-                R.drawable.ic_info, R.drawable.ic_wallpaper};
-
-        float density = ctx.getResources().getDisplayMetrics().density;
+    private void buildEntryCards(Context ctx, int icons, int apps, int themed, int wp) {
+        LinearLayout c = rootView.findViewById(R.id.dashboard_entries);
+        c.removeAllViews();
+        String[] t = {"浏览图标","申请图标","应用启动器","壁纸"};
+        String[] ds = {icons+" 个图标", themed+" / "+apps+" 已适配","选择并应用启动器",wp+" 张云端壁纸"};
+        int[] is = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_apply_card, R.drawable.ic_wallpaper};
+        float dp = ctx.getResources().getDisplayMetrics().density;
         for (int i = 0; i < 4; i++) {
-            View card = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, container, false);
-            card.setBackgroundResource(R.drawable.bg_card_surface);
-
-            ((TextView) card.findViewById(R.id.launcher_name)).setText(titles[i]);
-            ((TextView) card.findViewById(R.id.entry_desc)).setText(descs[i]);
-            ImageView iv = card.findViewById(R.id.launcher_icon);
-            if (iv != null) iv.setImageResource(icons[i]);
-
+            View v = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, c, false);
+            v.setBackgroundResource(R.drawable.bg_surface_card);
+            ((TextView) v.findViewById(R.id.launcher_name)).setText(t[i]);
+            ((TextView) v.findViewById(R.id.entry_desc)).setText(ds[i]);
+            ImageView iv = v.findViewById(R.id.launcher_icon);
+            if (iv != null) iv.setImageResource(is[i]);
             int idx = i;
-            card.setOnClickListener(v -> {
-                if (callback != null) callback.onCardClicked(10 + idx);
-            });
-
+            v.setOnClickListener(vv -> { if (callback != null) callback.onCardClicked(10+idx); });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 0, 0, (int)(12 * density));
-            card.setLayoutParams(lp);
-            container.addView(card);
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0,0,0,(int)(12*dp));
+            v.setLayoutParams(lp);
+            c.addView(v);
         }
     }
 
-    private void setupScrollListener() {
-        if (rootView instanceof ScrollView && getActivity() instanceof ScrollListener) {
+    private void setupScroll() {
+        if (rootView instanceof ScrollView && getActivity() instanceof ScrollListener)
             ((ScrollView) rootView).setOnScrollChangeListener(
-                    (v, sx, sy, ox, oy) -> ((ScrollListener) getActivity()).onScroll(sy));
-        }
+                    (v,sx,sy,ox,oy) -> ((ScrollListener) getActivity()).onScroll(sy));
     }
 }

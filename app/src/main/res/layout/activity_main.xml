@@ -32,7 +32,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="@drawable/glass_drawer_bg"
+        android:background="@color/drawer_background"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu"
         app:itemIconTint="@color/drawer_text"

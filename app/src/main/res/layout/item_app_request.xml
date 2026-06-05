@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="76dp"
-    android:background="@drawable/glass_card_entry"
+    android:background="@drawable/bg_surface_card"
     android:elevation="2dp"
     android:layout_marginBottom="10dp"
     android:clickable="true"
@@ -31,7 +31,7 @@
 
             <TextView android:id="@+id/request_app_name"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:textSize="15sp" android:textColor="#1A1A2E" android:textStyle="bold"
+                android:textSize="15sp" android:textColor="@color/text_primary" android:textStyle="bold"
                 android:maxLines="1" android:ellipsize="end" />
 
             <TextView android:id="@+id/request_package_name"

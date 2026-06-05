@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/icon_grid_item"
     android:layout_margin="4dp"
-    android:background="@drawable/glass_card_stat"
+    android:background="@drawable/bg_surface_card"
     android:elevation="2dp"
     android:clickable="true"
     android:focusable="true"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="11sp"
-            android:textColor="#4A4A6A"
+            android:textColor="@color/text_secondary"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_marginTop="4dp" />

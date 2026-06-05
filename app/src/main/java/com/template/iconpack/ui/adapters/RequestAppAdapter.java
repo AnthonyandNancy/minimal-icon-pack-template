@@ -103,11 +103,13 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
         h.checkbox.setChecked(app.isSelected);
 
         if (app.isThemed) {
-            h.status.setText("Themed");
-            h.status.setBackgroundResource(R.drawable.glass_badge_green);
+            h.status.setText("已适配");
+            h.status.setBackgroundColor(0xFFE8F5E9);
+            h.status.setTextColor(0xFF388E3C);
         } else {
-            h.status.setText("Missing");
-            h.status.setBackgroundResource(R.drawable.glass_badge_blue);
+            h.status.setText("未适配");
+            h.status.setBackgroundColor(0xFFFFEBEE);
+            h.status.setTextColor(0xFFE53935);
         }
 
         // Row click toggles selection

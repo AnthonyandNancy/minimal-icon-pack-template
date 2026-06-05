@@ -6,6 +6,7 @@
         <item name="colorAccent">@color/accent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/background</item>
+    <item name="android:navigationBarDividerColor">@android:color/transparent</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowNoTitle">true</item>

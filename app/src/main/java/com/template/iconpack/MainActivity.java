@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity
         TextView navAppName = headerView.findViewById(R.id.nav_app_name);
         TextView navVersion = headerView.findViewById(R.id.nav_version);
         navAppName.setText(R.string.app_name);
-        navAppName.setTextColor(0xFF1A1A2E);
-        navVersion.setTextColor(0xFF4A4A6A);
+        navAppName.setTextColor(getResources().getColor(R.color.text_primary));
+        navVersion.setTextColor(getResources().getColor(R.color.text_secondary));
 
         try {
             navVersion.setText(getPackageManager()
