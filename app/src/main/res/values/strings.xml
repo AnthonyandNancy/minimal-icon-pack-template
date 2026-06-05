@@ -20,6 +20,7 @@
 
     <!-- Dashboard -->
     <string name="dashboard_title">主页</string>
+    <string name="dashboard_subtitle">为你的主屏幕带来精美图标</string>
     <string name="card_apply_title">应用</string>
     <string name="card_apply_desc">应用此图标包到启动器</string>
     <string name="card_donate_title">捐赠</string>

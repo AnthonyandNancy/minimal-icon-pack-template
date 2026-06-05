@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:paddingBottom="24dp">
+    android:paddingBottom="32dp">
 
     <LinearLayout
         android:id="@+id/dashboard_root"
@@ -18,24 +18,27 @@
         <View android:id="@+id/status_spacer"
             android:layout_width="match_parent" android:layout_height="24dp" />
 
-        <!-- Brand header -->
+        <!-- ══ BRAND HEADER ══ -->
         <LinearLayout
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="horizontal" android:gravity="center_vertical"
-            android:layout_marginTop="8dp" android:layout_marginBottom="12dp"
+            android:layout_marginTop="8dp" android:layout_marginBottom="16dp"
             android:paddingStart="4dp">
 
             <ImageView android:id="@+id/hero_icon"
-                android:layout_width="52dp" android:layout_height="52dp"
+                android:layout_width="56dp" android:layout_height="56dp"
                 android:src="@mipmap/ic_launcher" android:scaleType="centerCrop"
                 android:layout_marginEnd="14dp" />
 
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/hero_app_name" android:textColor="#181821"
-                    android:textSize="22sp" android:textStyle="bold" />
-                <TextView android:id="@+id/hero_version" android:textColor="#6E6A78"
-                    android:textSize="13sp" android:layout_marginTop="2dp" />
+                <TextView android:id="@+id/hero_app_name"
+                    android:textColor="#181821" android:textSize="22sp"
+                    android:textStyle="bold" android:maxLines="1"
+                    android:ellipsize="end" />
+                <TextView android:id="@+id/hero_version"
+                    android:textColor="#6E6A78" android:textSize="13sp"
+                    android:layout_marginTop="2dp" />
             </LinearLayout>
 
             <ImageButton android:id="@+id/btn_menu_home"
@@ -45,10 +48,10 @@
                 android:scaleType="centerInside" />
         </LinearLayout>
 
-        <!-- Hero card: icon preview + apply button -->
+        <!-- ══ HERO CARD ══ -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            app:cardCornerRadius="28dp" app:cardElevation="2dp"
+            app:cardCornerRadius="28dp" app:cardElevation="1dp"
             app:cardBackgroundColor="#FFFFFF"
             app:strokeColor="#E7E1EF" app:strokeWidth="1dp"
             android:layout_marginBottom="20dp">
@@ -58,44 +61,51 @@
 
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="@string/dashboard_title" android:textColor="#181821"
-                    android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="6dp" />
+                    android:textSize="18sp" android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Beautiful icons for your home screen" android:textColor="#6E6A78"
-                    android:textSize="14sp" android:layout_marginBottom="18dp" />
+                    android:text="@string/dashboard_subtitle" android:textColor="#6E6A78"
+                    android:textSize="14sp" android:layout_marginBottom="16dp" />
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="horizontal" android:gravity="center">
-
+                    android:orientation="horizontal" android:gravity="center"
+                    android:layout_marginBottom="16dp">
                     <TextView android:id="@+id/stat_icons" android:textColor="#181821"
                         android:textStyle="bold" android:textSize="16sp" android:text="0" />
-                    <TextView android:text=" icons" android:textColor="#6E6A78" android:textSize="14sp"
-                        android:layout_marginEnd="24dp" />
+                    <TextView android:text="  Icons" android:textColor="#6E6A78"
+                        android:textSize="14sp" android:layout_marginEnd="24dp" />
                     <TextView android:id="@+id/stat_wallpapers" android:textColor="#181821"
                         android:textStyle="bold" android:textSize="16sp" android:text="0" />
-                    <TextView android:text=" wallpapers" android:textColor="#6E6A78" android:textSize="14sp" />
+                    <TextView android:text="  Wallpapers" android:textColor="#6E6A78"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView android:id="@+id/btn_apply"
                     android:layout_width="match_parent" android:layout_height="48dp"
-                    android:gravity="center" android:text="Apply Icons" android:textColor="#FFFFFF"
-                    android:textSize="16sp" android:textStyle="bold"
+                    android:gravity="center" android:text="@string/apply_title"
+                    android:textColor="#FFFFFF" android:textSize="16sp"
+                    android:textStyle="bold"
                     android:background="@drawable/bg_pill_primary"
-                    android:layout_marginTop="18dp"
                     android:clickable="true" android:focusable="true" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Quick actions grid -->
+        <!-- ══ QUICK STATS GRID ══ -->
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Overview" android:textColor="#181821"
+            android:textSize="16sp" android:textStyle="bold"
+            android:layout_marginBottom="12dp" android:paddingStart="4dp" />
+
         <GridLayout android:id="@+id/dashboard_stats"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:columnCount="2" android:useDefaultMargins="true"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="24dp" />
 
-        <!-- Entry cards -->
+        <!-- ══ FEATURE ENTRY CARDS ══ -->
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Features" android:textColor="#181821"
             android:textSize="16sp" android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp" android:paddingStart="4dp" />
 
         <LinearLayout android:id="@+id/dashboard_entries"
             android:layout_width="match_parent" android:layout_height="wrap_content"
