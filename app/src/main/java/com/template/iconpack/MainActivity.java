@@ -190,11 +190,9 @@ public class MainActivity extends AppCompatActivity
         int idx = pos - 10;
         if (idx >= 0 && idx <= 7) {
             switch (idx) {
-                case 0: showFragment(NAV_APPLY);     navView.setCheckedItem(R.id.nav_apply);      break;
                 case 1: showFragment(NAV_ICONS);     navView.setCheckedItem(R.id.nav_icons);      break;
                 case 2: showFragment(NAV_REQUEST);   navView.setCheckedItem(R.id.nav_request);    break;
                 case 3: showFragment(NAV_WALLPAPERS); navView.setCheckedItem(R.id.nav_wallpapers); break;
-                case 4: showFragment(NAV_PRESETS);   navView.setCheckedItem(R.id.nav_presets);    break;
                 case 5: showFragment(NAV_SETTINGS);  navView.setCheckedItem(R.id.nav_settings);   break;
                 case 6: showFragment(NAV_FAQ);       navView.setCheckedItem(R.id.nav_faq);        break;
                 case 7: showFragment(NAV_ABOUT);     navView.setCheckedItem(R.id.nav_about);      break;
@@ -241,11 +239,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_home) showFragment(NAV_HOME);
-        else if (id == R.id.nav_apply) showFragment(NAV_APPLY);
         else if (id == R.id.nav_icons) showFragment(NAV_ICONS);
         else if (id == R.id.nav_request) showFragment(NAV_REQUEST);
         else if (id == R.id.nav_wallpapers) showFragment(NAV_WALLPAPERS);
-        else if (id == R.id.nav_presets) showFragment(NAV_PRESETS);
         else if (id == R.id.nav_settings) showFragment(NAV_SETTINGS);
         else if (id == R.id.nav_faq) showFragment(NAV_FAQ);
         else if (id == R.id.nav_about) showFragment(NAV_ABOUT);
