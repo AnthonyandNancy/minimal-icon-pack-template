@@ -31,12 +31,12 @@
 
             <TextView android:id="@+id/request_app_name"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:textSize="15sp" android:textColor="#1A1A2E" android:textStyle="bold"
+                android:textSize="15sp" android:textColor="#F9FAFB" android:textStyle="bold"
                 android:maxLines="1" android:ellipsize="end" />
 
             <TextView android:id="@+id/request_package_name"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:textSize="12sp" android:textColor="#8A8AAA"
+                android:textSize="12sp" android:textColor="#8FA0B5"
                 android:maxLines="1" android:ellipsize="end" />
         </LinearLayout>
 
