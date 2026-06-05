@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Multi-layer: base + highlight + edge + stroke -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#55FFFFFF"/>
-            <corners android:radius="26dp"/>
-        </shape>
+        <shape><solid android:color="#F1F5F9"/><corners android:radius="26dp"/></shape>
     </item>
     <item>
-        <shape android:shape="rectangle">
-            <gradient android:startColor="#44FFFFFF" android:endColor="#00FFFFFF"
+        <shape>
+            <gradient android:startColor="#60FFFFFF" android:endColor="#00FFFFFF"
                 android:angle="135" android:type="linear"/>
             <corners android:radius="26dp"/>
         </shape>
     </item>
     <item>
-        <shape android:shape="rectangle">
-            <stroke android:width="0.5dp" android:color="#BFFFFFFF"/>
-            <corners android:radius="26dp"/>
+        <shape>
+            <stroke android:width="0.5dp" android:color="#90FFFFFF"/>
             <solid android:color="#00000000"/>
+            <corners android:radius="26dp"/>
         </shape>
     </item>
 </layer-list>

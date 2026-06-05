@@ -4,11 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Top bar: fixed -->
+    <!-- RecyclerView: drawn first, below top bar in z-order -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/request_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="80dp"
+        android:paddingBottom="90dp" />
+
+    <!-- Top bar: drawn on top of RecyclerView, elevated for touch priority -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:elevation="10dp">
 
         <View android:id="@+id/status_spacer_req"
             android:layout_width="match_parent" android:layout_height="16dp" />
@@ -35,18 +47,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Single RecyclerView: header (stats+filter) + app list, unified scroll -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/request_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingTop="70dp"
-        android:paddingBottom="90dp" />
-
-    <!-- Bottom bar: fixed -->
+    <!-- Bottom bar: fixed, highest elevation -->
     <LinearLayout android:id="@+id/request_bottom_bar"
         android:layout_width="match_parent" android:layout_height="60dp"
         android:layout_gravity="bottom"
