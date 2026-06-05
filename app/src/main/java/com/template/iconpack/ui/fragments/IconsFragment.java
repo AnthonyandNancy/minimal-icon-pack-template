@@ -37,7 +37,9 @@ public class IconsFragment extends Fragment {
         if (getContext() == null) 
         TextView tv = view.findViewById(R.id.page_title);
         if (tv != null) tv.setText(getString(R.string.icons_title));
-return view;
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.icons_title));
+        return view;
 
         prefs = new PreferencesHelper(getContext());
 
@@ -79,6 +81,8 @@ return view;
             });
         }
 
+                TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.icons_title));
         return view;
     }
 

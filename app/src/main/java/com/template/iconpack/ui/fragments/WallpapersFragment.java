@@ -31,7 +31,9 @@ public class WallpapersFragment extends Fragment {
         if (getContext() == null) 
         TextView tv = view.findViewById(R.id.page_title);
         if (tv != null) tv.setText(getString(R.string.wallpapers_title));
-return view;
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.wallpapers_title));
+        return view;
 
         List<WallpaperInfo> wallpapers = IconPackLoader.loadWallpapers(getContext());
 
@@ -62,6 +64,8 @@ return view;
             grid.setAdapter(adapter);
         }
 
+                TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.wallpapers_title));
         return view;
     }
 }
