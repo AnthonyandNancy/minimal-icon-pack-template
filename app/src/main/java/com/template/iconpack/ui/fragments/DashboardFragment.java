@@ -20,7 +20,8 @@ import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
-import com.template.iconpack.ui.LiquidGlassDrawable;
+import com.template.iconpack.ui.glass.GlassMaterialFactory;
+import com.template.iconpack.ui.glass.LiquidGlassDrawable;
 import com.template.iconpack.ui.anim.GlassAnimations;
 import com.template.iconpack.utils.AppScanner;
 import com.template.iconpack.utils.IconPackLoader;
@@ -63,7 +64,7 @@ public class DashboardFragment extends Fragment {
         // Register home toolbar with MainActivity + apply glass background
         LinearLayout tb = rootView.findViewById(R.id.toolbar);
         if (tb != null) {
-            tb.setBackground(LiquidGlassDrawable.toolbar(density));
+            tb.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.toolbar(), density));
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).registerHomeToolbar(tb);
             }
@@ -77,9 +78,9 @@ public class DashboardFragment extends Fragment {
             spacer.requestLayout();
         }
 
-        // Apply LiquidGlassDrawable to Hero card
+        // Hero card — using new GlassMaterialFactory
         View hero = rootView.findViewById(R.id.hero_card);
-        hero.setBackground(LiquidGlassDrawable.heroCard(density));
+        hero.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.hero(), density));
         hero.setElevation(8f);
 
         // Stat & entry cards have backgrounds set in their XML/layout builders
@@ -113,7 +114,7 @@ public class DashboardFragment extends Fragment {
 
     private void buildHeroCard(Context ctx, int iconCount, float density) {
         View card = rootView.findViewById(R.id.hero_card);
-        card.setBackground(LiquidGlassDrawable.heroCard(density));
+        card.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.hero(), density));
 
         TextView nameView = rootView.findViewById(R.id.hero_app_name);
         TextView versionView = rootView.findViewById(R.id.hero_version);
@@ -152,7 +153,7 @@ public class DashboardFragment extends Fragment {
             TextView desc  = card.findViewById(R.id.card_desc);
 
             // Apply LiquidGlassDrawable
-            card.setBackground(LiquidGlassDrawable.statCard(density));
+            card.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.statCard(), density));
 
             icon.setColorFilter(getResources().getColor(colors[i]));
             title.setText(stats[i][0]);
@@ -202,7 +203,7 @@ public class DashboardFragment extends Fragment {
             }
 
             // Apply LiquidGlassDrawable
-            card.setBackground(LiquidGlassDrawable.featureCard(density));
+            card.setBackground(new LiquidGlassDrawable(GlassMaterialFactory.featureCard(), density));
 
             ImageView iconView = card.findViewById(R.id.launcher_icon);
             TextView  nameView = card.findViewById(R.id.launcher_name);
