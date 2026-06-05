@@ -54,6 +54,7 @@ public class SettingsFragment extends Fragment {
             AppCompatDelegate.setDefaultNightMode(isChecked
                     ? AppCompatDelegate.MODE_NIGHT_YES
                     : AppCompatDelegate.MODE_NIGHT_NO);
+            requireActivity().recreate();
         });
 
         switchShowIconName.setOnCheckedChangeListener((buttonView, isChecked) -> {
