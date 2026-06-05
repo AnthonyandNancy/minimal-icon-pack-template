@@ -39,7 +39,10 @@ public class RequestFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_request, container, false);
         Context ctx = getContext();
-        if (ctx == null) return view;
+        if (ctx == null) 
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.request_title));
+return view;
 
         // Stats
         bottomBar = view.findViewById(R.id.request_bottom_bar);

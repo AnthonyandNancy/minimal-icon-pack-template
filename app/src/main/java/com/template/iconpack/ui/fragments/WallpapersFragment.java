@@ -28,7 +28,10 @@ public class WallpapersFragment extends Fragment {
         RecyclerView grid = view.findViewById(R.id.wallpapers_grid);
         TextView emptyView = view.findViewById(R.id.wallpapers_empty);
 
-        if (getContext() == null) return view;
+        if (getContext() == null) 
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.wallpapers_title));
+return view;
 
         List<WallpaperInfo> wallpapers = IconPackLoader.loadWallpapers(getContext());
 

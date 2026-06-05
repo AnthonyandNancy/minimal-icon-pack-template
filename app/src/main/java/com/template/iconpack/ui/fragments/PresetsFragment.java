@@ -3,7 +3,9 @@ package com.template.iconpack.ui.fragments;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -33,6 +35,9 @@ public class PresetsFragment extends Fragment {
             presetsList.setAdapter(adapter);
         }
 
-        return view;
+        
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.presets_title));
+return view;
     }
 }

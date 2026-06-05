@@ -34,7 +34,10 @@ public class IconsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_icons, container, false);
-        if (getContext() == null) return view;
+        if (getContext() == null) 
+        TextView tv = view.findViewById(R.id.page_title);
+        if (tv != null) tv.setText(getString(R.string.icons_title));
+return view;
 
         prefs = new PreferencesHelper(getContext());
 
