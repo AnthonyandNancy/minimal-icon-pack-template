@@ -56,23 +56,12 @@ public class LiquidGlassLayout extends FrameLayout {
     public void bindBlur(FrameLayout root) {
         if (root == null || blurReady) return;
         try {
-            // Use RenderEffect on API 31+, RenderScript on older
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                blurView.setupWith(root, new RenderEffectBlur())
-                        .setFrameClearDrawable(null)
-                        .setBlurRadius(16f)
-                        .setOverlayColor(0x00000000)
-                        .setBlurAutoUpdate(true);
-            } else {
-                blurView.setupWith(root, new RenderScriptBlur(getContext()))
-                        .setFrameClearDrawable(null)
-                        .setBlurRadius(16f)
-                        .setOverlayColor(0x00000000)
-                        .setBlurAutoUpdate(true);
-            }
+            blurView.setupWith(root)
+                    .setBlurRadius(14f)
+                    .setOverlayColor(0x00000000)
+                    .setBlurAutoUpdate(true);
             blurReady = true;
         } catch (Exception e) {
-            // BlurView failed silently — glass overlay still works
             blurView.setVisibility(GONE);
         }
     }
