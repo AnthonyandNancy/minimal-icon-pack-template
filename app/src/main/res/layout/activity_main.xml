@@ -7,8 +7,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- Content: dark background + fragments (no floating toolbar here) -->
+    <!-- Content: fixed bg + scrollable content -->
     <FrameLayout
+        android:id="@+id/root_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

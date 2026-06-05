@@ -21,8 +21,7 @@ import com.template.iconpack.MainActivity;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
-import com.template.iconpack.ui.glass.GlassMaterialFactory;
-import com.template.iconpack.ui.glass.LiquidGlassDrawable;
+import com.template.iconpack.ui.glass.LiquidGlassLayout;
 import com.template.iconpack.ui.anim.GlassAnimations;
 import com.template.iconpack.utils.AppScanner;
 import com.template.iconpack.utils.IconPackLoader;
@@ -79,7 +78,12 @@ public class DashboardFragment extends Fragment {
             spacer.requestLayout();
         }
 
-        // Hero card is now LiquidGlassView in XML — no manual background needed
+        // Hero card is LiquidGlassLayout with BlurView
+        View hero = rootView.findViewById(R.id.hero_card);
+        if (hero instanceof LiquidGlassLayout && getActivity() != null) {
+            FrameLayout root = getActivity().findViewById(R.id.root_container);
+            ((LiquidGlassLayout) hero).bindBlur(root);
+        }
         hero.setElevation(8f);
 
         // Stat & entry cards have backgrounds set in their XML/layout builders
