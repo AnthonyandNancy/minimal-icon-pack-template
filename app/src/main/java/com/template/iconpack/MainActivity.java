@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // Hook for DashboardFragment to register home toolbar
+    public void openDrawer() { drawer.openDrawer(GravityCompat.START); }
     public void registerHomeToolbar(ViewGroup tb) {
         this.homeToolbar = tb;
         View menuBtn = tb.findViewById(R.id.btn_menu_home);

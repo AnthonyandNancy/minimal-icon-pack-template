@@ -1,63 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- STAT CARD: FrameLayout + glass drawable — NO MaterialCardView, NO white rectangles -->
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:background="@drawable/glass_card_stat"
-    android:elevation="4dp"
-    android:clipChildren="false"
-    android:clickable="true"
-    android:focusable="true"
-    android:outlineProvider="background"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_width="0dp" android:layout_height="100dp"
+    android:orientation="vertical" android:gravity="center"
+    android:padding="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+    <TextView android:id="@+id/card_icon"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textSize="13sp" android:textColor="#6E6A78" android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
-        <ImageView
-            android:id="@+id/card_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="6dp" />
+    <TextView android:id="@+id/card_value"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textSize="28sp" android:textStyle="bold"
+        android:textColor="#6C63FF" android:includeFontPadding="false" />
 
-        <!-- Stat number -->
-        <TextView
-            android:id="@+id/card_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:includeFontPadding="false"
-            android:textColor="#4D96FF" />
-
-        <!-- Label -->
-        <TextView
-            android:id="@+id/card_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="#4A4A6A"
-            android:includeFontPadding="false"
-            android:layout_marginTop="6dp" />
-
-        <!-- Optional description (hidden by default) -->
-        <TextView
-            android:id="@+id/card_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:textColor="#9CA3AF"
-            android:layout_marginTop="4dp"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-</FrameLayout>
+    <TextView android:id="@+id/card_title"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textSize="12sp" android:textColor="#6E6A78"
+        android:includeFontPadding="false" android:layout_marginTop="4dp" />
+</LinearLayout>
