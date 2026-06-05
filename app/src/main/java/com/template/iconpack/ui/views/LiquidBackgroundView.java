@@ -12,24 +12,29 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 /**
- * iPhone prismatic rainbow background — makes liquid glass visible.
- * 6 colour blobs slowly drifting + base warm gradient.
+ * iOS 26 built-in light wallpaper style:
+ * warm sand → soft purple → pale blue gradient
+ * + 6 floating organic blobs.
  */
 public class LiquidBackgroundView extends View {
 
-    private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint bgPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    // Warm ivory → soft pink gradient base
-    private static final int[] COLORS = {0xFFF8F4F0, 0xFFFAE8E0, 0xFFF5E6F0, 0xFFEDF0F8};
-    private static final float[] STOPS = {0f, 0.35f, 0.68f, 1f};
+    // iOS 26 light wallpaper gradient
+    private static final int[] COLORS = {
+        0xFFF2EBE5, 0xFFEBE0F0, 0xFFE5E8F5, 0xFFE8F0F5, 0xFFF0EBE5
+    };
+    private static final float[] STOPS = {0f, 0.3f, 0.55f, 0.78f, 1f};
 
-    // 6 drifting rainbow blobs
-    private static final int[]   BC = {0xFFFF6B6B, 0xFF4ECDC4, 0xFFFFE66D, 0xFFA78BFA, 0xFF4D96FF, 0xFFFF85A2};
-    private static final float[] BA = {0.32f, 0.28f, 0.30f, 0.24f, 0.26f, 0.22f};
-    private static final float[] BS = {0.55f, 0.50f, 0.48f, 0.52f, 0.45f, 0.40f};
-    private static final float[] BX = {0.15f, 0.80f, 0.50f, 0.20f, 0.75f, 0.55f};
-    private static final float[] BY = {0.20f, 0.35f, 0.60f, 0.80f, 0.50f, 0.85f};
+    // 6 soft organic blobs
+    private static final int[]   BC = {
+        0xFFA8D8EA, 0xFFC9B8E8, 0xFFF5C4B8, 0xFFB8E8D0, 0xFFF5E4B8, 0xFFF5C4D8
+    };
+    private static final float[] BA = {0.38f, 0.32f, 0.34f, 0.28f, 0.30f, 0.26f};
+    private static final float[] BS = {0.48f, 0.52f, 0.44f, 0.50f, 0.46f, 0.42f};
+    private static final float[] BX = {0.12f, 0.82f, 0.48f, 0.22f, 0.72f, 0.58f};
+    private static final float[] BY = {0.18f, 0.32f, 0.58f, 0.78f, 0.48f, 0.82f};
     private static final float[] BP = {0f, 1.05f, 2.09f, 3.14f, 4.19f, 5.24f};
 
     private float animT;
@@ -44,7 +49,7 @@ public class LiquidBackgroundView extends View {
         if (!attached) {
             attached = true;
             animator = ValueAnimator.ofFloat(0f, (float)(2 * Math.PI));
-            animator.setDuration(35000);
+            animator.setDuration(40000);
             animator.setRepeatCount(ValueAnimator.INFINITE);
             animator.setInterpolator(new LinearInterpolator());
             animator.addUpdateListener(a -> { animT = (float)a.getAnimatedValue(); invalidate(); });
@@ -63,13 +68,13 @@ public class LiquidBackgroundView extends View {
         int w = getWidth(), h = getHeight();
         if (w == 0 || h == 0) return;
 
-        bgPaint.setShader(new LinearGradient(0, 0, 0, h, COLORS, STOPS, Shader.TileMode.CLAMP));
+        bgPaint.setShader(new LinearGradient(0, 0, w, h, COLORS, STOPS, Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, w, h, bgPaint);
 
         float s = Math.min(w, h);
         for (int i = 0; i < 6; i++) {
-            float ox = (float)Math.sin(animT * 0.7f + BP[i]) * 0.04f * w;
-            float oy = (float)Math.cos(animT * 0.5f + BP[i]) * 0.03f * h;
+            float ox = (float)Math.sin(animT * 0.6f + BP[i]) * 0.03f * w;
+            float oy = (float)Math.cos(animT * 0.45f + BP[i]) * 0.025f * h;
             float r = s * BS[i];
             blob(canvas, w * BX[i] + ox, h * BY[i] + oy, r, BC[i], BA[i]);
         }
