@@ -100,13 +100,11 @@ public class DashboardFragment extends Fragment {
 
         // Toolbar scroll behavior + continuous glass refresh
         if (rootView instanceof ScrollView) {
-            View hero = rootView.findViewById(R.id.hero_card);
             ScrollView sv = (ScrollView) rootView;
             sv.setOnScrollChangeListener((v, sx, sy, ox, oy) -> {
                 if (getActivity() instanceof ScrollListener)
                     ((ScrollListener) getActivity()).onScroll(sy);
-                // Refresh glass on scroll → samples new bg region
-                if (hero != null) hero.invalidate();
+                hero.invalidate();
                 View grid = rootView.findViewById(R.id.dashboard_stats);
                 if (grid != null) grid.invalidate();
                 View entries = rootView.findViewById(R.id.dashboard_entries);
