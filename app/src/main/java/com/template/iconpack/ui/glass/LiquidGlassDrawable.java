@@ -224,9 +224,17 @@ public class LiquidGlassDrawable extends Drawable {
     private void captureBg() {
         View v = detectView();
         if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) return;
-        float blurDp = cfg.blurAmount * 45f;
-        blurredBg = BlurUtils.captureAndBlur(v, blurDp, d);
-        if (blurredBg != null) bgCaptured = true; // only mark captured if successful
+        // Get background view from the view hierarchy root
+        View root = v.getRootView();
+        View bgView = root.findViewById(com.template.iconpack.R.id.liquid_bg);
+        if (bgView instanceof com.template.iconpack.ui.views.LiquidBackgroundView) {
+            com.template.iconpack.ui.views.LiquidBackgroundView lbg =
+                    (com.template.iconpack.ui.views.LiquidBackgroundView) bgView;
+            int[] loc = new int[2];
+            v.getLocationOnScreen(loc);
+            blurredBg = lbg.getBlurredBackdrop(loc[0], loc[1], v.getWidth(), v.getHeight());
+        }
+        if (blurredBg != null) bgCaptured = true;
     }
 
     // ── draw helpers ─────────────────────────────────

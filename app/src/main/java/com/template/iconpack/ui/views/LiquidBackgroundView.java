@@ -2,6 +2,7 @@ package com.template.iconpack.ui.views;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -11,23 +12,22 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
+import com.template.iconpack.ui.glass.BlurUtils;
+
 /**
- * iOS 26 built-in light wallpaper style:
- * warm sand → soft purple → pale blue gradient
- * + 6 floating organic blobs.
+ * iOS 26 wallpaper background.
+ * Exposes a blurred version of itself for LiquidGlassDrawable to use as backdrop.
  */
 public class LiquidBackgroundView extends View {
 
     private final Paint bgPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint blobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    // iOS 26 light wallpaper gradient
     private static final int[] COLORS = {
         0xFFF2EBE5, 0xFFEBE0F0, 0xFFE5E8F5, 0xFFE8F0F5, 0xFFF0EBE5
     };
     private static final float[] STOPS = {0f, 0.3f, 0.55f, 0.78f, 1f};
 
-    // 6 soft organic blobs
     private static final int[]   BC = {
         0xFFA8D8EA, 0xFFC9B8E8, 0xFFF5C4B8, 0xFFB8E8D0, 0xFFF5E4B8, 0xFFF5C4D8
     };
@@ -41,6 +41,10 @@ public class LiquidBackgroundView extends View {
     private ValueAnimator animator;
     private boolean attached;
 
+    // Cached blurred version for glass components
+    private Bitmap blurredCache;
+    private boolean needsRecache = true;
+
     public LiquidBackgroundView(Context c) { super(c); }
     public LiquidBackgroundView(Context c, AttributeSet a) { super(c, a); }
 
@@ -52,7 +56,11 @@ public class LiquidBackgroundView extends View {
             animator.setDuration(40000);
             animator.setRepeatCount(ValueAnimator.INFINITE);
             animator.setInterpolator(new LinearInterpolator());
-            animator.addUpdateListener(a -> { animT = (float)a.getAnimatedValue(); invalidate(); });
+            animator.addUpdateListener(a -> {
+                animT = (float)a.getAnimatedValue();
+                needsRecache = true; // recache blurred bg on each frame
+                invalidate();
+            });
             animator.start();
         }
     }
@@ -60,6 +68,7 @@ public class LiquidBackgroundView extends View {
     @Override protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (animator != null) { animator.cancel(); animator = null; }
+        if (blurredCache != null) { blurredCache.recycle(); blurredCache = null; }
         attached = false;
     }
 
@@ -75,8 +84,7 @@ public class LiquidBackgroundView extends View {
         for (int i = 0; i < 6; i++) {
             float ox = (float)Math.sin(animT * 0.6f + BP[i]) * 0.03f * w;
             float oy = (float)Math.cos(animT * 0.45f + BP[i]) * 0.025f * h;
-            float r = s * BS[i];
-            blob(canvas, w * BX[i] + ox, h * BY[i] + oy, r, BC[i], BA[i]);
+            blob(canvas, w * BX[i] + ox, h * BY[i] + oy, s * BS[i], BC[i], BA[i]);
         }
     }
 
@@ -84,6 +92,43 @@ public class LiquidBackgroundView extends View {
         blobPaint.setShader(new RadialGradient(x, y, r,
                 argb(col, a), argb(col, 0f), Shader.TileMode.CLAMP));
         c.drawCircle(x, y, r, blobPaint);
+    }
+
+    /** Get a blurred copy of the background for glass components. */
+    public Bitmap getBlurredBackdrop(int viewLeft, int viewTop, int viewW, int viewH) {
+        int w = getWidth(), h = getHeight();
+        if (w <= 0 || h <= 0) return null;
+
+        // Re-render to a scaled-down bitmap and blur
+        if (needsRecache || blurredCache == null) {
+            float scale = 0.25f;
+            int sw = Math.max(1, (int)(w * scale));
+            int sh = Math.max(1, (int)(h * scale));
+
+            Bitmap small = Bitmap.createBitmap(sw, sh, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(small);
+            c.scale(scale, scale);
+            super.draw(c);
+
+            // Blur the small version
+            blurredCache = BlurUtils.boxBlurOnly(small, 8, 2);
+            if (blurredCache != small) small.recycle();
+            needsRecache = false;
+        }
+
+        // Crop the portion under the glass view
+        int bw = blurredCache.getWidth(), bh = blurredCache.getHeight();
+        float scale = (float) bw / w;
+        int sx = Math.max(0, Math.min(bw, (int)(viewLeft * scale)));
+        int sy = Math.max(0, Math.min(bh, (int)(viewTop * scale)));
+        int cropW = Math.min(bw - sx, Math.max(1, (int)(viewW * scale)));
+        int cropH = Math.min(bh - sy, Math.max(1, (int)(viewH * scale)));
+
+        try {
+            return Bitmap.createBitmap(blurredCache, sx, sy, cropW, cropH);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static int argb(int c, float a) { return ((int)(255*a)<<24)|(c&0x00FFFFFF); }

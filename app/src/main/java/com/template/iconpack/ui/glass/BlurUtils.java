@@ -21,14 +21,19 @@ public final class BlurUtils {
         if (parent == null) return null;
 
         int w = view.getWidth(), h = view.getHeight();
-        float scale = 0.25f; // scale down for performance
+        float scale = 0.25f;
         int sw = Math.max(1, (int)(w * scale)), sh = Math.max(1, (int)(h * scale));
 
-        // Capture parent's drawing cache at this view's location
+        // Temporarily hide this view to avoid recursive draw
+        int oldVis = view.getVisibility();
+        view.setVisibility(View.INVISIBLE);
+
         Bitmap full = Bitmap.createBitmap(parent.getWidth(), parent.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(full);
         c.translate(-view.getLeft(), -view.getTop());
         parent.draw(c);
+
+        view.setVisibility(oldVis);
 
         // Crop to view bounds
         Bitmap cropped = Bitmap.createBitmap(full,
@@ -51,6 +56,11 @@ public final class BlurUtils {
         Bitmap result = Bitmap.createScaledBitmap(blurred, w, h, true);
         blurred.recycle();
         return result;
+    }
+
+    /** Public access for LiquidBackgroundView. Blur the bitmap in-place. */
+    public static Bitmap boxBlurOnly(Bitmap src, int radius, int iterations) {
+        return boxBlur(src, radius, iterations);
     }
 
     /** Fast iterative box blur (approximates Gaussian blur). */
