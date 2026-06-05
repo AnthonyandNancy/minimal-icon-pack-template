@@ -1,9 +1,7 @@
 pluginManagement {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/google/' }
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
         google()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -11,9 +9,8 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/google/' }
         google()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         mavenCentral()
     }
 }
