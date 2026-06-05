@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
         decor.setSystemUiVisibility(flags);
-            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        }
-        decor.setSystemUiVisibility(flags);
     }
 
     public int getStatusBarHeight() {
