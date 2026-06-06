@@ -99,8 +99,8 @@ public class MainActivity extends AppCompatActivity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(0xFFF0EBE5);
+            window.setStatusBarColor(getResources().getColor(R.color.background));
+            window.setNavigationBarColor(getResources().getColor(R.color.background));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false);
@@ -175,7 +175,8 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
                             R.anim.slide_in_left, R.anim.slide_out_right)
-                    .replace(R.id.content_frame, fragment).commit();
+                    .replace(R.id.content_frame, fragment)
+                    .addToBackStack(null).commit();
         }
     }
 
@@ -254,7 +255,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
-        else if (currentNavItem != NAV_HOME) { showFragment(NAV_HOME); navView.setCheckedItem(R.id.nav_home); }
+        else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            currentNavItem = NAV_HOME;
+            navView.setCheckedItem(R.id.nav_home);
+        }
         else super.onBackPressed();
     }
 }
