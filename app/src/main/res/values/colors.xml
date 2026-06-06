@@ -84,4 +84,13 @@
     <color name="color_warning">#FFE36B75</color>
     <color name="color_warning_container">#FFFFF0F2</color>
     <color name="color_neutral_number">#FF20242C</color>
+
+    <color name="color_divider_soft">#FFE6EAF0</color>
+
+    <color name="color_primary_clean">@color/primary</color>
+    <color name="color_primary_clean_dark">@color/primary_dark</color>
+    <color name="color_primary_container">@color/primary_light</color>
+    <color name="color_text_primary">@color/text_primary</color>
+    <color name="color_text_secondary">@color/text_secondary</color>
+    <color name="color_text_tertiary">@color/text_hint</color>
 </resources>
