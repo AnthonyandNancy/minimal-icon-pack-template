@@ -249,14 +249,15 @@
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_icons"
                     android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="@dimen/stat_card_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/stat_card_min_height"
                     app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
                     app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
                     app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginEnd="7dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="@dimen/stat_card_min_height"
                         android:orientation="vertical"
-                        android:gravity="center_vertical"
                         android:padding="@dimen/stat_card_padding">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="horizontal" android:gravity="center_vertical">
@@ -273,7 +274,8 @@
                             android:textSize="@dimen/stat_number_size" android:textStyle="bold"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="6dp"/>
-                        <TextView android:id="@+id/card_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        <TextView android:id="@+id/card_subtitle" android:layout_width="match_parent" android:layout_height="@dimen/stat_subtitle_line_height"
+                            android:gravity="center_vertical"
                             android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="2dp"/>
@@ -282,14 +284,15 @@
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_apps"
                     android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="@dimen/stat_card_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/stat_card_min_height"
                     app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
                     app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
                     app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginStart="7dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="@dimen/stat_card_min_height"
                         android:orientation="vertical"
-                        android:gravity="center_vertical"
                         android:padding="@dimen/stat_card_padding">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="horizontal" android:gravity="center_vertical">
@@ -306,7 +309,8 @@
                             android:textSize="@dimen/stat_number_size" android:textStyle="bold"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="6dp"/>
-                        <TextView android:id="@+id/card_subtitle2" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        <TextView android:id="@+id/card_subtitle2" android:layout_width="match_parent" android:layout_height="@dimen/stat_subtitle_line_height"
+                            android:gravity="center_vertical"
                             android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="2dp"/>
@@ -322,14 +326,15 @@
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_themed"
                     android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="@dimen/stat_card_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/stat_card_min_height"
                     app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
                     app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
                     app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginEnd="7dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="@dimen/stat_card_min_height"
                         android:orientation="vertical"
-                        android:gravity="center_vertical"
                         android:padding="@dimen/stat_card_padding">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="horizontal" android:gravity="center_vertical">
@@ -346,7 +351,8 @@
                             android:textSize="@dimen/stat_number_size" android:textStyle="bold"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="6dp"/>
-                        <TextView android:id="@+id/card_subtitle3" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        <TextView android:id="@+id/card_subtitle3" android:layout_width="match_parent" android:layout_height="@dimen/stat_subtitle_line_height"
+                            android:gravity="center_vertical"
                             android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="2dp"/>
@@ -355,14 +361,15 @@
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_missing"
                     android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="@dimen/stat_card_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/stat_card_min_height"
                     app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
                     app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
                     app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginStart="7dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="@dimen/stat_card_min_height"
                         android:orientation="vertical"
-                        android:gravity="center_vertical"
                         android:padding="@dimen/stat_card_padding">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="horizontal" android:gravity="center_vertical">
@@ -379,7 +386,8 @@
                             android:textSize="@dimen/stat_number_size" android:textStyle="bold"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="6dp"/>
-                        <TextView android:id="@+id/card_subtitle4" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        <TextView android:id="@+id/card_subtitle4" android:layout_width="match_parent" android:layout_height="@dimen/stat_subtitle_line_height"
+                            android:gravity="center_vertical"
                             android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
                             android:maxLines="1" android:ellipsize="end"
                             android:layout_marginTop="2dp"/>

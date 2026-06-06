@@ -64,13 +64,15 @@
     <dimen name="section_bar_height">24dp</dimen>
 
     <!-- ══ Stats card ══ -->
-    <dimen name="stat_card_height">120dp</dimen>
+    <dimen name="stat_card_min_height">126dp</dimen>
+    <dimen name="stat_card_height">126dp</dimen>
     <dimen name="stat_card_padding">14dp</dimen>
     <dimen name="stat_badge_size">43dp</dimen>
     <dimen name="stat_badge_icon_size">23dp</dimen>
     <dimen name="stat_title_size">14sp</dimen>
     <dimen name="stat_number_size">28sp</dimen>
     <dimen name="stat_subtitle_size">13sp</dimen>
+    <dimen name="stat_subtitle_line_height">20dp</dimen>
 
     <!-- ══ Quick item ══ -->
     <dimen name="quick_item_height">72dp</dimen>
