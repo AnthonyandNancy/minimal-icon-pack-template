@@ -9,6 +9,7 @@ public class AppInfo {
     public String componentName;
     public boolean isThemed;
     public boolean isSelected;
+    public String drawableName;
 
     public AppInfo(String appName, String packageName, String componentName) {
         this.appName = appName;
@@ -16,6 +17,7 @@ public class AppInfo {
         this.componentName = componentName;
         this.isThemed = false;
         this.isSelected = false;
+        this.drawableName = null;
     }
 
     public String getComponentInfo() {

@@ -106,11 +106,22 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
         AppInfo app = filteredApps.get(pos);
         h.name.setText(app.appName);
         h.pkg.setText(app.packageName);
-        // Load actual app icon
+        // Load icon: themed → icon pack drawable, unthemed → native app icon
         try {
-            Drawable icon = h.itemView.getContext().getPackageManager()
-                    .getApplicationIcon(app.packageName);
-            h.icon.setImageDrawable(icon);
+            if (app.isThemed && app.drawableName != null) {
+                int rid = h.itemView.getContext().getResources()
+                        .getIdentifier(app.drawableName, "drawable",
+                                h.itemView.getContext().getPackageName());
+                if (rid != 0) {
+                    h.icon.setImageResource(rid);
+                } else {
+                    h.icon.setImageResource(android.R.drawable.sym_def_app_icon);
+                }
+            } else {
+                Drawable icon = h.itemView.getContext().getPackageManager()
+                        .getApplicationIcon(app.packageName);
+                h.icon.setImageDrawable(icon);
+            }
         } catch (Exception e) {
             h.icon.setImageResource(android.R.drawable.sym_def_app_icon);
         }

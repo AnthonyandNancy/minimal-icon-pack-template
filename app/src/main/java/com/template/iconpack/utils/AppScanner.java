@@ -50,6 +50,7 @@ public class AppScanner {
 
             // Check if this app is themed
             app.isThemed = appFilter.containsKey(componentKey);
+            if (app.isThemed) app.drawableName = appFilter.get(componentKey);
 
             apps.add(app);
         }

@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity
 
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.content_frame, fragment).commit();
         }
     }
