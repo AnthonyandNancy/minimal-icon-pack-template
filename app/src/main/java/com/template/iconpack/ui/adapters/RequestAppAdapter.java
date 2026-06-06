@@ -130,12 +130,12 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
 
         if (app.isThemed) {
             h.status.setText("已适配");
-            h.status.setBackgroundColor(0xFFE8F5E9);
-            h.status.setTextColor(0xFF388E3C);
+            h.status.setBackgroundColor(0xFFEAF7EF);
+            h.status.setTextColor(0xFF4CAF73);
         } else {
             h.status.setText("未适配");
-            h.status.setBackgroundColor(0xFFFFEBEE);
-            h.status.setTextColor(0xFFE53935);
+            h.status.setBackgroundColor(0xFFFFF0F2);
+            h.status.setTextColor(0xFFE36B75);
         }
 
         // Row click toggles selection

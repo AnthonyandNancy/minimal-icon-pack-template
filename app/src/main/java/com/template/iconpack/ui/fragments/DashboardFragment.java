@@ -85,9 +85,9 @@ public class DashboardFragment extends Fragment {
         GridLayout g = rootView.findViewById(R.id.dashboard_stats);
         g.removeAllViews();
         int unthemed = apps - themed;
-        String[][] d = {{"图标",String.valueOf(icons),"已打包图标"},{"应用",String.valueOf(apps),"已安装应用"},
-                {"已适配",String.valueOf(themed),"适配累计"},{"未适配",String.valueOf(unthemed),"待适配"}};
-        int[] cs = {R.color.primary, R.color.text_primary, R.color.status_themed, R.color.status_unthemed};
+        String[][] d = {{"图标",String.valueOf(icons),"已打包"},{"应用",String.valueOf(apps),"已安装"},
+                {"已适配",String.valueOf(themed),"完成适配"},{"未适配",String.valueOf(unthemed),"待处理"}};
+        int[] cs = {R.color.primary, R.color.text_primary, R.color.color_success, R.color.color_warning};
         float dp = ctx.getResources().getDisplayMetrics().density;
         for (int i = 0; i < 4; i++) {
             View c = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_card, g, false);

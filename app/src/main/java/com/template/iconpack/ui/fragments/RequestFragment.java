@@ -99,7 +99,7 @@ public class RequestFragment extends Fragment {
             if (p == null) continue;
             boolean sel = keys[i].equals(f);
             p.setBackgroundResource(sel ? R.drawable.bg_chip_selected : R.drawable.bg_surface_card);
-            ((TextView)p).setTextColor(sel ? 0xFFFFFFFF : 0xFF49454F);
+            ((TextView)p).setTextColor(sel ? 0xFFFFFFFF : 0xFF6B7280);
         }
     }
 
