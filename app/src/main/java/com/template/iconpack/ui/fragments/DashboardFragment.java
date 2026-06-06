@@ -83,26 +83,26 @@ public class DashboardFragment extends Fragment {
 
     private void buildQuickCards(int icons, int apps, int themed, int missing) {
         setupStatCard(R.id.stat_card_icons, R.drawable.bg_badge_blue,
-                R.drawable.ic_rate, 0xFF4F7CFF, "图标",
+                R.drawable.ic_grid_rounded, 0xFF4F7CFF, "图标",
                 String.valueOf(icons), 0xFF4F7CFF, "已打包图标",
                 R.id.card_badge, R.id.card_badge_icon,
                 R.id.card_title_label, R.id.card_value, R.id.card_subtitle);
 
         setupStatCard(R.id.stat_card_apps, R.drawable.bg_badge_gray,
-                R.drawable.ic_info, 0xFF4B5563, "应用",
+                R.drawable.ic_cube_outline, 0xFF4B5563, "应用",
                 String.valueOf(apps), 0xFF20242C, "已安装应用",
                 R.id.card_badge2, R.id.card_badge_icon2,
                 R.id.card_title_label2, R.id.card_value2, R.id.card_subtitle2);
 
         setupStatCard(R.id.stat_card_themed, R.drawable.bg_badge_green,
-                R.drawable.ic_rate, 0xFF4CAF73, "已适配",
+                R.drawable.ic_check_circle_outline, 0xFF4CAF73, "已适配",
                 String.valueOf(themed), 0xFF4CAF73, "适配累计",
                 R.id.card_badge3, R.id.card_badge_icon3,
                 R.id.card_title_label3, R.id.card_value3, R.id.card_subtitle3);
 
         setupStatCard(R.id.stat_card_missing, R.drawable.bg_badge_red,
-                R.drawable.ic_info, 0xFFE36B75, "未适配",
-                String.valueOf(missing), 0xFFE36B75, "待适配",
+                R.drawable.ic_dashed_circle, 0xFFE96450, "未适配",
+                String.valueOf(missing), 0xFFE96450, "待适配",
                 R.id.card_badge4, R.id.card_badge_icon4,
                 R.id.card_title_label4, R.id.card_value4, R.id.card_subtitle4);
     }
@@ -148,25 +148,25 @@ public class DashboardFragment extends Fragment {
             {"申请图标", themed + " / " + apps + " 已适配", null, null, null, "12"},
             {"壁纸", wp + " 张云端壁纸", null, null, null, "13"},
         };
-        int[] badgeBgs = {R.drawable.bg_badge_blue, R.drawable.bg_badge_blue, R.drawable.bg_badge_orange};
-        int[] iconRes = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_wallpaper};
-        int[] iconTints = {0xFF4F7CFF, 0xFF4F7CFF, 0xFFD89A3D};
+        int[] badgeBgs = {R.drawable.bg_badge_blue, R.drawable.bg_badge_blue, R.drawable.bg_badge_purple};
+        int[] iconRes = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_image_mountain};
+        int[] iconTints = {0xFF4F7CFF, 0xFF4F7CFF, 0xFF7A66E8};
 
         for (int i = 0; i < 3; i++) {
-            View v = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, c, false);
+            View v = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_entry, c, false);
             // DO NOT override background — XML MaterialCardView handles it
 
-            FrameLayout badge = v.findViewById(R.id.launcher_badge);
+            FrameLayout badge = v.findViewById(R.id.entry_badge);
             if (badge != null) badge.setBackgroundResource(badgeBgs[i]);
 
-            ImageView iv = v.findViewById(R.id.launcher_icon);
+            ImageView iv = v.findViewById(R.id.entry_icon);
             if (iv != null) {
                 iv.setImageResource(iconRes[i]);
                 iv.setColorFilter(iconTints[i]);
             }
 
-            ((TextView) v.findViewById(R.id.launcher_name)).setText(items[i][0]);
-            ((TextView) v.findViewById(R.id.entry_desc)).setText(items[i][1]);
+            ((TextView) v.findViewById(R.id.entry_title)).setText(items[i][0]);
+            ((TextView) v.findViewById(R.id.entry_subtitle)).setText(items[i][1]);
 
             int target = Integer.parseInt(items[i][5]);
             v.setOnClickListener(vv -> nav(target));
