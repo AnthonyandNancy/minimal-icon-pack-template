@@ -254,23 +254,25 @@
                     app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginEnd="7dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:padding="@dimen/stat_card_padding">
                         <FrameLayout android:id="@+id/card_badge" android:layout_width="@dimen/stat_badge_size" android:layout_height="@dimen/stat_badge_size">
                             <ImageView android:id="@+id/card_badge_icon" android:layout_width="@dimen/stat_badge_icon_size" android:layout_height="@dimen/stat_badge_icon_size" android:layout_gravity="center"/>
                         </FrameLayout>
-                        <TextView android:id="@+id/card_title_label" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:textSize="@dimen/stat_title_size" android:textColor="@color/color_text_primary"
-                            android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
-                            android:layout_marginTop="12dp"/>
-                        <TextView android:id="@+id/card_value" android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:textSize="@dimen/stat_number_size" android:textStyle="bold"
-                            android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
-                            android:layout_marginTop="6dp"/>
-                        <TextView android:id="@+id/card_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
-                            android:maxLines="1" android:singleLine="true" android:ellipsize="end"
-                            android:includeFontPadding="false" android:layout_marginTop="4dp"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:orientation="vertical" android:layout_marginStart="12dp">
+                            <TextView android:id="@+id/card_title_label" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_title_size" android:textColor="@color/color_text_primary"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"/>
+                            <TextView android:id="@+id/card_value" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_number_size" android:textStyle="bold"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
+                                android:layout_marginTop="6dp"/>
+                            <TextView android:id="@+id/card_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
+                                android:maxLines="1" android:singleLine="true" android:ellipsize="end"
+                                android:includeFontPadding="false" android:layout_marginTop="4dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
