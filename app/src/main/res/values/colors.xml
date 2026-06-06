@@ -93,4 +93,10 @@
     <color name="color_text_primary">@color/text_primary</color>
     <color name="color_text_secondary">@color/text_secondary</color>
     <color name="color_text_tertiary">@color/text_hint</color>
+
+    <color name="color_icon_bg_blue">@color/icon_bg_blue</color>
+    <color name="color_icon_bg_green">@color/icon_bg_green</color>
+    <color name="color_icon_bg_orange">@color/icon_bg_orange</color>
+    <color name="color_icon_bg_red">@color/icon_bg_red</color>
+    <color name="color_icon_bg_gray">@color/icon_bg_gray</color>
 </resources>
