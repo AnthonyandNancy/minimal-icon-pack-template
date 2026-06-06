@@ -29,23 +29,65 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="request_checkbox_size">24dp</dimen>
 
+    <!-- ══ Radius ══ -->
+    <dimen name="radius_logo">14dp</dimen>
+    <dimen name="radius_menu">999dp</dimen>
+    <dimen name="radius_hero">28dp</dimen>
+    <dimen name="radius_stat_card">24dp</dimen>
+    <dimen name="radius_quick_item">20dp</dimen>
+    <dimen name="radius_badge">12dp</dimen>
+    <dimen name="radius_section_bar">2dp</dimen>
+
+    <!-- ══ Page ══ -->
     <dimen name="page_padding_horizontal">24dp</dimen>
-    <dimen name="page_padding_top">28dp</dimen>
+    <dimen name="page_padding_top">24dp</dimen>
     <dimen name="page_padding_bottom">32dp</dimen>
-    <dimen name="section_spacing">28dp</dimen>
-    <dimen name="hero_radius">30dp</dimen>
-    <dimen name="card_radius_large">26dp</dimen>
-    <dimen name="card_radius_medium">22dp</dimen>
-    <dimen name="icon_badge_radius">16dp</dimen>
-    <dimen name="hero_card_padding">24dp</dimen>
-    <dimen name="normal_card_padding">20dp</dimen>
-    <dimen name="stats_card_height">128dp</dimen>
-    <dimen name="quick_item_height">72dp</dimen>
-    <dimen name="header_logo_size">56dp</dimen>
-    <dimen name="header_logo_radius">18dp</dimen>
-    <dimen name="header_menu_size">48dp</dimen>
-    <dimen name="quick_icon_badge_size">42dp</dimen>
-    <dimen name="stats_icon_badge_size">48dp</dimen>
+
+    <!-- ══ Header ══ -->
+    <dimen name="header_logo_size">48dp</dimen>
+    <dimen name="header_logo_inner_icon">32dp</dimen>
+    <dimen name="header_menu_size">42dp</dimen>
+    <dimen name="header_menu_icon">20dp</dimen>
+    <dimen name="header_title_size">20sp</dimen>
+    <dimen name="header_version_size">13sp</dimen>
+
+    <!-- ══ Hero ══ -->
+    <dimen name="hero_padding">22dp</dimen>
+    <dimen name="hero_title_size">19sp</dimen>
+    <dimen name="hero_subtitle_size">14sp</dimen>
+    <dimen name="hero_number_size">26sp</dimen>
+    <dimen name="hero_label_size">12sp</dimen>
+    <dimen name="hero_divider_height">42dp</dimen>
+
+    <!-- ══ Section ══ -->
+    <dimen name="section_title_size">18sp</dimen>
     <dimen name="section_bar_width">4dp</dimen>
-    <dimen name="section_bar_height">28dp</dimen>
+    <dimen name="section_bar_height">24dp</dimen>
+
+    <!-- ══ Stats card ══ -->
+    <dimen name="stat_card_height">122dp</dimen>
+    <dimen name="stat_card_padding">16dp</dimen>
+    <dimen name="stat_badge_size">38dp</dimen>
+    <dimen name="stat_badge_icon_size">20dp</dimen>
+    <dimen name="stat_title_size">13sp</dimen>
+    <dimen name="stat_number_size">26sp</dimen>
+    <dimen name="stat_subtitle_size">12sp</dimen>
+
+    <!-- ══ Quick item ══ -->
+    <dimen name="quick_item_height">66dp</dimen>
+    <dimen name="quick_item_padding_start">16dp</dimen>
+    <dimen name="quick_item_padding_end">14dp</dimen>
+    <dimen name="quick_badge_size">38dp</dimen>
+    <dimen name="quick_badge_icon_size">19dp</dimen>
+    <dimen name="quick_title_size">14sp</dimen>
+    <dimen name="quick_subtitle_size">12sp</dimen>
+    <dimen name="quick_arrow_size">18dp</dimen>
+
+    <!-- ══ Spacing ══ -->
+    <dimen name="header_to_hero">22dp</dimen>
+    <dimen name="hero_to_section">26dp</dimen>
+    <dimen name="section_to_content">14dp</dimen>
+    <dimen name="stat_card_gap">14dp</dimen>
+    <dimen name="section_gap">26dp</dimen>
+    <dimen name="quick_item_gap">10dp</dimen>
 </resources>

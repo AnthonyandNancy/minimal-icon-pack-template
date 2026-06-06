@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,17 +45,17 @@ public class DashboardFragment extends Fragment {
         List<DrawableInfo> icons = IconPackLoader.loadDrawables(ctx);
         List<AppInfo> apps = AppScanner.scanInstalledApps(ctx);
         List<WallpaperInfo> wps = IconPackLoader.loadWallpapers(ctx);
-        int themed = 0;
-        for (AppInfo a : apps) if (a.isThemed) themed++;
 
         int iconCount = icons.size();
         int wpCount = wps.size();
         int appCount = apps.size();
+        int themed = 0;
+        for (AppInfo a : apps) if (a.isThemed) themed++;
         int missing = appCount - themed;
 
         setupHero(iconCount, wpCount, themed);
-        setupStats(iconCount, appCount, themed, missing);
-        setupQuickEntries(iconCount, themed, appCount, wpCount);
+        buildQuickCards(iconCount, appCount, themed, missing);
+        buildEntryCards(ctx, iconCount, themed, appCount, wpCount);
         setupScroll();
 
         return rootView;
@@ -63,11 +63,9 @@ public class DashboardFragment extends Fragment {
 
     private void setupBrand(Context ctx) {
         try {
-            ((TextView) rootView.findViewById(R.id.hero_app_name))
-                    .setText(getString(R.string.app_name));
-            String v = ctx.getPackageManager()
-                    .getPackageInfo(ctx.getPackageName(), 0).versionName;
-            ((TextView) rootView.findViewById(R.id.hero_version)).setText("v" + v);
+            t(R.id.hero_app_name, getString(R.string.app_name));
+            String v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+            t(R.id.hero_version, "v" + v);
         } catch (Exception ignored) {}
     }
 
@@ -83,31 +81,93 @@ public class DashboardFragment extends Fragment {
         t(R.id.hero_themed_count, String.valueOf(themed));
     }
 
-    private void setupStats(int icons, int apps, int themed, int missing) {
-        t(R.id.stat_icon_count, String.valueOf(icons));
-        t(R.id.stat_app_count, String.valueOf(apps));
-        t(R.id.stat_themed_count, String.valueOf(themed));
-        t(R.id.stat_missing_count, String.valueOf(missing));
+    private void buildQuickCards(int icons, int apps, int themed, int missing) {
+        setupStatCard(R.id.stat_card_icons, R.drawable.bg_badge_blue,
+                R.drawable.ic_rate, 0xFF4F7CFF, "图标",
+                String.valueOf(icons), 0xFF4F7CFF, "已打包图标");
+
+        setupStatCard(R.id.stat_card_apps, R.drawable.bg_badge_gray,
+                R.drawable.ic_info, 0xFF4B5563, "应用",
+                String.valueOf(apps), 0xFF20242C, "已安装应用");
+
+        setupStatCard(R.id.stat_card_themed, R.drawable.bg_badge_green,
+                R.drawable.ic_rate, 0xFF4CAF73, "已适配",
+                String.valueOf(themed), 0xFF4CAF73, "适配累计");
+
+        setupStatCard(R.id.stat_card_missing, R.drawable.bg_badge_red,
+                R.drawable.ic_info, 0xFFE36B75, "未适配",
+                String.valueOf(missing), 0xFFE36B75, "待适配");
     }
 
-    private void setupQuickEntries(int icons, int themed, int apps, int wp) {
-        t(R.id.quick_icons_subtitle, icons + " 个图标");
-        t(R.id.quick_request_subtitle, themed + " / " + apps + " 已适配");
-        t(R.id.quick_wallpaper_subtitle, wp + " 张云端壁纸");
+    private void setupStatCard(int rootId, int badgeBg, int iconRes, int iconTint,
+                               String label, String value, int valueColor, String subtitle) {
+        View card = rootView.findViewById(rootId);
+        if (card == null) return;
 
-        click(R.id.entry_browse, 11);    // NAV_ICONS
-        click(R.id.entry_request, 12);   // NAV_REQUEST
-        click(R.id.entry_wallpaper, 13); // NAV_WALLPAPERS
+        FrameLayout badge = card.findViewById(R.id.card_badge);
+        if (badge != null) badge.setBackgroundResource(badgeBg);
+
+        ImageView badgeIcon = card.findViewById(R.id.card_badge_icon);
+        if (badgeIcon != null) {
+            badgeIcon.setImageResource(iconRes);
+            badgeIcon.setColorFilter(iconTint);
+        }
+
+        View labelView = card.findViewById(R.id.card_title_label);
+        if (labelView instanceof TextView) ((TextView) labelView).setText(label);
+
+        View valueView = card.findViewById(R.id.card_value);
+        if (valueView instanceof TextView) {
+            TextView tv = (TextView) valueView;
+            tv.setText(value);
+            tv.setTextColor(valueColor);
+        }
+
+        View subView = card.findViewById(R.id.card_subtitle);
+        if (subView instanceof TextView) ((TextView) subView).setText(subtitle);
+    }
+
+    private void buildEntryCards(Context ctx, int icons, int themed, int apps, int wp) {
+        ViewGroup c = rootView.findViewById(R.id.dashboard_entries);
+        if (c == null) return;
+        c.removeAllViews();
+
+        // Item data: title, subtitle, badgeBg, iconRes, iconTint, navTarget
+        String[][] items = {
+            {"浏览图标", icons + " 个图标", null, null, null, "11"},
+            {"申请图标", themed + " / " + apps + " 已适配", null, null, null, "12"},
+            {"壁纸", wp + " 张云端壁纸", null, null, null, "13"},
+        };
+        int[] badgeBgs = {R.drawable.bg_badge_blue, R.drawable.bg_badge_blue, R.drawable.bg_badge_orange};
+        int[] iconRes = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_wallpaper};
+        int[] iconTints = {0xFF4F7CFF, 0xFF4F7CFF, 0xFFD89A3D};
+
+        for (int i = 0; i < 3; i++) {
+            View v = LayoutInflater.from(ctx).inflate(R.layout.item_launcher, c, false);
+            // DO NOT override background — XML MaterialCardView handles it
+
+            FrameLayout badge = v.findViewById(R.id.launcher_badge);
+            if (badge != null) badge.setBackgroundResource(badgeBgs[i]);
+
+            ImageView iv = v.findViewById(R.id.launcher_icon);
+            if (iv != null) {
+                iv.setImageResource(iconRes[i]);
+                iv.setColorFilter(iconTints[i]);
+            }
+
+            ((TextView) v.findViewById(R.id.launcher_name)).setText(items[i][0]);
+            ((TextView) v.findViewById(R.id.entry_desc)).setText(items[i][1]);
+
+            int target = Integer.parseInt(items[i][5]);
+            v.setOnClickListener(vv -> nav(target));
+
+            c.addView(v);
+        }
     }
 
     private void t(int id, String value) {
         View v = rootView.findViewById(id);
         if (v instanceof TextView) ((TextView) v).setText(value);
-    }
-
-    private void click(int id, int pos) {
-        View v = rootView.findViewById(id);
-        if (v != null) v.setOnClickListener(vv -> nav(pos));
     }
 
     private void nav(int pos) {
