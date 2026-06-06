@@ -174,12 +174,17 @@ public class IconPackLoader {
 
     private static WallpaperInfo parseWallpaperObject(String obj) {
         String id = extractString(obj, "id");
-        String title = extractString(obj, "title");
-        String thumb = extractString(obj, "thumbnailUrl");
-        String download = extractString(obj, "downloadUrl");
+        String title = firstString(obj, "title", "name");
+        String thumb = firstString(obj, "thumbnailUrl", "thumbnail", "thumb", "previewUrl",
+                "preview", "imageUrl", "image", "url");
+        String download = firstString(obj, "downloadUrl", "download", "fullUrl", "full",
+                "wallpaperUrl", "wallpaper", "imageUrl", "image", "url");
         if (id == null) id = "";
         if (title == null) title = "Untitled";
-        return new WallpaperInfo(id, title, thumb, download);
+        WallpaperInfo wallpaper = new WallpaperInfo(id, title, thumb, download);
+        String author = extractString(obj, "author");
+        if (author != null) wallpaper.author = author;
+        return wallpaper;
     }
 
     private static List<PresetInfo> parsePresetsJson(String json) {
@@ -225,5 +230,13 @@ public class IconPackLoader {
         int quote2 = json.indexOf('"', quote1 + 1);
         if (quote2 < 0) return null;
         return json.substring(quote1 + 1, quote2);
+    }
+
+    private static String firstString(String json, String... keys) {
+        for (String key : keys) {
+            String value = extractString(json, key);
+            if (value != null && !value.trim().isEmpty()) return value;
+        }
+        return null;
     }
 }

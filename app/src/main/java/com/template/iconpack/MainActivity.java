@@ -1,7 +1,6 @@
 package com.template.iconpack;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,12 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,8 +65,7 @@ public class MainActivity extends AppCompatActivity
         }
         super.onCreate(savedInstanceState);
 
-        // Immersive: transparent status bar, NO light icons (dark background)
-        makeStatusBarTransparent();
+        configureSystemBars();
 
         setContentView(R.layout.activity_main);
 
@@ -86,33 +89,64 @@ public class MainActivity extends AppCompatActivity
             navVersion.setText(R.string.version_name);
         }
 
+        applySystemBarInsets(headerView);
+
         showFragment(NAV_HOME);
         navView.setCheckedItem(R.id.nav_home);
     }
 
-    // ═══════════════════════════════════════════════════════
-    // Edge-to-edge: transparent status bar, light icons (LIGHT_STATUS_BAR)
-    // ═══════════════════════════════════════════════════════
-    private void makeStatusBarTransparent() {
+    private void configureSystemBars() {
         Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.bg_mist_start));
-            window.setNavigationBarColor(getResources().getColor(R.color.background));
+            window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            window.setNavigationBarColor(ContextCompat.getColor(this, R.color.background));
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false);
-        }
-        View decor = window.getDecorView();
-        int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        }
-        decor.setSystemUiVisibility(flags);
+        WindowCompat.setDecorFitsSystemWindows(window, false);
+
+        WindowInsetsControllerCompat controller =
+                new WindowInsetsControllerCompat(window, window.getDecorView());
+        controller.setAppearanceLightStatusBars(true);
+        controller.setAppearanceLightNavigationBars(true);
+    }
+
+    private void applySystemBarInsets(View headerView) {
+        View contentFrame = findViewById(R.id.content_frame);
+        final int contentStart = contentFrame.getPaddingStart();
+        final int contentEnd = contentFrame.getPaddingEnd();
+        final int headerHeight = headerView.getLayoutParams().height;
+        final int headerPaddingStart = headerView.getPaddingStart();
+        final int headerPaddingTop = headerView.getPaddingTop();
+        final int headerPaddingEnd = headerView.getPaddingEnd();
+        final int headerPaddingBottom = headerView.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(drawer, (v, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            contentFrame.setPaddingRelative(
+                    contentStart,
+                    bars.top,
+                    contentEnd,
+                    bars.bottom
+            );
+
+            navView.setPaddingRelative(bars.left, 0, bars.right, bars.bottom);
+
+            ViewGroup.LayoutParams lp = headerView.getLayoutParams();
+            lp.height = headerHeight + bars.top;
+            headerView.setLayoutParams(lp);
+            headerView.setPaddingRelative(
+                    headerPaddingStart,
+                    headerPaddingTop + bars.top,
+                    headerPaddingEnd,
+                    headerPaddingBottom
+            );
+
+            return windowInsets;
+        });
+        ViewCompat.requestApplyInsets(drawer);
     }
 
     public int getStatusBarHeight() {

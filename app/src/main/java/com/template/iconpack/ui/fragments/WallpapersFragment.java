@@ -1,7 +1,9 @@
 package com.template.iconpack.ui.fragments;
 
 import android.app.Dialog;
+import android.app.WallpaperManager;
 import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -57,9 +59,7 @@ public class WallpapersFragment extends Fragment {
 
                         @Override
                         public void onApplyClick(WallpaperInfo wallpaper) {
-                            Toast.makeText(getContext(),
-                                    "壁纸功能开发中",
-                                    Toast.LENGTH_SHORT).show();
+                            applyWallpaper(wallpaper);
                         }
                     });
             grid.setAdapter(adapter);
@@ -90,16 +90,46 @@ public class WallpapersFragment extends Fragment {
         View apply = content.findViewById(R.id.btn_preview_apply);
         if (apply != null) {
             apply.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "壁纸功能开发中", Toast.LENGTH_SHORT).show();
+                applyWallpaper(wallpaper);
                 dialog.dismiss();
             });
         }
 
+        dialog.setContentView(content);
         dialog.show();
         Window window = dialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+    }
+
+    private void applyWallpaper(WallpaperInfo wallpaper) {
+        if (getContext() == null) return;
+
+        String wallpaperUrl = wallpaper.downloadUrl != null && !wallpaper.downloadUrl.trim().isEmpty()
+                ? wallpaper.downloadUrl
+                : wallpaper.thumbnailUrl;
+        Toast.makeText(getContext(), "正在设置壁纸...", Toast.LENGTH_SHORT).show();
+
+        WallpaperImageLoader.loadBitmap(getContext(), wallpaperUrl, new WallpaperImageLoader.BitmapCallback() {
+            @Override
+            public void onLoaded(Bitmap bitmap) {
+                if (getContext() == null) return;
+                try {
+                    WallpaperManager.getInstance(getContext()).setBitmap(bitmap);
+                    Toast.makeText(getContext(), "壁纸已设置", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "设置壁纸失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError() {
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "壁纸加载失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
