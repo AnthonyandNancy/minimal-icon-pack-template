@@ -116,7 +116,7 @@ public class DashboardFragment extends Fragment {
 
     private void setupScroll() {
         if (rootView instanceof NestedScrollView && getActivity() instanceof ScrollListener) {
-            ((NestedScrollView) rootView).setOnScrollChangeListener(
+            ((android.view.View) rootView).setOnScrollChangeListener(
                     (v, sx, sy, ox, oy) -> ((ScrollListener) getActivity()).onScroll(sy));
         }
     }
