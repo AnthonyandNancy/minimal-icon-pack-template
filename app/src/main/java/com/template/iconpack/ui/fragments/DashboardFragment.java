@@ -84,46 +84,56 @@ public class DashboardFragment extends Fragment {
     private void buildQuickCards(int icons, int apps, int themed, int missing) {
         setupStatCard(R.id.stat_card_icons, R.drawable.bg_badge_blue,
                 R.drawable.ic_rate, 0xFF4F7CFF, "图标",
-                String.valueOf(icons), 0xFF4F7CFF, "已打包图标");
+                String.valueOf(icons), 0xFF4F7CFF, "已打包图标",
+                R.id.card_badge, R.id.card_badge_icon,
+                R.id.card_title_label, R.id.card_value, R.id.card_subtitle);
 
         setupStatCard(R.id.stat_card_apps, R.drawable.bg_badge_gray,
                 R.drawable.ic_info, 0xFF4B5563, "应用",
-                String.valueOf(apps), 0xFF20242C, "已安装应用");
+                String.valueOf(apps), 0xFF20242C, "已安装应用",
+                R.id.card_badge2, R.id.card_badge_icon2,
+                R.id.card_title_label2, R.id.card_value2, R.id.card_subtitle2);
 
         setupStatCard(R.id.stat_card_themed, R.drawable.bg_badge_green,
                 R.drawable.ic_rate, 0xFF4CAF73, "已适配",
-                String.valueOf(themed), 0xFF4CAF73, "适配累计");
+                String.valueOf(themed), 0xFF4CAF73, "适配累计",
+                R.id.card_badge3, R.id.card_badge_icon3,
+                R.id.card_title_label3, R.id.card_value3, R.id.card_subtitle3);
 
         setupStatCard(R.id.stat_card_missing, R.drawable.bg_badge_red,
                 R.drawable.ic_info, 0xFFE36B75, "未适配",
-                String.valueOf(missing), 0xFFE36B75, "待适配");
+                String.valueOf(missing), 0xFFE36B75, "待适配",
+                R.id.card_badge4, R.id.card_badge_icon4,
+                R.id.card_title_label4, R.id.card_value4, R.id.card_subtitle4);
     }
 
     private void setupStatCard(int rootId, int badgeBg, int iconRes, int iconTint,
-                               String label, String value, int valueColor, String subtitle) {
+                               String label, String value, int valueColor, String subtitle,
+                               int badgeId, int badgeIconId,
+                               int labelId, int valueId, int subtitleId) {
         View card = rootView.findViewById(rootId);
         if (card == null) return;
 
-        FrameLayout badge = card.findViewById(R.id.card_badge);
+        FrameLayout badge = card.findViewById(badgeId);
         if (badge != null) badge.setBackgroundResource(badgeBg);
 
-        ImageView badgeIcon = card.findViewById(R.id.card_badge_icon);
+        ImageView badgeIcon = card.findViewById(badgeIconId);
         if (badgeIcon != null) {
             badgeIcon.setImageResource(iconRes);
             badgeIcon.setColorFilter(iconTint);
         }
 
-        View labelView = card.findViewById(R.id.card_title_label);
+        View labelView = card.findViewById(labelId);
         if (labelView instanceof TextView) ((TextView) labelView).setText(label);
 
-        View valueView = card.findViewById(R.id.card_value);
+        View valueView = card.findViewById(valueId);
         if (valueView instanceof TextView) {
             TextView tv = (TextView) valueView;
             tv.setText(value);
             tv.setTextColor(valueColor);
         }
 
-        View subView = card.findViewById(R.id.card_subtitle);
+        View subView = card.findViewById(subtitleId);
         if (subView instanceof TextView) ((TextView) subView).setText(subtitle);
     }
 

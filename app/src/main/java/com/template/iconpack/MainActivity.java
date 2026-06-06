@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.background));
+            window.setStatusBarColor(getResources().getColor(R.color.bg_mist_start));
             window.setNavigationBarColor(getResources().getColor(R.color.background));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

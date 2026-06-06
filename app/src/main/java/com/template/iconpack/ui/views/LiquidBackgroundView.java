@@ -24,11 +24,11 @@ public class LiquidBackgroundView extends View {
         if (w == 0 || h == 0) return;
 
         bgPaint.setShader(new android.graphics.LinearGradient(0, 0, w, h,
-                0xFFF7F4EE, 0xFFF1EEF8, Shader.TileMode.CLAMP));
+                0xFFFDFCF8, 0xFFF1F6FA, Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, w, h, bgPaint);
 
         float s = Math.min(w, h);
-        blob(canvas, w * 0.15f, h * 0.25f, s * 0.55f, 0xFFE8E3FF, 0.30f);
+        blob(canvas, w * 0.15f, h * 0.25f, s * 0.55f, 0xFFEAF3FF, 0.30f);
         blob(canvas, w * 0.85f, h * 0.65f, s * 0.45f, 0xFFFFE8E8, 0.22f);
         blob(canvas, w * 0.5f, h * 0.4f, s * 0.35f, 0xFFE3F0FF, 0.18f);
     }

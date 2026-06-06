@@ -239,41 +239,139 @@
             android:orientation="vertical"
             android:layout_marginBottom="@dimen/section_gap">
 
+            <!-- Row 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/stat_card_gap">
 
-                <include layout="@layout/item_dashboard_card"
-                    android:id="@+id/stat_card_icons"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="7dp"/>
+                <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_icons"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="@dimen/stat_card_height"
+                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
+                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
+                    app:cardBackgroundColor="@color/color_card_surface"
+                    android:layout_marginEnd="7dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:padding="@dimen/stat_card_padding">
+                        <FrameLayout android:id="@+id/card_badge" android:layout_width="@dimen/stat_badge_size" android:layout_height="@dimen/stat_badge_size">
+                            <ImageView android:id="@+id/card_badge_icon" android:layout_width="@dimen/stat_badge_icon_size" android:layout_height="@dimen/stat_badge_icon_size" android:layout_gravity="center"/>
+                        </FrameLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:id="@+id/card_title_label" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_title_size" android:textColor="@color/color_text_primary"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"/>
+                            <TextView android:id="@+id/card_value" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_number_size" android:textStyle="bold"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
+                                android:layout_marginTop="10dp"/>
+                            <TextView android:id="@+id/card_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
+                                android:maxLines="1" android:singleLine="true" android:ellipsize="end"
+                                android:includeFontPadding="false" android:layout_marginTop="5dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                <include layout="@layout/item_dashboard_card"
-                    android:id="@+id/stat_card_apps"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="7dp"/>
+                <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_apps"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="@dimen/stat_card_height"
+                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
+                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
+                    app:cardBackgroundColor="@color/color_card_surface"
+                    android:layout_marginStart="7dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:padding="@dimen/stat_card_padding">
+                        <FrameLayout android:id="@+id/card_badge2" android:layout_width="@dimen/stat_badge_size" android:layout_height="@dimen/stat_badge_size">
+                            <ImageView android:id="@+id/card_badge_icon2" android:layout_width="@dimen/stat_badge_icon_size" android:layout_height="@dimen/stat_badge_icon_size" android:layout_gravity="center"/>
+                        </FrameLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:id="@+id/card_title_label2" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_title_size" android:textColor="@color/color_text_primary"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"/>
+                            <TextView android:id="@+id/card_value2" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_number_size" android:textStyle="bold"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
+                                android:layout_marginTop="10dp"/>
+                            <TextView android:id="@+id/card_subtitle2" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
+                                android:maxLines="1" android:singleLine="true" android:ellipsize="end"
+                                android:includeFontPadding="false" android:layout_marginTop="5dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
+            <!-- Row 2 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <include layout="@layout/item_dashboard_card"
-                    android:id="@+id/stat_card_themed"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="7dp"/>
+                <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_themed"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="@dimen/stat_card_height"
+                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
+                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
+                    app:cardBackgroundColor="@color/color_card_surface"
+                    android:layout_marginEnd="7dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:padding="@dimen/stat_card_padding">
+                        <FrameLayout android:id="@+id/card_badge3" android:layout_width="@dimen/stat_badge_size" android:layout_height="@dimen/stat_badge_size">
+                            <ImageView android:id="@+id/card_badge_icon3" android:layout_width="@dimen/stat_badge_icon_size" android:layout_height="@dimen/stat_badge_icon_size" android:layout_gravity="center"/>
+                        </FrameLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:id="@+id/card_title_label3" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_title_size" android:textColor="@color/color_text_primary"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"/>
+                            <TextView android:id="@+id/card_value3" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_number_size" android:textStyle="bold"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
+                                android:layout_marginTop="10dp"/>
+                            <TextView android:id="@+id/card_subtitle3" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
+                                android:maxLines="1" android:singleLine="true" android:ellipsize="end"
+                                android:includeFontPadding="false" android:layout_marginTop="5dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                <include layout="@layout/item_dashboard_card"
-                    android:id="@+id/stat_card_missing"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="7dp"/>
+                <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_missing"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="@dimen/stat_card_height"
+                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
+                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
+                    app:cardBackgroundColor="@color/color_card_surface"
+                    android:layout_marginStart="7dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:padding="@dimen/stat_card_padding">
+                        <FrameLayout android:id="@+id/card_badge4" android:layout_width="@dimen/stat_badge_size" android:layout_height="@dimen/stat_badge_size">
+                            <ImageView android:id="@+id/card_badge_icon4" android:layout_width="@dimen/stat_badge_icon_size" android:layout_height="@dimen/stat_badge_icon_size" android:layout_gravity="center"/>
+                        </FrameLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:id="@+id/card_title_label4" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_title_size" android:textColor="@color/color_text_primary"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"/>
+                            <TextView android:id="@+id/card_value4" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_number_size" android:textStyle="bold"
+                                android:maxLines="1" android:singleLine="true" android:includeFontPadding="false"
+                                android:layout_marginTop="10dp"/>
+                            <TextView android:id="@+id/card_subtitle4" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:textSize="@dimen/stat_subtitle_size" android:textColor="@color/color_text_tertiary"
+                                android:maxLines="1" android:singleLine="true" android:ellipsize="end"
+                                android:includeFontPadding="false" android:layout_marginTop="5dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </LinearLayout>
 
