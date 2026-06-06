@@ -12,8 +12,8 @@
     <dimen name="stat_card_height">110dp</dimen>
     <dimen name="entry_card_height">84dp</dimen>
     <dimen name="menu_item_height">52dp</dimen>
-    <dimen name="icon_grid_item">120dp</dimen>
-    <dimen name="icon_image_size">66dp</dimen>
+    <dimen name="icon_grid_item">128dp</dimen>
+    <dimen name="icon_image_size">60dp</dimen>
 
     <dimen name="card_icon_size">38dp</dimen>
     <dimen name="wallpaper_height">220dp</dimen>

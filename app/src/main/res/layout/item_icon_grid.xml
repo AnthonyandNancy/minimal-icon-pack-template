@@ -9,19 +9,12 @@
     android:clipToPadding="false"
     android:padding="6dp">
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/icon_image"
         android:layout_width="@dimen/icon_image_size"
         android:layout_height="@dimen/icon_image_size"
-        android:clipChildren="false"
-        android:layout_marginBottom="6dp">
-
-        <ImageView
-            android:id="@+id/icon_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"/>
-    </FrameLayout>
+        android:scaleType="centerInside"
+        android:layout_marginBottom="6dp"/>
 
     <TextView
         android:id="@+id/icon_name"
