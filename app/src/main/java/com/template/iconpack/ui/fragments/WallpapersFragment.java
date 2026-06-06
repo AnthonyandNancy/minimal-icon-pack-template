@@ -1,9 +1,14 @@
 package com.template.iconpack.ui.fragments;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Window;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +20,7 @@ import com.template.iconpack.R;
 import com.template.iconpack.models.WallpaperInfo;
 import com.template.iconpack.ui.adapters.WallpaperAdapter;
 import com.template.iconpack.utils.IconPackLoader;
+import com.template.iconpack.utils.WallpaperImageLoader;
 
 import java.util.List;
 
@@ -46,9 +52,7 @@ public class WallpapersFragment extends Fragment {
                     new WallpaperAdapter.OnWallpaperClickListener() {
                         @Override
                         public void onWallpaperClick(WallpaperInfo wallpaper) {
-                            Toast.makeText(getContext(),
-                                    "预览: " + wallpaper.title,
-                                    Toast.LENGTH_LONG).show();
+                            showPreviewDialog(wallpaper);
                         }
 
                         @Override
@@ -62,5 +66,40 @@ public class WallpapersFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void showPreviewDialog(WallpaperInfo wallpaper) {
+        if (getContext() == null) return;
+
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View content = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_wallpaper_preview, null, false);
+
+        ImageView preview = content.findViewById(R.id.wallpaper_preview_image);
+        if (preview != null) {
+            String previewUrl = wallpaper.downloadUrl != null && !wallpaper.downloadUrl.trim().isEmpty()
+                    ? wallpaper.downloadUrl
+                    : wallpaper.thumbnailUrl;
+            WallpaperImageLoader.load(preview, previewUrl);
+        }
+
+        View close = content.findViewById(R.id.btn_preview_close);
+        if (close != null) close.setOnClickListener(v -> dialog.dismiss());
+
+        View apply = content.findViewById(R.id.btn_preview_apply);
+        if (apply != null) {
+            apply.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "壁纸功能开发中", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+        }
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 }

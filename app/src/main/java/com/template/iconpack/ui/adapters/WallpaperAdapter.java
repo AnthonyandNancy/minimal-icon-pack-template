@@ -4,13 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
 import com.template.iconpack.models.WallpaperInfo;
+import com.template.iconpack.utils.WallpaperImageLoader;
 
 import java.util.List;
 
@@ -40,8 +40,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         WallpaperInfo wp = wallpapers.get(position);
-        holder.title.setText(wp.title);
-        holder.thumbnail.setImageResource(R.drawable.preset_preview_bg);
+        WallpaperImageLoader.load(holder.thumbnail, wp.thumbnailUrl);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onWallpaperClick(wp);
@@ -58,13 +57,11 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.View
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView thumbnail;
-        TextView title;
         View btnApply;
 
         ViewHolder(View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.wallpaper_thumbnail);
-            title = itemView.findViewById(R.id.wallpaper_title);
             btnApply = itemView.findViewById(R.id.btn_wallpaper_apply);
         }
     }
