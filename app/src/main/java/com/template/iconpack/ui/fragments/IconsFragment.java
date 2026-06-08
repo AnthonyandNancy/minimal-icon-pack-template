@@ -128,6 +128,7 @@ public class IconsFragment extends Fragment {
 
         ImageView preview = content.findViewById(R.id.icon_preview_image);
         TextView title = content.findViewById(R.id.icon_preview_title);
+        View panel = content.findViewById(R.id.icon_preview_panel);
 
         if (preview != null) {
             preview.setImageResource(icon.resId);
@@ -137,14 +138,20 @@ public class IconsFragment extends Fragment {
             title.setText(icon.label != null ? icon.label : icon.name);
         }
         content.setOnClickListener(v -> dialog.dismiss());
+        if (panel != null) {
+            panel.setOnClickListener(v -> { });
+        }
 
         dialog.setContentView(content);
         dialog.show();
         Window window = dialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            WindowManager.LayoutParams attributes = window.getAttributes();
+            attributes.dimAmount = 0.45f;
+            window.setAttributes(attributes);
         }
     }
 }
