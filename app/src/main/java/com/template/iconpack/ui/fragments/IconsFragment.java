@@ -1,19 +1,18 @@
 package com.template.iconpack.ui.fragments;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.app.Dialog;
-import android.graphics.Color;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -119,23 +118,40 @@ public class IconsFragment extends Fragment {
     }
 
     private void showIconZoom(DrawableInfo icon) {
-        Dialog d = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        ImageView iv = new ImageView(getContext());
-        iv.setImageResource(icon.resId);
-        iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        iv.setBackgroundColor(0x50B0B0B0);
-        iv.setPadding(32,32,32,32);
-        iv.setOnClickListener(v -> d.dismiss());
+        if (getContext() == null) return;
 
-        ScaleAnimation anim = new ScaleAnimation(
-                0.7f, 1.0f, 0.7f, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        anim.setDuration(250);
-        anim.setFillAfter(true);
-        iv.startAnimation(anim);
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View content = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_icon_preview, null, false);
 
-        d.setContentView(iv);
-        d.show();
+        ImageView preview = content.findViewById(R.id.icon_preview_image);
+        TextView title = content.findViewById(R.id.icon_preview_title);
+        TextView subtitle = content.findViewById(R.id.icon_preview_subtitle);
+        View close = content.findViewById(R.id.btn_preview_close);
+
+        if (preview != null) {
+            preview.setImageResource(icon.resId);
+            preview.setContentDescription(icon.label != null ? icon.label : icon.name);
+        }
+        if (title != null) {
+            title.setText(icon.label != null ? icon.label : icon.name);
+        }
+        if (subtitle != null) {
+            boolean sameAsLabel = icon.label != null && icon.label.equals(icon.name);
+            subtitle.setText(icon.name);
+            subtitle.setVisibility(sameAsLabel ? View.GONE : View.VISIBLE);
+        }
+        if (close != null) {
+            close.setOnClickListener(v -> dialog.dismiss());
+        }
+
+        dialog.setContentView(content);
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 }

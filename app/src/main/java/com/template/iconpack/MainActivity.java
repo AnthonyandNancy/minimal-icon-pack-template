@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
@@ -160,11 +161,32 @@ public class MainActivity extends AppCompatActivity
     // Fragment navigation
     // ═══════════════════════════════════════════════════════
     private void showFragment(int navId) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+        if (isCurrentDestination(currentFragment, navId)) {
+            syncFragmentReference(navId, currentFragment);
+            currentNavItem = navId;
+            return;
+        }
+
         currentNavItem = navId;
         if (homeToolbar != null) {
             homeToolbar.setTranslationY(0f);
             homeToolbar.setAlpha(1f);
         }
+
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            Fragment restoredFragment = fragmentManager.findFragmentById(R.id.content_frame);
+            if (restoredFragment instanceof DashboardFragment) {
+                dashboardFragment = (DashboardFragment) restoredFragment;
+                dashboardFragment.setCallback(this::onDashboardCardClicked);
+            }
+            if (navId == NAV_HOME && isCurrentDestination(restoredFragment, NAV_HOME)) {
+                return;
+            }
+        }
+
         Fragment fragment = null;
 
         switch (navId) {
@@ -176,11 +198,10 @@ public class MainActivity extends AppCompatActivity
                 fragment = dashboardFragment;
                 break;
             case NAV_APPLY:
-                // Wrap with back-bar: sub-page fragment needs back arrow
                 fragment = new ApplyFragment();
                 break;
             case NAV_ICONS:
-                if (iconsFragment == null) iconsFragment = new IconsFragment();
+                iconsFragment = new IconsFragment();
                 fragment = iconsFragment;
                 break;
             case NAV_REQUEST:
@@ -206,11 +227,76 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (fragment != null) {
-            getSupportFragmentManager().beginTransaction()
+            androidx.fragment.app.FragmentTransaction transaction = fragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
                             R.anim.slide_in_left, R.anim.slide_out_right)
-                    .replace(R.id.content_frame, fragment)
-                    .addToBackStack(null).commit();
+                    .replace(R.id.content_frame, fragment);
+
+            if (navId != NAV_HOME) {
+                transaction.addToBackStack(getNavTag(navId));
+            }
+
+            transaction.commit();
+        }
+    }
+
+    private void syncFragmentReference(int navId, Fragment fragment) {
+        if (navId == NAV_HOME && fragment instanceof DashboardFragment) {
+            dashboardFragment = (DashboardFragment) fragment;
+            dashboardFragment.setCallback(this::onDashboardCardClicked);
+        } else if (navId == NAV_ICONS && fragment instanceof IconsFragment) {
+            iconsFragment = (IconsFragment) fragment;
+        }
+    }
+
+    private boolean isCurrentDestination(Fragment fragment, int navId) {
+        if (fragment == null) return false;
+        switch (navId) {
+            case NAV_HOME:
+                return fragment instanceof DashboardFragment;
+            case NAV_APPLY:
+                return fragment instanceof ApplyFragment;
+            case NAV_ICONS:
+                return fragment instanceof IconsFragment;
+            case NAV_REQUEST:
+                return fragment instanceof RequestFragment;
+            case NAV_WALLPAPERS:
+                return fragment instanceof WallpapersFragment;
+            case NAV_PRESETS:
+                return fragment instanceof PresetsFragment;
+            case NAV_SETTINGS:
+                return fragment instanceof SettingsFragment;
+            case NAV_FAQ:
+                return fragment instanceof FaqFragment;
+            case NAV_ABOUT:
+                return fragment instanceof AboutFragment;
+            default:
+                return false;
+        }
+    }
+
+    private String getNavTag(int navId) {
+        switch (navId) {
+            case NAV_HOME:
+                return "home";
+            case NAV_APPLY:
+                return "apply";
+            case NAV_ICONS:
+                return "icons";
+            case NAV_REQUEST:
+                return "request";
+            case NAV_WALLPAPERS:
+                return "wallpapers";
+            case NAV_PRESETS:
+                return "presets";
+            case NAV_SETTINGS:
+                return "settings";
+            case NAV_FAQ:
+                return "faq";
+            case NAV_ABOUT:
+                return "about";
+            default:
+                return "page_" + navId;
         }
     }
 
@@ -292,6 +378,7 @@ public class MainActivity extends AppCompatActivity
         else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
             currentNavItem = NAV_HOME;
+            iconsFragment = null;
             navView.setCheckedItem(R.id.nav_home);
         }
         else super.onBackPressed();
