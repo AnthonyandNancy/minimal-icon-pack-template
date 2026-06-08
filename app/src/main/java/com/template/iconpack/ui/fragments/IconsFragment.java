@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -127,8 +128,6 @@ public class IconsFragment extends Fragment {
 
         ImageView preview = content.findViewById(R.id.icon_preview_image);
         TextView title = content.findViewById(R.id.icon_preview_title);
-        TextView subtitle = content.findViewById(R.id.icon_preview_subtitle);
-        View close = content.findViewById(R.id.btn_preview_close);
 
         if (preview != null) {
             preview.setImageResource(icon.resId);
@@ -137,14 +136,7 @@ public class IconsFragment extends Fragment {
         if (title != null) {
             title.setText(icon.label != null ? icon.label : icon.name);
         }
-        if (subtitle != null) {
-            boolean sameAsLabel = icon.label != null && icon.label.equals(icon.name);
-            subtitle.setText(icon.name);
-            subtitle.setVisibility(sameAsLabel ? View.GONE : View.VISIBLE);
-        }
-        if (close != null) {
-            close.setOnClickListener(v -> dialog.dismiss());
-        }
+        content.setOnClickListener(v -> dialog.dismiss());
 
         dialog.setContentView(content);
         dialog.show();
@@ -152,6 +144,7 @@ public class IconsFragment extends Fragment {
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
     }
 }
