@@ -49,19 +49,28 @@
                 <category android:name="android.intent.category.INFO" />
             </intent-filter>
 
-            <!-- ADW / LauncherPro theme picker -->
+            <!-- Standard ADW icon-pack entry used by Samsung Theme Park and most launchers. -->
+            <intent-filter>
+                <action android:name="org.adw.ActivityStarter.THEMES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Legacy ADW / LauncherPro theme picker -->
             <intent-filter>
                 <action android:name="org.adw.launcher.THEMES" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- Icon picker -->
             <intent-filter>
                 <action android:name="org.adw.launcher.icons.ACTION_PICK_ICON" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- Nova / Action Launcher apply -->
             <intent-filter>
                 <action android:name="com.novalauncher.THEME" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
         </activity>

@@ -4,15 +4,21 @@ import android.content.Context;
 import android.content.res.XmlResourceParser;
 
 import com.template.iconpack.models.DrawableInfo;
+import com.template.iconpack.models.IconCategoryData;
+import com.template.iconpack.models.IconCategoryDef;
+import com.template.iconpack.models.IconCategoryEntry;
 import com.template.iconpack.models.PresetInfo;
 import com.template.iconpack.models.WallpaperInfo;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +34,7 @@ public class IconPackLoader {
      */
     public static List<DrawableInfo> loadDrawables(Context context) {
         List<DrawableInfo> list = new ArrayList<>();
+        IconCategoryData categoryData = loadIconPackCategories(context);
         try {
             // Try res/xml/drawable.xml
             int resId = context.getResources().getIdentifier(
@@ -37,16 +44,24 @@ public class IconPackLoader {
             XmlResourceParser parser = context.getResources().getXml(resId);
             int eventType = parser.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG && "drawable".equals(parser.getName())) {
-                    String name = parser.getAttributeValue(null, "name");
-                    String label = parser.getAttributeValue(null, "label");
-                    if (name != null) {
+                if (eventType == XmlPullParser.START_TAG) {
+                    String tagName = parser.getName();
+                    String name = null;
+                    if ("item".equals(tagName)) {
+                        name = parser.getAttributeValue(null, "drawable");
+                    } else if ("drawable".equals(tagName)) {
+                        name = parser.getAttributeValue(null, "name");
+                    }
+
+                    if (name != null && !name.isEmpty()) {
+                        String label = parser.getAttributeValue(null, "label");
                         int drawableResId = context.getResources().getIdentifier(
                                 name, "drawable", context.getPackageName());
                         if (drawableResId == 0) {
                             drawableResId = context.getResources().getIdentifier(
                                     name, "drawable-nodpi", context.getPackageName());
                         }
+                        label = resolveDrawableLabel(name, label, categoryData);
                         if (label != null && !label.isEmpty()) {
                             list.add(new DrawableInfo(name,
                                     drawableResId != 0 ? drawableResId : android.R.drawable.ic_menu_gallery,
@@ -143,6 +158,211 @@ public class IconPackLoader {
             list.add(new PresetInfo("light_bg", "浅色背景", "circle", "light"));
         }
         return list;
+    }
+
+    /**
+     * Load assets/iconpack_categories.json.
+     * Returns null if file is missing (graceful no-crash fallback).
+     */
+    public static IconCategoryData loadIconPackCategories(Context context) {
+        try {
+            java.io.InputStream is = context.getAssets().open("iconpack_categories.json");
+            java.io.BufferedReader reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(is, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) sb.append(line);
+            reader.close();
+            return parseCategoriesJson(sb.toString().trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static IconCategoryData parseCategoriesJson(String json) {
+        if (json.isEmpty() || json.equals("{}")) return null;
+        IconCategoryData data = new IconCategoryData();
+        data.categories = new ArrayList<>();
+        data.icons = new ArrayList<>();
+        data.iconCategoryMap = new HashMap<>();
+        data.iconEntryMap = new HashMap<>();
+        data.categoryDefMap = new HashMap<>();
+
+        try {
+            JSONObject root = new JSONObject(json);
+            data.version = root.optInt("version", 1);
+
+            JSONArray categories = root.optJSONArray("categories");
+            if (categories != null) {
+                for (int i = 0; i < categories.length(); i++) {
+                    JSONObject obj = categories.optJSONObject(i);
+                    if (obj == null) continue;
+                    IconCategoryDef cat = parseCategoryDef(obj);
+                    if (cat != null && cat.enabled) {
+                        data.categories.add(cat);
+                        data.categoryDefMap.put(cat.id, cat);
+                    }
+                }
+            }
+            Collections.sort(data.categories, (a, b) -> Integer.compare(a.sort, b.sort));
+
+            JSONArray icons = root.optJSONArray("icons");
+            if (icons != null) {
+                for (int i = 0; i < icons.length(); i++) {
+                    JSONObject obj = icons.optJSONObject(i);
+                    if (obj == null) continue;
+                    IconCategoryEntry entry = parseIconEntry(obj);
+                    if (entry == null) continue;
+                    data.icons.add(entry);
+                    String[] categoryIds = entry.categoryIds.toArray(new String[0]);
+                    if (entry.drawableName != null && !entry.drawableName.isEmpty()) {
+                        data.iconCategoryMap.put(entry.drawableName, categoryIds);
+                        data.iconEntryMap.put(entry.drawableName, entry);
+                    }
+                    if (entry.componentKey != null && !entry.componentKey.isEmpty()) {
+                        data.iconCategoryMap.put(entry.componentKey, categoryIds);
+                        data.iconEntryMap.put(entry.componentKey, entry);
+                    }
+                }
+            }
+            return data;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static IconCategoryDef parseCategoryDef(JSONObject obj) {
+        IconCategoryDef c = new IconCategoryDef();
+        c.id = obj.optString("id", "");
+        if (c.id.isEmpty()) return null;
+        c.name = obj.optString("name", c.id);
+        c.color = obj.optString("color", "");
+        c.icon = obj.optString("icon", "");
+        c.sort = obj.optInt("sort", 0);
+        c.enabled = obj.optBoolean("enabled", true);
+        return c;
+    }
+
+    private static IconCategoryEntry parseIconEntry(JSONObject obj) {
+        IconCategoryEntry e = new IconCategoryEntry();
+        e.drawableName = obj.optString("drawableName", "");
+        e.displayName = obj.optString("displayName", "");
+        e.packageName = obj.optString("packageName", "");
+        e.activityName = obj.optString("activityName", "");
+        e.component = obj.optString("component", "");
+        e.componentKey = obj.optString("componentKey", "");
+        e.primaryCategoryId = obj.optString("primaryCategoryId", "");
+        e.matchStatus = obj.optString("matchStatus", "");
+        e.categoryIds = new ArrayList<>();
+        JSONArray ids = obj.optJSONArray("categoryIds");
+        if (ids != null) {
+            for (int i = 0; i < ids.length(); i++) {
+                String id = ids.optString(i, "");
+                if (!id.isEmpty()) e.categoryIds.add(id);
+            }
+        }
+        return e;
+    }
+
+    private static String resolveDrawableLabel(String drawableName, String xmlLabel, IconCategoryData data) {
+        if (data != null && data.iconEntryMap != null) {
+            IconCategoryEntry entry = data.iconEntryMap.get(drawableName);
+            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
+                if (xmlLabel == null || xmlLabel.isEmpty() || drawableName.equals(xmlLabel)) {
+                    return entry.displayName;
+                }
+            }
+        }
+        return xmlLabel;
+    }
+
+    private static void parseCategories(String arr, java.util.List<IconCategoryDef> out) {
+        int depth = 0, objStart = -1;
+        for (int i = 0; i < arr.length(); i++) {
+            if (arr.charAt(i) == '{') { if (depth == 0) objStart = i; depth++; }
+            else if (arr.charAt(i) == '}') {
+                depth--;
+                if (depth == 0 && objStart >= 0) {
+                    IconCategoryDef cat = parseCategoryDef(arr.substring(objStart, i + 1));
+                    if (cat != null && cat.enabled) out.add(cat);
+                    objStart = -1;
+                }
+            }
+        }
+    }
+
+    private static IconCategoryDef parseCategoryDef(String obj) {
+        IconCategoryDef c = new IconCategoryDef();
+        c.id = extractString(obj, "id");
+        c.name = extractString(obj, "name");
+        c.color = extractString(obj, "color");
+        c.icon = extractString(obj, "icon");
+        String sort = extractNumber(obj, "sort");
+        c.sort = sort != null ? Integer.parseInt(sort) : 0;
+        String en = extractString(obj, "enabled");
+        c.enabled = en == null || "true".equals(en);
+        return c;
+    }
+
+    private static void parseIconEntries(String arr, java.util.List<IconCategoryEntry> out) {
+        int depth = 0, objStart = -1;
+        for (int i = 0; i < arr.length(); i++) {
+            if (arr.charAt(i) == '{') { if (depth == 0) objStart = i; depth++; }
+            else if (arr.charAt(i) == '}') {
+                depth--;
+                if (depth == 0 && objStart >= 0) {
+                    IconCategoryEntry e = parseIconEntry(arr.substring(objStart, i + 1));
+                    if (e != null) out.add(e);
+                    objStart = -1;
+                }
+            }
+        }
+    }
+
+    private static IconCategoryEntry parseIconEntry(String obj) {
+        IconCategoryEntry e = new IconCategoryEntry();
+        e.drawableName = extractString(obj, "drawableName");
+        e.componentKey = extractString(obj, "componentKey");
+        e.primaryCategoryId = extractString(obj, "primaryCategoryId");
+        e.matchStatus = extractString(obj, "matchStatus");
+        String ids = extractStringArray(obj, "categoryIds");
+        e.categoryIds = new java.util.ArrayList<>();
+        if (ids != null && !ids.isEmpty() && !ids.equals("[]")) {
+            for (String s : ids.replace("[","").replace("]","").split(",")) {
+                String tid = s.trim().replace("\"", "");
+                if (!tid.isEmpty()) e.categoryIds.add(tid);
+            }
+        }
+        return e;
+    }
+
+    private static String extractStringArray(String json, String key) {
+        String search = "\"" + key + "\"";
+        int idx = json.indexOf(search); if (idx < 0) return null;
+        int colon = json.indexOf(':', idx + search.length()); if (colon < 0) return null;
+        int bracket = json.indexOf('[', colon); if (bracket < 0) return null;
+        int close = findMatchingBracket(json, bracket);
+        return json.substring(bracket, close + 1);
+    }
+
+    private static int findMatchingBracket(String s, int start) {
+        int depth = 0;
+        for (int i = start; i < s.length(); i++) {
+            if (s.charAt(i) == '[' || s.charAt(i) == '{') depth++;
+            else if (s.charAt(i) == ']' || s.charAt(i) == '}') { depth--; if (depth == 0) return i; }
+        }
+        return -1;
+    }
+
+    private static String extractNumber(String json, String key) {
+        String search = "\"" + key + "\"";
+        int idx = json.indexOf(search); if (idx < 0) return null;
+        int colon = json.indexOf(':', idx + search.length()); if (colon < 0) return null;
+        int start = colon + 1;
+        while (start < json.length() && (json.charAt(start) == ' ' || json.charAt(start) == '\n')) start++;
+        int end = start;
+        while (end < json.length() && Character.isDigit(json.charAt(end))) end++;
+        return end > start ? json.substring(start, end) : null;
     }
 
     // -- Minimal JSON parsers (no external libs) --

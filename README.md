@@ -129,8 +129,8 @@ EOF
 cat > /tmp/work/decompiled/res/xml/drawable.xml << 'EOF'
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="wechat" />
-    <drawable name="qq" />
+    <item drawable="wechat" />
+    <item drawable="qq" />
     <!-- ... 更多图标 ... -->
 </resources>
 EOF
@@ -230,9 +230,9 @@ androidx.constraintlayout            (未使用，预留)
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="wechat" />
-    <drawable name="dingtalk" />
-    <drawable name="alipay" />
+    <item drawable="wechat" />
+    <item drawable="dingtalk" />
+    <item drawable="alipay" />
 </resources>
 ```
 
