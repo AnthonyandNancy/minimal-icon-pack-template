@@ -98,6 +98,8 @@
 
     <!-- About -->
     <string name="about_title">关于</string>
+    <string name="about_author_label">作者</string>
+    <string name="about_author_name">未设置</string>
     <string name="about_description">这是一款精美的 Android 图标包应用。\n\n通过高质量图标设计为你的主屏幕带来全新视觉体验，支持主流启动器，持续更新更多图标适配。</string>
     <string name="about_oss">开源许可</string>
     <string name="about_oss_desc">本应用使用了以下开源组件：\n- AndroidX (Apache 2.0)\n- Google Material Design (Apache 2.0)\n\n本模板工程本身采用 MIT 许可。</string>
