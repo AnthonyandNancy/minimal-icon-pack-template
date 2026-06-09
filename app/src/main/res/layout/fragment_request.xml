@@ -114,14 +114,14 @@
 
         <TextView android:id="@+id/btn_export"
             android:layout_width="wrap_content" android:layout_height="32dp"
-            android:gravity="center" android:text="导出" android:textSize="11sp"
+            android:gravity="center" android:text="导出ZIP" android:textSize="11sp"
             android:textColor="@color/text_on_primary" android:background="@drawable/bg_chip_selected"
             android:paddingStart="12dp" android:paddingEnd="12dp" android:layout_marginEnd="6dp"
             android:clickable="true" android:focusable="true"/>
 
         <TextView android:id="@+id/btn_share"
             android:layout_width="wrap_content" android:layout_height="32dp"
-            android:gravity="center" android:text="分享" android:textSize="11sp"
+            android:gravity="center" android:text="发邮件" android:textSize="11sp"
             android:textColor="@color/primary" android:background="@drawable/bg_surface_card"
             android:paddingStart="12dp" android:paddingEnd="12dp"
             android:clickable="true" android:focusable="true"/>

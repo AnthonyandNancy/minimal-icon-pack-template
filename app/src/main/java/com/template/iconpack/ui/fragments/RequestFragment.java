@@ -1,15 +1,17 @@
 package com.template.iconpack.ui.fragments;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +19,7 @@ import com.template.iconpack.R;
 import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
 import com.template.iconpack.utils.AppScanner;
+import com.template.iconpack.utils.RequestPackageExporter;
 import java.util.List;
 
 public class RequestFragment extends Fragment {
@@ -76,8 +79,8 @@ public class RequestFragment extends Fragment {
                 adapter.selectAllUnthemed();
             }
         });
-        view.findViewById(R.id.btn_export).setOnClickListener(v -> exportList());
-        view.findViewById(R.id.btn_share).setOnClickListener(v -> shareList());
+        view.findViewById(R.id.btn_export).setOnClickListener(v -> exportZip());
+        view.findViewById(R.id.btn_share).setOnClickListener(v -> sendEmail());
 
         updateBottomBar();
         updatePillState("all");
@@ -119,28 +122,77 @@ public class RequestFragment extends Fragment {
         }
     }
 
-    private void exportList() {
+    private void exportZip() {
         List<AppInfo> sel = adapter.getSelectedApps();
-        if (sel.isEmpty()) { Toast.makeText(getContext(),"未选择应用",Toast.LENGTH_SHORT).show(); return; }
-        StringBuilder sb = new StringBuilder();
-        for (AppInfo a : sel)
-            sb.append(a.appName).append(" | ").append(a.packageName).append("\n");
-        ((ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE))
-                .setPrimaryClip(ClipData.newPlainText("icon_request", sb.toString()));
-        Toast.makeText(getContext(),"已复制到剪贴板",Toast.LENGTH_SHORT).show();
+        if (sel.isEmpty()) {
+            Toast.makeText(getContext(), "请先选择需要申请适配的应用。", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            RequestPackageExporter.Result result = RequestPackageExporter.createRequestZip(requireContext(), sel);
+            Toast.makeText(
+                    getContext(),
+                    "已导出ZIP：" + result.zipFile.getAbsolutePath(),
+                    Toast.LENGTH_LONG
+            ).show();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "导出失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void shareList() {
+    private void sendEmail() {
         List<AppInfo> sel = adapter.getSelectedApps();
-        if (sel.isEmpty()) { Toast.makeText(getContext(),"未选择应用",Toast.LENGTH_SHORT).show(); return; }
-        StringBuilder sb = new StringBuilder();
-        for (AppInfo a : sel)
-            sb.append(a.appName).append(" | ").append(a.packageName)
-                    .append(" | ").append(a.componentName).append("\n");
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_request_subject));
-        i.putExtra(Intent.EXTRA_TEXT, sb.toString());
-        startActivity(Intent.createChooser(i, getString(R.string.request_share)));
+        Context context = getContext();
+        if (context == null) return;
+        if (sel.isEmpty()) {
+            Toast.makeText(context, "请先选择需要申请适配的应用。", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            RequestPackageExporter.Result result = RequestPackageExporter.createRequestZip(context, sel);
+            Uri uri = FileProvider.getUriForFile(
+                    context,
+                    context.getPackageName() + ".fileprovider",
+                    result.zipFile
+            );
+
+            Intent selector = new Intent(Intent.ACTION_SENDTO);
+            selector.setData(Uri.parse("mailto:"));
+
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.setSelector(selector);
+            email.setType("application/zip");
+            email.putExtra(Intent.EXTRA_SUBJECT, "图标适配申请 - " + result.count + " 个应用");
+            email.putExtra(Intent.EXTRA_TEXT,
+                    "你好，附件是图标适配申请包。\n\n" +
+                            "包含内容：\n" +
+                            "- request_icons.json\n" +
+                            "- appfilter.xml\n" +
+                            "- 原始应用图标\n\n" +
+                            "请导入桌面端工具处理。");
+            email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            PackageManager pm = context.getPackageManager();
+            if (email.resolveActivity(pm) == null) {
+                Toast.makeText(context, "未检测到可用邮件应用，请先导出ZIP后手动发送。", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            List<ResolveInfo> targets = pm.queryIntentActivities(email, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo target : targets) {
+                context.grantUriPermission(
+                        target.activityInfo.packageName,
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                );
+            }
+
+            startActivity(Intent.createChooser(email, "发邮件"));
+        } catch (Exception e) {
+            Toast.makeText(context, "发邮件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }
