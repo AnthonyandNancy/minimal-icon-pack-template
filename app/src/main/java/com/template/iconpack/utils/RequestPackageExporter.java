@@ -128,13 +128,22 @@ public final class RequestPackageExporter {
 
     private static String buildAppfilterXml(List<RequestItem> items) {
         StringBuilder xml = new StringBuilder();
-        xml.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n");
+        xml.append("<resources>\n");
+        xml.append("\t<iconback img1=\"iconback\"/>\n");
+        xml.append("\t<iconmask img1=\"iconmask\"/>\n");
+        xml.append("\t<iconupon img1=\"iconupon\"/>\n");
+        xml.append("\t<scale factor=\"1.0\"/>\n\n");
         for (RequestItem item : items) {
-            xml.append("    <item component=\"")
+            xml.append("\t<!-- ")
+                    .append(escapeXml(safeText(item.app.appName)))
+                    .append(" -->\n");
+            xml.append("\t<item\n")
+                    .append("\t\tcomponent=\"")
                     .append(escapeXml(item.component))
-                    .append("\" drawable=\"")
+                    .append("\"\n")
+                    .append("\t\tdrawable=\"")
                     .append(escapeXml(item.drawableName))
-                    .append("\" />\n");
+                    .append("\"/>\n\n");
         }
         xml.append("</resources>\n");
         return xml.toString();
