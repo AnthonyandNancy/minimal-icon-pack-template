@@ -1,5 +1,8 @@
 package com.template.iconpack.ui.fragments;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,7 +23,11 @@ import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.ui.adapters.RequestAppAdapter;
 import com.template.iconpack.utils.AppScanner;
 import com.template.iconpack.utils.RequestPackageExporter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class RequestFragment extends Fragment {
 
@@ -79,7 +86,7 @@ public class RequestFragment extends Fragment {
                 adapter.selectAllUnthemed();
             }
         });
-        view.findViewById(R.id.btn_export).setOnClickListener(v -> exportZip());
+        view.findViewById(R.id.btn_export).setOnClickListener(v -> copyRequestList());
         view.findViewById(R.id.btn_share).setOnClickListener(v -> sendEmail());
 
         updateBottomBar();
@@ -122,23 +129,23 @@ public class RequestFragment extends Fragment {
         }
     }
 
-    private void exportZip() {
+    private void copyRequestList() {
         List<AppInfo> sel = adapter.getSelectedApps();
         if (sel.isEmpty()) {
             Toast.makeText(getContext(), "请先选择需要申请适配的应用。", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        try {
-            RequestPackageExporter.Result result = RequestPackageExporter.createRequestZip(requireContext(), sel);
-            Toast.makeText(
-                    getContext(),
-                    "已导出ZIP：" + result.zipFile.getAbsolutePath(),
-                    Toast.LENGTH_LONG
-            ).show();
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "导出失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        StringBuilder sb = new StringBuilder();
+        for (AppInfo a : sel) {
+            sb.append(a.appName).append(" | ")
+                    .append(a.packageName).append(" | ")
+                    .append(a.componentName).append("\n");
         }
+        ClipboardManager clipboard = (ClipboardManager) requireContext()
+                .getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("icon_request", sb.toString()));
+        Toast.makeText(getContext(), "已复制申请信息", Toast.LENGTH_SHORT).show();
     }
 
     private void sendEmail() {
@@ -158,41 +165,169 @@ public class RequestFragment extends Fragment {
                     result.zipFile
             );
 
-            Intent selector = new Intent(Intent.ACTION_SENDTO);
-            selector.setData(Uri.parse("mailto:"));
-
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.setSelector(selector);
-            email.setType("application/zip");
-            email.putExtra(Intent.EXTRA_SUBJECT, "图标适配申请 - " + result.count + " 个应用");
-            email.putExtra(Intent.EXTRA_TEXT,
-                    "你好，附件是图标适配申请包。\n\n" +
-                            "包含内容：\n" +
-                            "- request_icons.json\n" +
-                            "- appfilter.xml\n" +
-                            "- 原始应用图标\n\n" +
-                            "请导入桌面端工具处理。");
-            email.putExtra(Intent.EXTRA_STREAM, uri);
-            email.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
             PackageManager pm = context.getPackageManager();
-            if (email.resolveActivity(pm) == null) {
-                Toast.makeText(context, "未检测到可用邮件应用，请先导出ZIP后手动发送。", Toast.LENGTH_LONG).show();
+            String subject = "图标适配申请 - " + result.count + " 个应用";
+            String body = "你好，附件是图标适配申请包。\n\n" +
+                    "包含内容：\n" +
+                    "- request_icons.json\n" +
+                    "- appfilter.xml\n" +
+                    "- 原始应用图标\n\n" +
+                    "请导入桌面端工具处理。";
+            String authorEmail = getString(R.string.request_author_email).trim();
+            Intent[] emailTargets = buildEmailIntents(context, pm, uri, authorEmail, subject, body);
+
+            if (emailTargets.length == 0) {
+                Toast.makeText(context, "未检测到可用邮件应用，请先安装邮箱应用。", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            List<ResolveInfo> targets = pm.queryIntentActivities(email, PackageManager.MATCH_DEFAULT_ONLY);
-            for (ResolveInfo target : targets) {
-                context.grantUriPermission(
-                        target.activityInfo.packageName,
-                        uri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                );
+            Intent chooser = Intent.createChooser(emailTargets[0], "发邮件");
+            if (emailTargets.length > 1) {
+                Intent[] initialIntents = new Intent[emailTargets.length - 1];
+                System.arraycopy(emailTargets, 1, initialIntents, 0, initialIntents.length);
+                chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, initialIntents);
             }
-
-            startActivity(Intent.createChooser(email, "发邮件"));
+            chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(chooser);
         } catch (Exception e) {
             Toast.makeText(context, "发邮件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private Intent[] buildEmailIntents(
+            Context context,
+            PackageManager pm,
+            Uri attachmentUri,
+            String to,
+            String subject,
+            String body
+    ) {
+        List<Intent> emailProbes = new ArrayList<>();
+        List<Intent> attachmentProbes = new ArrayList<>();
+
+        Intent mailto = new Intent(Intent.ACTION_SENDTO);
+        mailto.setData(Uri.parse("mailto:"));
+        emailProbes.add(mailto);
+
+        Intent rfc822 = new Intent(Intent.ACTION_SEND);
+        rfc822.setType("message/rfc822");
+        emailProbes.add(rfc822);
+
+        Intent zip = new Intent(Intent.ACTION_SEND);
+        zip.setType("application/zip");
+        attachmentProbes.add(zip);
+
+        Intent any = new Intent(Intent.ACTION_SEND);
+        any.setType("*/*");
+        attachmentProbes.add(any);
+
+        Map<String, Intent> targets = new LinkedHashMap<>();
+        List<String> emailPackages = new ArrayList<>();
+
+        for (Intent probe : emailProbes) {
+            List<ResolveInfo> infos = pm.queryIntentActivities(probe, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo info : infos) {
+                if (info.activityInfo == null) continue;
+                String pkg = info.activityInfo.packageName;
+                if (!emailPackages.contains(pkg)) emailPackages.add(pkg);
+                addEmailTarget(context, targets, info, attachmentUri, to, subject, body);
+            }
+        }
+
+        for (Intent probe : attachmentProbes) {
+            List<ResolveInfo> infos = pm.queryIntentActivities(probe, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo info : infos) {
+                if (info.activityInfo == null) continue;
+                if (!emailPackages.contains(info.activityInfo.packageName) && !isLikelyEmailApp(pm, info)) continue;
+                addEmailTarget(context, targets, info, attachmentUri, to, subject, body);
+            }
+        }
+
+        return targets.values().toArray(new Intent[0]);
+    }
+
+    private void addEmailTarget(
+            Context context,
+            Map<String, Intent> targets,
+            ResolveInfo info,
+            Uri attachmentUri,
+            String to,
+            String subject,
+            String body
+    ) {
+        Intent target = createTargetEmailIntent(
+                info,
+                attachmentUri,
+                to,
+                subject,
+                body
+        );
+        String key = info.activityInfo.packageName + "/" + info.activityInfo.name;
+        targets.put(key, target);
+        context.grantUriPermission(
+                info.activityInfo.packageName,
+                attachmentUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+        );
+    }
+
+    private Intent createTargetEmailIntent(
+            ResolveInfo info,
+            Uri attachmentUri,
+            String to,
+            String subject,
+            String body
+    ) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("application/zip");
+        intent.setComponent(new ComponentName(info.activityInfo.packageName, info.activityInfo.name));
+        if (!to.isEmpty()) intent.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+        intent.putExtra(Intent.EXTRA_STREAM, attachmentUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return intent;
+    }
+
+    private boolean isLikelyEmailApp(PackageManager pm, ResolveInfo info) {
+        String pkg = safeLower(info.activityInfo.packageName);
+        String name = safeLower(info.activityInfo.name);
+        CharSequence labelSeq = info.loadLabel(pm);
+        String label = safeLower(labelSeq == null ? "" : labelSeq.toString());
+        String all = pkg + " " + name + " " + label;
+
+        return all.contains("mail") ||
+                all.contains("email") ||
+                all.contains("gmail") ||
+                all.contains("qqmail") ||
+                all.contains("qq邮箱") ||
+                all.contains("邮箱") ||
+                all.contains("邮件") ||
+                all.contains("网易") ||
+                all.contains("outlook") ||
+                all.contains("hotmail") ||
+                all.contains("netease") ||
+                all.contains("163") ||
+                all.contains("126") ||
+                all.contains("yeah") ||
+                all.contains("aliyun") ||
+                all.contains("sina") ||
+                all.contains("189") ||
+                all.contains("139") ||
+                all.contains("yahoo") ||
+                all.contains("zoho") ||
+                all.contains("proton") ||
+                all.contains("spark") ||
+                all.contains("foxmail") ||
+                all.contains("bluemail") ||
+                all.contains("aquamail") ||
+                all.contains("yandex") ||
+                pkg.equals("com.google.android.gm") ||
+                pkg.equals("com.tencent.androidqqmail") ||
+                pkg.equals("com.microsoft.office.outlook");
+    }
+
+    private String safeLower(String value) {
+        return value == null ? "" : value.toLowerCase(Locale.ROOT);
     }
 }
