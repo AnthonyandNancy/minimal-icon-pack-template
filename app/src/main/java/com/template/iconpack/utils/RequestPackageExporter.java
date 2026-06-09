@@ -126,6 +126,7 @@ public final class RequestPackageExporter {
         return root;
     }
 
+    // Request ZIP only. Do not reuse this as the icon pack's runtime appfilter.xml.
     private static String buildAppfilterXml(List<RequestItem> items) {
         StringBuilder xml = new StringBuilder();
         xml.append("<resources>\n");
