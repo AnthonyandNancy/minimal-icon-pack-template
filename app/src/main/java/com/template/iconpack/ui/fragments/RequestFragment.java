@@ -183,8 +183,9 @@ public class RequestFragment extends Fragment {
                 );
 
                 PackageManager pm = appContext.getPackageManager();
-                String subject = "图标适配申请 - " + result.count + " 个应用";
-                String body = buildRequestEmailBody(sel);
+                String iconPackName = getString(R.string.app_name);
+                String subject = "图标适配申请 - " + iconPackName + " - " + result.count + " 个应用";
+                String body = buildRequestEmailBody(sel, iconPackName);
                 Intent[] emailTargets = buildEmailIntents(appContext, pm, uri, authorEmail, subject, body);
 
                 runOnUiThread(() -> {
@@ -284,8 +285,9 @@ public class RequestFragment extends Fragment {
         getActivity().runOnUiThread(action);
     }
 
-    private String buildRequestEmailBody(List<AppInfo> apps) {
+    private String buildRequestEmailBody(List<AppInfo> apps, String iconPackName) {
         StringBuilder sb = new StringBuilder();
+        sb.append("图标包：").append(iconPackName).append("\n\n");
         sb.append("需适配的应用列表（共 ").append(apps.size()).append(" 个）：\n\n");
 
         int index = 1;
