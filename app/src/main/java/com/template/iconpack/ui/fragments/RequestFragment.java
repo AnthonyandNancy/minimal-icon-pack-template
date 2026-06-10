@@ -184,7 +184,7 @@ public class RequestFragment extends Fragment {
 
                 PackageManager pm = appContext.getPackageManager();
                 String iconPackName = getString(R.string.app_name);
-                String subject = "图标适配申请 - " + iconPackName + " - " + result.count + " 个应用";
+                String subject = iconPackName + "图标适配申请 - " + " - " + result.count + " 个应用";
                 String body = buildRequestEmailBody(sel, iconPackName);
                 Intent[] emailTargets = buildEmailIntents(appContext, pm, uri, authorEmail, subject, body);
 
