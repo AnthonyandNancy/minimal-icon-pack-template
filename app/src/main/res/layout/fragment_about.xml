@@ -7,7 +7,7 @@
     android:paddingStart="@dimen/page_margin"
     android:paddingEnd="@dimen/page_margin"
     android:paddingTop="4dp"
-    android:background="@color/background">
+    android:background="@drawable/bg_clean_mist_dashboard">
 
     <include layout="@layout/include_backbar"/>
 
