@@ -167,12 +167,7 @@ public class RequestFragment extends Fragment {
 
             PackageManager pm = context.getPackageManager();
             String subject = "图标适配申请 - " + result.count + " 个应用";
-            String body = "你好，附件是图标适配申请包。\n\n" +
-                    "包含内容：\n" +
-                    "- request_icons.json\n" +
-                    "- appfilter.xml\n" +
-                    "- 原始应用图标\n\n" +
-                    "请导入桌面端工具处理。";
+            String body = buildRequestEmailBody(sel);
             String authorEmail = getString(R.string.request_author_email).trim();
             Intent[] emailTargets = buildEmailIntents(context, pm, uri, authorEmail, subject, body);
 
@@ -192,6 +187,20 @@ public class RequestFragment extends Fragment {
         } catch (Exception e) {
             Toast.makeText(context, "发邮件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private String buildRequestEmailBody(List<AppInfo> apps) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("需适配的应用列表（共 ").append(apps.size()).append(" 个）：\n\n");
+
+        int index = 1;
+        for (AppInfo app : apps) {
+            sb.append(index++).append(". 应用名：").append(safeText(app.appName)).append("\n")
+                    .append("   包名：").append(safeText(app.packageName)).append("\n")
+                    .append("   启动项：").append(safeText(app.componentName)).append("\n\n");
+        }
+
+        return sb.toString().trim();
     }
 
     private Intent[] buildEmailIntents(
@@ -329,5 +338,9 @@ public class RequestFragment extends Fragment {
 
     private String safeLower(String value) {
         return value == null ? "" : value.toLowerCase(Locale.ROOT);
+    }
+
+    private String safeText(String value) {
+        return value == null ? "" : value.trim();
     }
 }
