@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,11 +33,12 @@ import java.util.Map;
 public class RequestFragment extends Fragment {
 
     private RecyclerView requestList;
-    private View bottomBar, btnSelectAll;
+    private View bottomBar, btnSelectAll, btnExport, btnShare, loadingOverlay;
     private TextView selectedCountText;
     private RequestAppAdapter adapter;
     private List<AppInfo> allApps;
     private String currentFilter = "all";
+    private boolean emailInProgress = false;
 
     private View pillAll, pillThemed, pillUnthemed;
 
@@ -61,6 +63,9 @@ public class RequestFragment extends Fragment {
 
         bottomBar = view.findViewById(R.id.request_bottom_bar);
         btnSelectAll = view.findViewById(R.id.btn_select_all);
+        btnExport = view.findViewById(R.id.btn_export);
+        btnShare = view.findViewById(R.id.btn_share);
+        loadingOverlay = view.findViewById(R.id.request_loading_overlay);
         selectedCountText = view.findViewById(R.id.selected_count_text);
 
         // List
@@ -86,8 +91,8 @@ public class RequestFragment extends Fragment {
                 adapter.selectAllUnthemed();
             }
         });
-        view.findViewById(R.id.btn_export).setOnClickListener(v -> copyRequestList());
-        view.findViewById(R.id.btn_share).setOnClickListener(v -> sendEmail());
+        btnExport.setOnClickListener(v -> copyRequestList());
+        btnShare.setOnClickListener(v -> sendEmail());
 
         updateBottomBar();
         updatePillState("all");
@@ -149,7 +154,9 @@ public class RequestFragment extends Fragment {
     }
 
     private void sendEmail() {
-        List<AppInfo> sel = adapter.getSelectedApps();
+        if (emailInProgress) return;
+
+        List<AppInfo> sel = new ArrayList<>(adapter.getSelectedApps());
         Context context = getContext();
         if (context == null) return;
         if (sel.isEmpty()) {
@@ -157,36 +164,124 @@ public class RequestFragment extends Fragment {
             return;
         }
 
-        try {
-            RequestPackageExporter.Result result = RequestPackageExporter.createRequestZip(context, sel);
-            Uri uri = FileProvider.getUriForFile(
-                    context,
-                    context.getPackageName() + ".fileprovider",
-                    result.zipFile
-            );
-
-            PackageManager pm = context.getPackageManager();
-            String subject = "图标适配申请 - " + result.count + " 个应用";
-            String body = buildRequestEmailBody(sel);
-            String authorEmail = getString(R.string.request_author_email).trim();
-            Intent[] emailTargets = buildEmailIntents(context, pm, uri, authorEmail, subject, body);
-
-            if (emailTargets.length == 0) {
-                Toast.makeText(context, "未检测到可用邮件应用，请先安装邮箱应用。", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            Intent chooser = Intent.createChooser(emailTargets[0], "发邮件");
-            if (emailTargets.length > 1) {
-                Intent[] initialIntents = new Intent[emailTargets.length - 1];
-                System.arraycopy(emailTargets, 1, initialIntents, 0, initialIntents.length);
-                chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, initialIntents);
-            }
-            chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(chooser);
-        } catch (Exception e) {
-            Toast.makeText(context, "发邮件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        if (!hasAvailableEmailApp(context.getPackageManager())) {
+            showNoEmailAppDialog();
+            return;
         }
+
+        Context appContext = context.getApplicationContext();
+        String authorEmail = getString(R.string.request_author_email).trim();
+        showEmailLoading(true);
+
+        new Thread(() -> {
+            try {
+                RequestPackageExporter.Result result = RequestPackageExporter.createRequestZip(appContext, sel);
+                Uri uri = FileProvider.getUriForFile(
+                        appContext,
+                        appContext.getPackageName() + ".fileprovider",
+                        result.zipFile
+                );
+
+                PackageManager pm = appContext.getPackageManager();
+                String subject = "图标适配申请 - " + result.count + " 个应用";
+                String body = buildRequestEmailBody(sel);
+                Intent[] emailTargets = buildEmailIntents(appContext, pm, uri, authorEmail, subject, body);
+
+                runOnUiThread(() -> {
+                    showEmailLoading(false);
+                    if (!isAdded()) return;
+
+                    if (emailTargets.length == 0) {
+                        showNoEmailAppDialog();
+                        return;
+                    }
+
+                    Intent chooser = Intent.createChooser(emailTargets[0], "发邮件");
+                    if (emailTargets.length > 1) {
+                        Intent[] initialIntents = new Intent[emailTargets.length - 1];
+                        System.arraycopy(emailTargets, 1, initialIntents, 0, initialIntents.length);
+                        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, initialIntents);
+                    }
+                    chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                    try {
+                        startActivity(chooser);
+                    } catch (Exception e) {
+                        Toast.makeText(requireContext(), "发邮件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    showEmailLoading(false);
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "发邮件失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void showEmailLoading(boolean show) {
+        emailInProgress = show;
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+        if (btnShare != null) {
+            btnShare.setEnabled(!show);
+            btnShare.setAlpha(show ? 0.6f : 1f);
+        }
+        if (btnExport != null) btnExport.setEnabled(!show);
+        if (btnSelectAll != null) btnSelectAll.setEnabled(!show);
+    }
+
+    private boolean hasAvailableEmailApp(PackageManager pm) {
+        List<Intent> emailProbes = new ArrayList<>();
+
+        Intent mailto = new Intent(Intent.ACTION_SENDTO);
+        mailto.setData(Uri.parse("mailto:"));
+        emailProbes.add(mailto);
+
+        Intent rfc822 = new Intent(Intent.ACTION_SEND);
+        rfc822.setType("message/rfc822");
+        emailProbes.add(rfc822);
+
+        for (Intent probe : emailProbes) {
+            if (!pm.queryIntentActivities(probe, PackageManager.MATCH_DEFAULT_ONLY).isEmpty()) {
+                return true;
+            }
+        }
+
+        Intent zip = new Intent(Intent.ACTION_SEND);
+        zip.setType("application/zip");
+        if (hasLikelyEmailTarget(pm, zip)) return true;
+
+        Intent any = new Intent(Intent.ACTION_SEND);
+        any.setType("*/*");
+        return hasLikelyEmailTarget(pm, any);
+    }
+
+    private boolean hasLikelyEmailTarget(PackageManager pm, Intent probe) {
+        List<ResolveInfo> infos = pm.queryIntentActivities(probe, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo info : infos) {
+            if (info.activityInfo != null && isLikelyEmailApp(pm, info)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showNoEmailAppDialog() {
+        if (!isAdded()) return;
+        new AlertDialog.Builder(requireContext())
+                .setTitle("未检测到邮箱应用")
+                .setMessage("请先安装并登录邮箱应用，例如 QQ 邮箱、Gmail 或 Outlook，然后再发送图标适配申请。也可以先点“复制”保存申请信息。")
+                .setPositiveButton("知道了", null)
+                .show();
+    }
+
+    private void runOnUiThread(Runnable action) {
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(action);
     }
 
     private String buildRequestEmailBody(List<AppInfo> apps) {
