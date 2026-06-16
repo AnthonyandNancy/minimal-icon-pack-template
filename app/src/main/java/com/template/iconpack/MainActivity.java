@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
     private static final int CHANGELOG_DIALOG_CONTENT_LINES = 5;
     private static final int CHANGELOG_DIALOG_CONTENT_CHARS = 160;
     private static final int CHANGELOG_DIALOG_ICON_COUNT = 6;
+    private static final int CHANGELOG_DIALOG_MESSAGE_LINES = 10;
     private int currentNavItem = NAV_HOME;
     private DashboardFragment dashboardFragment;
     private IconsFragment iconsFragment;
@@ -384,7 +386,7 @@ public class MainActivity extends AppCompatActivity
                 : current.title;
         String message = buildChangelogMessage(current);
 
-        new MaterialAlertDialogBuilder(this)
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .setNegativeButton(R.string.changelog_dialog_view_all, (dialog, which) -> {
@@ -397,6 +399,15 @@ public class MainActivity extends AppCompatActivity
                 })
                 .setOnDismissListener(dialog -> markChangelogSeen(currentVersionCode))
                 .show();
+        limitChangelogDialogMessage(dialog);
+    }
+
+    private void limitChangelogDialogMessage(AlertDialog dialog) {
+        TextView messageView = dialog.findViewById(android.R.id.message);
+        if (messageView == null) return;
+        messageView.setMaxLines(CHANGELOG_DIALOG_MESSAGE_LINES);
+        messageView.setEllipsize(TextUtils.TruncateAt.END);
+        messageView.setVerticalScrollBarEnabled(false);
     }
 
     private ChangelogEntry findCurrentChangelogEntry(List<ChangelogEntry> entries,

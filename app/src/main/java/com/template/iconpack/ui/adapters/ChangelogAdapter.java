@@ -22,6 +22,7 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
     private static final int COLLAPSED_CONTENT_LINES = 6;
     private static final int COLLAPSED_CONTENT_CHARS = 180;
     private static final int COLLAPSED_ICON_COUNT = 6;
+    private static final int COLLAPSED_ICON_LINES = COLLAPSED_ICON_COUNT + 2;
 
     private final List<ChangelogEntry> items = new ArrayList<>();
     private final Set<Integer> expandedItems = new HashSet<>();
@@ -55,6 +56,8 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
 
         bindOptionalText(holder.content, buildContentText(entry.content, expanded));
         bindOptionalText(holder.icons, buildIconsText(entry.icons, expanded));
+        applyTextCollapse(holder.content, expanded ? Integer.MAX_VALUE : COLLAPSED_CONTENT_LINES);
+        applyTextCollapse(holder.icons, expanded ? Integer.MAX_VALUE : COLLAPSED_ICON_LINES);
 
         boolean expandable = hasMoreContent(entry.content) || hasMoreIcons(entry.icons);
         holder.toggle.setVisibility(expandable ? View.VISIBLE : View.GONE);
@@ -161,6 +164,11 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
             view.setVisibility(View.VISIBLE);
             view.setText(text);
         }
+    }
+
+    private void applyTextCollapse(TextView view, int maxLines) {
+        view.setMaxLines(maxLines);
+        view.setEllipsize(maxLines == Integer.MAX_VALUE ? null : TextUtils.TruncateAt.END);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
