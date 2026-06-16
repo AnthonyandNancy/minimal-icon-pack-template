@@ -21,9 +21,6 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
 
     private static final int COLLAPSED_CONTENT_LINES = 6;
     private static final int COLLAPSED_CONTENT_CHARS = 180;
-    private static final int COLLAPSED_ICON_COUNT = 6;
-    private static final int COLLAPSED_ICON_LINES = COLLAPSED_ICON_COUNT + 2;
-
     private final List<ChangelogEntry> items = new ArrayList<>();
     private final Set<Integer> expandedItems = new HashSet<>();
 
@@ -55,11 +52,9 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
         holder.meta.setText(buildMeta(entry));
 
         bindOptionalText(holder.content, buildContentText(entry.content, expanded));
-        bindOptionalText(holder.icons, buildIconsText(entry.icons, expanded));
         applyTextCollapse(holder.content, expanded ? Integer.MAX_VALUE : COLLAPSED_CONTENT_LINES);
-        applyTextCollapse(holder.icons, expanded ? Integer.MAX_VALUE : COLLAPSED_ICON_LINES);
 
-        boolean expandable = hasMoreContent(entry.content) || hasMoreIcons(entry.icons);
+        boolean expandable = hasMoreContent(entry.content);
         holder.toggle.setVisibility(expandable ? View.VISIBLE : View.GONE);
         holder.toggle.setText(expanded ? "收起" : "展开全部");
         View.OnClickListener toggleListener = v -> {
@@ -123,39 +118,6 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
                 || normalized.length() > COLLAPSED_CONTENT_CHARS;
     }
 
-    private String buildIconsText(List<String> icons, boolean expanded) {
-        if (icons == null || icons.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder("更新图标：");
-        int totalIcons = countIcons(icons);
-        int limit = expanded ? totalIcons : Math.min(COLLAPSED_ICON_COUNT, totalIcons);
-        int shown = 0;
-        for (String icon : icons) {
-            if (TextUtils.isEmpty(icon)) continue;
-            if (shown >= limit) break;
-            sb.append('\n').append("• ").append(icon);
-            shown++;
-        }
-        if (!expanded && totalIcons > COLLAPSED_ICON_COUNT) {
-            sb.append('\n').append("... 还有 ")
-                    .append(totalIcons - COLLAPSED_ICON_COUNT)
-                    .append(" 个图标");
-        }
-        return sb.toString();
-    }
-
-    private boolean hasMoreIcons(List<String> icons) {
-        return countIcons(icons) > COLLAPSED_ICON_COUNT;
-    }
-
-    private int countIcons(List<String> icons) {
-        if (icons == null) return 0;
-        int count = 0;
-        for (String icon : icons) {
-            if (!TextUtils.isEmpty(icon)) count++;
-        }
-        return count;
-    }
-
     private void bindOptionalText(TextView view, String text) {
         if (TextUtils.isEmpty(text)) {
             view.setVisibility(View.GONE);
@@ -177,7 +139,6 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
         TextView title;
         TextView meta;
         TextView content;
-        TextView icons;
         TextView toggle;
 
         ViewHolder(View itemView) {
@@ -187,7 +148,6 @@ public class ChangelogAdapter extends RecyclerView.Adapter<ChangelogAdapter.View
             title = itemView.findViewById(R.id.changelog_item_title);
             meta = itemView.findViewById(R.id.changelog_item_meta);
             content = itemView.findViewById(R.id.changelog_item_content);
-            icons = itemView.findViewById(R.id.changelog_item_icons);
             toggle = itemView.findViewById(R.id.changelog_item_toggle);
         }
     }

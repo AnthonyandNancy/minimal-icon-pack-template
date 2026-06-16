@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity
             NAV_CHANGELOG = 6, NAV_SETTINGS = 7, NAV_FAQ = 8, NAV_ABOUT = 9;
     private static final int CHANGELOG_DIALOG_CONTENT_LINES = 5;
     private static final int CHANGELOG_DIALOG_CONTENT_CHARS = 160;
-    private static final int CHANGELOG_DIALOG_ICON_COUNT = 6;
     private static final int CHANGELOG_DIALOG_MESSAGE_LINES = 10;
     private int currentNavItem = NAV_HOME;
     private DashboardFragment dashboardFragment;
@@ -457,31 +456,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private String buildChangelogMessage(ChangelogEntry entry) {
-        StringBuilder sb = new StringBuilder();
-        String content = buildDialogContentPreview(entry.content);
-        if (!TextUtils.isEmpty(content)) {
-            sb.append(content);
-        }
-
-        int totalIcons = countChangelogIcons(entry.icons);
-        if (totalIcons > 0) {
-            if (sb.length() > 0) sb.append("\n\n");
-            sb.append("更新图标：");
-            int limit = Math.min(CHANGELOG_DIALOG_ICON_COUNT, totalIcons);
-            int shown = 0;
-            for (String icon : entry.icons) {
-                if (TextUtils.isEmpty(icon)) continue;
-                if (shown >= limit) break;
-                sb.append('\n').append("- ").append(icon);
-                shown++;
-            }
-            if (totalIcons > limit) {
-                sb.append('\n').append("... 还有 ")
-                        .append(totalIcons - limit)
-                        .append(" 个图标，查看全部可浏览完整列表");
-            }
-        }
-        return sb.toString();
+        return buildDialogContentPreview(entry.content);
     }
 
     private String buildDialogContentPreview(String content) {
@@ -511,15 +486,6 @@ public class MainActivity extends AppCompatActivity
             preview += "... 内容较多，查看全部可继续浏览";
         }
         return preview;
-    }
-
-    private int countChangelogIcons(List<String> icons) {
-        if (icons == null) return 0;
-        int count = 0;
-        for (String icon : icons) {
-            if (!TextUtils.isEmpty(icon)) count++;
-        }
-        return count;
     }
 
     private void markChangelogSeen(int versionCode) {
