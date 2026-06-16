@@ -1,9 +1,11 @@
 package com.template.iconpack;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +27,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.template.iconpack.models.ChangelogEntry;
 import com.template.iconpack.ui.fragments.AboutFragment;
 import com.template.iconpack.ui.fragments.ApplyFragment;
+import com.template.iconpack.ui.fragments.ChangelogFragment;
 import com.template.iconpack.ui.fragments.DashboardFragment;
 import com.template.iconpack.ui.fragments.FaqFragment;
 import com.template.iconpack.ui.fragments.IconsFragment;
@@ -35,7 +40,10 @@ import com.template.iconpack.ui.fragments.PresetsFragment;
 import com.template.iconpack.ui.fragments.RequestFragment;
 import com.template.iconpack.ui.fragments.SettingsFragment;
 import com.template.iconpack.ui.fragments.WallpapersFragment;
+import com.template.iconpack.utils.IconPackLoader;
 import com.template.iconpack.utils.PreferencesHelper;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -50,7 +58,10 @@ public class MainActivity extends AppCompatActivity
 
     private static final int NAV_HOME = 0, NAV_APPLY = 1, NAV_ICONS = 2,
             NAV_REQUEST = 3, NAV_WALLPAPERS = 4, NAV_PRESETS = 5,
-            NAV_SETTINGS = 6, NAV_FAQ = 7, NAV_ABOUT = 8;
+            NAV_CHANGELOG = 6, NAV_SETTINGS = 7, NAV_FAQ = 8, NAV_ABOUT = 9;
+    private static final int CHANGELOG_DIALOG_CONTENT_LINES = 5;
+    private static final int CHANGELOG_DIALOG_CONTENT_CHARS = 160;
+    private static final int CHANGELOG_DIALOG_ICON_COUNT = 6;
     private int currentNavItem = NAV_HOME;
     private DashboardFragment dashboardFragment;
     private IconsFragment iconsFragment;
@@ -94,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         showFragment(NAV_HOME);
         navView.setCheckedItem(R.id.nav_home);
+        drawer.post(this::maybeShowChangelogDialog);
     }
 
     private void configureSystemBars() {
@@ -213,6 +225,9 @@ public class MainActivity extends AppCompatActivity
             case NAV_PRESETS:
                 fragment = new PresetsFragment();
                 break;
+            case NAV_CHANGELOG:
+                fragment = new ChangelogFragment();
+                break;
             case NAV_SETTINGS:
                 SettingsFragment sf = new SettingsFragment();
                 sf.setCallback(() -> { iconsFragment = null; dashboardFragment = null; });
@@ -264,6 +279,8 @@ public class MainActivity extends AppCompatActivity
                 return fragment instanceof WallpapersFragment;
             case NAV_PRESETS:
                 return fragment instanceof PresetsFragment;
+            case NAV_CHANGELOG:
+                return fragment instanceof ChangelogFragment;
             case NAV_SETTINGS:
                 return fragment instanceof SettingsFragment;
             case NAV_FAQ:
@@ -289,6 +306,8 @@ public class MainActivity extends AppCompatActivity
                 return "wallpapers";
             case NAV_PRESETS:
                 return "presets";
+            case NAV_CHANGELOG:
+                return "changelog";
             case NAV_SETTINGS:
                 return "settings";
             case NAV_FAQ:
@@ -342,6 +361,160 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, "已刷新", Toast.LENGTH_SHORT).show();
     }
 
+    private void maybeShowChangelogDialog() {
+        int currentVersionCode = getCurrentVersionCode();
+        String currentVersionName = getCurrentVersionName();
+        if (currentVersionCode <= 0 ||
+                prefs.getLastSeenChangelogVersionCode() >= currentVersionCode) {
+            return;
+        }
+
+        List<ChangelogEntry> entries = IconPackLoader.loadChangelog(this);
+        if (entries.isEmpty()) return;
+
+        ChangelogEntry current = findCurrentChangelogEntry(
+                entries,
+                currentVersionCode,
+                currentVersionName
+        );
+        if (current == null) return;
+
+        String title = TextUtils.isEmpty(current.title)
+                ? getString(R.string.changelog_dialog_title)
+                : current.title;
+        String message = buildChangelogMessage(current);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton(R.string.changelog_dialog_view_all, (dialog, which) -> {
+                    markChangelogSeen(currentVersionCode);
+                    showFragment(NAV_CHANGELOG);
+                    navView.setCheckedItem(R.id.nav_changelog);
+                })
+                .setPositiveButton(R.string.changelog_dialog_ok, (dialog, which) -> {
+                    markChangelogSeen(currentVersionCode);
+                })
+                .setOnDismissListener(dialog -> markChangelogSeen(currentVersionCode))
+                .show();
+    }
+
+    private ChangelogEntry findCurrentChangelogEntry(List<ChangelogEntry> entries,
+                                                     int currentVersionCode,
+                                                     String currentVersionName) {
+        String normalizedCurrentVersionName = normalizeVersionName(currentVersionName);
+        for (ChangelogEntry entry : entries) {
+            if (entry.versionCode == currentVersionCode) {
+                return entry;
+            }
+            if (!TextUtils.isEmpty(normalizedCurrentVersionName) &&
+                    normalizedCurrentVersionName.equals(normalizeVersionName(entry.versionName))) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    private int getCurrentVersionCode() {
+        try {
+            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return (int) Math.min(Integer.MAX_VALUE, pi.getLongVersionCode());
+            }
+            return pi.versionCode;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private String getCurrentVersionName() {
+        try {
+            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+            return pi.versionName != null ? pi.versionName : "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private String normalizeVersionName(String versionName) {
+        if (TextUtils.isEmpty(versionName)) return "";
+        String normalized = versionName.trim();
+        if (normalized.startsWith("v") || normalized.startsWith("V")) {
+            return normalized.substring(1).trim();
+        }
+        return normalized;
+    }
+
+    private String buildChangelogMessage(ChangelogEntry entry) {
+        StringBuilder sb = new StringBuilder();
+        String content = buildDialogContentPreview(entry.content);
+        if (!TextUtils.isEmpty(content)) {
+            sb.append(content);
+        }
+
+        int totalIcons = countChangelogIcons(entry.icons);
+        if (totalIcons > 0) {
+            if (sb.length() > 0) sb.append("\n\n");
+            sb.append("更新图标：");
+            int limit = Math.min(CHANGELOG_DIALOG_ICON_COUNT, totalIcons);
+            int shown = 0;
+            for (String icon : entry.icons) {
+                if (TextUtils.isEmpty(icon)) continue;
+                if (shown >= limit) break;
+                sb.append('\n').append("- ").append(icon);
+                shown++;
+            }
+            if (totalIcons > limit) {
+                sb.append('\n').append("... 还有 ")
+                        .append(totalIcons - limit)
+                        .append(" 个图标，查看全部可浏览完整列表");
+            }
+        }
+        return sb.toString();
+    }
+
+    private String buildDialogContentPreview(String content) {
+        if (TextUtils.isEmpty(content)) return "";
+
+        String normalized = content.trim()
+                .replace("\r\n", "\n")
+                .replace('\r', '\n');
+        String[] lines = normalized.split("\n", -1);
+        StringBuilder sb = new StringBuilder();
+        boolean truncated = lines.length > CHANGELOG_DIALOG_CONTENT_LINES
+                || normalized.length() > CHANGELOG_DIALOG_CONTENT_CHARS;
+
+        for (int i = 0; i < lines.length && i < CHANGELOG_DIALOG_CONTENT_LINES; i++) {
+            if (sb.length() > 0) sb.append('\n');
+            sb.append(lines[i]);
+            if (sb.length() >= CHANGELOG_DIALOG_CONTENT_CHARS) {
+                sb.setLength(CHANGELOG_DIALOG_CONTENT_CHARS);
+                truncated = true;
+                break;
+            }
+        }
+
+        String preview = sb.toString().trim();
+        if (truncated) {
+            if (!preview.isEmpty()) preview += "\n";
+            preview += "... 内容较多，查看全部可继续浏览";
+        }
+        return preview;
+    }
+
+    private int countChangelogIcons(List<String> icons) {
+        if (icons == null) return 0;
+        int count = 0;
+        for (String icon : icons) {
+            if (!TextUtils.isEmpty(icon)) count++;
+        }
+        return count;
+    }
+
+    private void markChangelogSeen(int versionCode) {
+        prefs.setLastSeenChangelogVersionCode(versionCode);
+    }
+
     private void openPlayStore() {
         try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName()))); }
         catch (Exception e) {
@@ -365,6 +538,7 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_icons) showFragment(NAV_ICONS);
         else if (id == R.id.nav_request) showFragment(NAV_REQUEST);
         else if (id == R.id.nav_wallpapers) showFragment(NAV_WALLPAPERS);
+        else if (id == R.id.nav_changelog) showFragment(NAV_CHANGELOG);
         else if (id == R.id.nav_settings) showFragment(NAV_SETTINGS);
         else if (id == R.id.nav_faq) showFragment(NAV_FAQ);
         else if (id == R.id.nav_about) showFragment(NAV_ABOUT);
