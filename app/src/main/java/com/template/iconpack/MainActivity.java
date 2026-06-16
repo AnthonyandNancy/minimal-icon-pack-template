@@ -389,15 +389,15 @@ public class MainActivity extends AppCompatActivity
         AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setNegativeButton(R.string.changelog_dialog_view_all, (dialog, which) -> {
+                .setNegativeButton(R.string.changelog_dialog_view_all, (clickedDialog, which) -> {
                     markChangelogSeen(currentVersionCode);
                     showFragment(NAV_CHANGELOG);
                     navView.setCheckedItem(R.id.nav_changelog);
                 })
-                .setPositiveButton(R.string.changelog_dialog_ok, (dialog, which) -> {
+                .setPositiveButton(R.string.changelog_dialog_ok, (clickedDialog, which) -> {
                     markChangelogSeen(currentVersionCode);
                 })
-                .setOnDismissListener(dialog -> markChangelogSeen(currentVersionCode))
+                .setOnDismissListener(dismissedDialog -> markChangelogSeen(currentVersionCode))
                 .show();
         limitChangelogDialogMessage(dialog);
     }
