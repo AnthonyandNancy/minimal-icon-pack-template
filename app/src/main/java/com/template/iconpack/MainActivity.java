@@ -384,6 +384,10 @@ public class MainActivity extends AppCompatActivity
                 ? getString(R.string.changelog_dialog_title)
                 : current.title;
         String message = buildChangelogMessage(current);
+        if (TextUtils.isEmpty(message)) {
+            markChangelogSeen(currentVersionCode);
+            return;
+        }
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setTitle(title)
