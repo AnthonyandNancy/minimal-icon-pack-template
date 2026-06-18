@@ -25,6 +25,12 @@ import java.util.List;
 
 public class DashboardFragment extends Fragment {
 
+    public static final int TARGET_ICONS = 11;
+    public static final int TARGET_REQUEST_ALL = 12;
+    public static final int TARGET_WALLPAPERS = 13;
+    public static final int TARGET_REQUEST_THEMED = 14;
+    public static final int TARGET_REQUEST_UNTHEMED = 15;
+
     public interface ScrollListener { void onScroll(int sy); }
     public interface CardCallback { void onCardClicked(int pos); }
 
@@ -56,6 +62,7 @@ public class DashboardFragment extends Fragment {
 
         setupHero(iconCount, wpCount, themed);
         buildQuickCards(iconCount, appCount, themed, missing);
+        setupOverviewNavigation();
         buildEntryCards(ctx, iconCount, themed, appCount, wpCount);
         setupScroll();
 
@@ -115,6 +122,24 @@ public class DashboardFragment extends Fragment {
                 R.id.card_title_label4, R.id.card_value4, R.id.card_subtitle4);
     }
 
+    private void setupOverviewNavigation() {
+        bindNavigationTarget(R.id.hero_stat_icons, TARGET_ICONS);
+        bindNavigationTarget(R.id.hero_stat_wallpapers, TARGET_WALLPAPERS);
+        bindNavigationTarget(R.id.hero_stat_themed, TARGET_REQUEST_THEMED);
+        bindNavigationTarget(R.id.stat_card_icons, TARGET_ICONS);
+        bindNavigationTarget(R.id.stat_card_apps, TARGET_REQUEST_ALL);
+        bindNavigationTarget(R.id.stat_card_themed, TARGET_REQUEST_THEMED);
+        bindNavigationTarget(R.id.stat_card_missing, TARGET_REQUEST_UNTHEMED);
+    }
+
+    private void bindNavigationTarget(int viewId, int target) {
+        View view = rootView.findViewById(viewId);
+        if (view == null) return;
+        view.setClickable(true);
+        view.setFocusable(true);
+        view.setOnClickListener(v -> nav(target));
+    }
+
     private void setupStatCard(int rootId, int badgeBg, int iconRes, int iconTint,
                                String label, String value, int valueColor, String subtitle,
                                int badgeId, int badgeIconId,
@@ -152,9 +177,9 @@ public class DashboardFragment extends Fragment {
 
         // Item data: title, subtitle, badgeBg, iconRes, iconTint, navTarget
         String[][] items = {
-            {"浏览图标", icons + " 个图标", null, null, null, "11"},
-            {"申请图标", themed + " / " + apps + " 已适配", null, null, null, "12"},
-            {"壁纸", wp + " 张云端壁纸", null, null, null, "13"},
+            {"浏览图标", icons + " 个图标", null, null, null, String.valueOf(TARGET_ICONS)},
+            {"申请图标", themed + " / " + apps + " 已适配", null, null, null, String.valueOf(TARGET_REQUEST_ALL)},
+            {"壁纸", wp + " 张云端壁纸", null, null, null, String.valueOf(TARGET_WALLPAPERS)},
         };
         int[] badgeBgs = {R.drawable.bg_badge_blue, R.drawable.bg_badge_blue, R.drawable.bg_badge_purple};
         int[] iconRes = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_image_mountain};

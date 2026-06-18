@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private int currentNavItem = NAV_HOME;
     private DashboardFragment dashboardFragment;
     private IconsFragment iconsFragment;
+    private RequestFragment requestFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,10 +183,17 @@ public class MainActivity extends AppCompatActivity
     // Fragment navigation
     // ═══════════════════════════════════════════════════════
     private void showFragment(int navId) {
+        showFragment(navId, null);
+    }
+
+    private void showFragment(int navId, String requestFilter) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
         if (isCurrentDestination(currentFragment, navId)) {
             syncFragmentReference(navId, currentFragment);
+            if (navId == NAV_REQUEST && requestFragment != null) {
+                requestFragment.setInitialFilter(requestFilter);
+            }
             currentNavItem = navId;
             return;
         }
@@ -226,7 +234,8 @@ public class MainActivity extends AppCompatActivity
                 fragment = iconsFragment;
                 break;
             case NAV_REQUEST:
-                fragment = new RequestFragment();
+                requestFragment = RequestFragment.newInstance(requestFilter);
+                fragment = requestFragment;
                 break;
             case NAV_WALLPAPERS:
                 fragment = new WallpapersFragment();
@@ -270,6 +279,8 @@ public class MainActivity extends AppCompatActivity
             dashboardFragment.setCallback(this::onDashboardCardClicked);
         } else if (navId == NAV_ICONS && fragment instanceof IconsFragment) {
             iconsFragment = (IconsFragment) fragment;
+        } else if (navId == NAV_REQUEST && fragment instanceof RequestFragment) {
+            requestFragment = (RequestFragment) fragment;
         }
     }
 
@@ -338,16 +349,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onDashboardCardClicked(int pos) {
-        int idx = pos - 10;
-        if (idx >= 0 && idx <= 7) {
-            switch (idx) {
-                case 1: showFragment(NAV_ICONS);     navView.setCheckedItem(R.id.nav_icons);      break;
-                case 2: showFragment(NAV_REQUEST);   navView.setCheckedItem(R.id.nav_request);    break;
-                case 3: showFragment(NAV_WALLPAPERS); navView.setCheckedItem(R.id.nav_wallpapers); break;
-                case 5: showFragment(NAV_SETTINGS);  navView.setCheckedItem(R.id.nav_settings);   break;
-                case 6: showFragment(NAV_FAQ);       navView.setCheckedItem(R.id.nav_faq);        break;
-                case 7: showFragment(NAV_ABOUT);     navView.setCheckedItem(R.id.nav_about);      break;
-            }
+        switch (pos) {
+            case DashboardFragment.TARGET_ICONS:
+                showFragment(NAV_ICONS);
+                navView.setCheckedItem(R.id.nav_icons);
+                break;
+            case DashboardFragment.TARGET_REQUEST_ALL:
+                showFragment(NAV_REQUEST, RequestFragment.FILTER_ALL);
+                navView.setCheckedItem(R.id.nav_request);
+                break;
+            case DashboardFragment.TARGET_WALLPAPERS:
+                showFragment(NAV_WALLPAPERS);
+                navView.setCheckedItem(R.id.nav_wallpapers);
+                break;
+            case DashboardFragment.TARGET_REQUEST_THEMED:
+                showFragment(NAV_REQUEST, RequestFragment.FILTER_THEMED);
+                navView.setCheckedItem(R.id.nav_request);
+                break;
+            case DashboardFragment.TARGET_REQUEST_UNTHEMED:
+                showFragment(NAV_REQUEST, RequestFragment.FILTER_UNTHEMED);
+                navView.setCheckedItem(R.id.nav_request);
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
     }
@@ -366,7 +388,7 @@ public class MainActivity extends AppCompatActivity
 
     private void refreshCurrentPage() {
         if (currentNavItem == NAV_ICONS && iconsFragment != null) iconsFragment.refresh();
-        else { dashboardFragment = null; iconsFragment = null; showFragment(currentNavItem); }
+        else { dashboardFragment = null; iconsFragment = null; requestFragment = null; showFragment(currentNavItem); }
         Toast.makeText(this, "已刷新", Toast.LENGTH_SHORT).show();
     }
 
@@ -542,6 +564,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().popBackStack();
             currentNavItem = NAV_HOME;
             iconsFragment = null;
+            requestFragment = null;
             navView.setCheckedItem(R.id.nav_home);
         }
         else super.onBackPressed();
