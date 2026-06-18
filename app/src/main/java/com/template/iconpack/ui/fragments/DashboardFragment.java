@@ -259,16 +259,25 @@ public class DashboardFragment extends Fragment {
             return;
         }
 
-        if (item.link == null || item.link.trim().isEmpty()) {
+        String normalizedLink = normalizeFindMeLink(item.link);
+        if (normalizedLink.isEmpty()) {
             Toast.makeText(ctx, "链接未配置", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.link.trim()));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(normalizedLink));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(ctx, "无法打开链接", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String normalizeFindMeLink(String link) {
+        String value = link == null ? "" : link.trim();
+        if (value.isEmpty()) return "";
+        if (value.matches("^[a-zA-Z][a-zA-Z0-9+.-]*:.*")) return value;
+        return "https://" + value;
     }
 
     private void showFindMeImageDialog(Context ctx, String title, int imageRes) {
