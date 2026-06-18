@@ -26,7 +26,9 @@ import com.template.iconpack.models.AppInfo;
 import com.template.iconpack.models.DrawableInfo;
 import com.template.iconpack.models.WallpaperInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DashboardFragment extends Fragment {
 
@@ -68,7 +70,7 @@ public class DashboardFragment extends Fragment {
         setupHero(iconCount, wpCount, themed);
         buildQuickCards(iconCount, appCount, themed, missing);
         setupOverviewNavigation();
-        buildFindMeCards(ctx);
+        buildFindMeCards(ctx, icons);
         setupScroll();
 
         return rootView;
@@ -175,7 +177,7 @@ public class DashboardFragment extends Fragment {
         if (subView instanceof TextView) ((TextView) subView).setText(subtitle);
     }
 
-    private void buildFindMeCards(Context ctx) {
+    private void buildFindMeCards(Context ctx, List<DrawableInfo> icons) {
         ViewGroup c = rootView.findViewById(R.id.dashboard_entries);
         if (c == null) return;
         c.removeAllViews();
@@ -192,17 +194,33 @@ public class DashboardFragment extends Fragment {
 
         int primary = ContextCompat.getColor(ctx, R.color.primary);
         int accent = ContextCompat.getColor(ctx, R.color.accent);
+        Map<String, Integer> packIcons = buildFindMePackIconMap(ctx, icons);
 
         for (FindMeItem item : items) {
             View v = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_entry, c, false);
+            FindMeIcon icon = resolveFindMeIcon(item.icon, packIcons);
 
             FrameLayout badge = v.findViewById(R.id.entry_badge);
-            if (badge != null) badge.setBackgroundResource("image".equals(item.type) ? R.drawable.bg_badge_purple : R.drawable.bg_badge_blue);
+            if (badge != null) {
+                if (icon.usesPackIcon) {
+                    badge.setBackground(null);
+                } else {
+                    badge.setBackgroundResource("image".equals(item.type) ? R.drawable.bg_badge_purple : R.drawable.bg_badge_blue);
+                }
+            }
 
             ImageView iv = v.findViewById(R.id.entry_icon);
             if (iv != null) {
-                iv.setImageResource(resolveFindMeIcon(item.icon));
-                iv.setColorFilter("image".equals(item.type) ? accent : primary);
+                iv.setImageResource(icon.resId);
+                if (icon.usesPackIcon) {
+                    iv.clearColorFilter();
+                    iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    setSquareSize(iv, R.dimen.quick_badge_size);
+                } else {
+                    iv.setColorFilter("image".equals(item.type) ? accent : primary);
+                    iv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    setSquareSize(iv, R.dimen.quick_badge_icon_size);
+                }
             }
 
             ((TextView) v.findViewById(R.id.entry_title)).setText(item.title);
@@ -314,8 +332,19 @@ public class DashboardFragment extends Fragment {
                 .show();
     }
 
-    private int resolveFindMeIcon(String icon) {
-        String key = icon == null ? "" : icon.trim().toLowerCase();
+    private FindMeIcon resolveFindMeIcon(String icon, Map<String, Integer> packIcons) {
+        String appKey = normalizeFindMeAppKey(icon);
+        if (!appKey.isEmpty()) {
+            Integer packIcon = packIcons.get(appKey);
+            if (packIcon != null && packIcon != 0) return new FindMeIcon(packIcon, true);
+        }
+
+        return new FindMeIcon(resolveDefaultFindMeIcon(icon), false);
+    }
+
+    private int resolveDefaultFindMeIcon(String icon) {
+        String key = normalizeFindMeAppKey(icon);
+        if (key.isEmpty()) key = normalizeFindMeKey(icon);
         switch (key) {
             case "rednote":
                 return R.drawable.ic_rate;
@@ -336,10 +365,137 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    private Map<String, Integer> buildFindMePackIconMap(Context ctx, List<DrawableInfo> icons) {
+        Map<String, Integer> result = new HashMap<>();
+        Map<String, String> appFilter = IconPackLoader.loadAppFilter(ctx);
+        String[] appKeys = {"rednote", "douyin", "qq", "wechat", "alipay"};
+        for (String appKey : appKeys) {
+            int resId = resolvePackIconResource(ctx, icons, appFilter, appKey);
+            if (resId != 0) result.put(appKey, resId);
+        }
+        return result;
+    }
+
+    private int resolvePackIconResource(Context ctx, List<DrawableInfo> icons,
+                                        Map<String, String> appFilter, String appKey) {
+        for (String candidate : getFindMeIconCandidates(appKey)) {
+            int resId = resolveDrawableResource(ctx, icons, candidate);
+            if (resId != 0) return resId;
+        }
+
+        if (appFilter == null || appFilter.isEmpty()) return 0;
+        for (Map.Entry<String, String> entry : appFilter.entrySet()) {
+            if (!matchesFindMePackage(appKey, entry.getKey())) continue;
+            int resId = resolveDrawableResource(ctx, icons, entry.getValue());
+            if (resId != 0) return resId;
+        }
+        return 0;
+    }
+
+    private String[] getFindMeIconCandidates(String appKey) {
+        switch (appKey) {
+            case "rednote":
+                return new String[]{"rednote", "xiaohongshu", "xhs"};
+            case "douyin":
+                return new String[]{"douyin", "aweme", "tiktok"};
+            case "qq":
+                return new String[]{"qq", "tencent_qq", "mobileqq"};
+            case "wechat":
+                return new String[]{"wechat", "weixin", "weixin_chat"};
+            case "alipay":
+                return new String[]{"alipay", "zhifubao", "alipaygphone"};
+            default:
+                return new String[]{appKey};
+        }
+    }
+
+    private boolean matchesFindMePackage(String appKey, String component) {
+        String value = component == null ? "" : component.toLowerCase();
+        switch (appKey) {
+            case "rednote":
+                return value.contains("com.xingin.xhs");
+            case "douyin":
+                return value.contains("com.ss.android.ugc.aweme");
+            case "qq":
+                return value.contains("com.tencent.mobileqq");
+            case "wechat":
+                return value.contains("com.tencent.mm");
+            case "alipay":
+                return value.contains("com.eg.android.alipaygphone");
+            default:
+                return false;
+        }
+    }
+
+    private int resolveDrawableResource(Context ctx, List<DrawableInfo> icons, String name) {
+        int resId = resolveDrawableByName(ctx, name);
+        if (resId != 0) return resId;
+
+        String safeName = name == null ? "" : name.trim();
+        if (safeName.isEmpty() || icons == null) return 0;
+        for (DrawableInfo icon : icons) {
+            if (icon == null || icon.name == null) continue;
+            if (safeName.equalsIgnoreCase(icon.name)
+                    && icon.resId != 0
+                    && icon.resId != android.R.drawable.ic_menu_gallery) {
+                return icon.resId;
+            }
+        }
+        return 0;
+    }
+
+    private String normalizeFindMeAppKey(String icon) {
+        String key = normalizeFindMeKey(icon);
+        switch (key) {
+            case "rednote":
+            case "xiaohongshu":
+            case "xhs":
+                return "rednote";
+            case "douyin":
+            case "aweme":
+            case "tiktok":
+                return "douyin";
+            case "qq":
+            case "mobileqq":
+                return "qq";
+            case "wechat":
+            case "weixin":
+                return "wechat";
+            case "alipay":
+            case "zhifubao":
+                return "alipay";
+            default:
+                return "";
+        }
+    }
+
+    private String normalizeFindMeKey(String icon) {
+        return icon == null ? "" : icon.trim().toLowerCase().replace('-', '_');
+    }
+
+    private void setSquareSize(View view, int dimenResId) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) return;
+        int size = view.getResources().getDimensionPixelSize(dimenResId);
+        params.width = size;
+        params.height = size;
+        view.setLayoutParams(params);
+    }
+
     private int resolveDrawableByName(Context ctx, String name) {
         String safeName = name == null ? "" : name.trim();
         if (safeName.isEmpty()) return 0;
         return ctx.getResources().getIdentifier(safeName, "drawable", ctx.getPackageName());
+    }
+
+    private static class FindMeIcon {
+        final int resId;
+        final boolean usesPackIcon;
+
+        FindMeIcon(int resId, boolean usesPackIcon) {
+            this.resId = resId;
+            this.usesPackIcon = usesPackIcon;
+        }
     }
 
     private void t(int id, String value) {

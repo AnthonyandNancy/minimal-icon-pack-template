@@ -131,14 +131,12 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
 
         if (app.isThemed) {
             h.status.setText("已适配");
-            h.status.setBackgroundColor(ContextCompat.getColor(
-                    h.itemView.getContext(), R.color.status_themed_bg));
+            h.status.setBackgroundResource(R.drawable.bg_badge_green);
             h.status.setTextColor(ContextCompat.getColor(
                     h.itemView.getContext(), R.color.status_themed));
         } else {
             h.status.setText("未适配");
-            h.status.setBackgroundColor(ContextCompat.getColor(
-                    h.itemView.getContext(), R.color.status_unthemed_bg));
+            h.status.setBackgroundResource(R.drawable.bg_badge_red);
             h.status.setTextColor(ContextCompat.getColor(
                     h.itemView.getContext(), R.color.status_unthemed));
         }
