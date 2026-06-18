@@ -1,13 +1,18 @@
 package com.template.iconpack.ui.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
@@ -63,7 +68,7 @@ public class DashboardFragment extends Fragment {
         setupHero(iconCount, wpCount, themed);
         buildQuickCards(iconCount, appCount, themed, missing);
         setupOverviewNavigation();
-        buildEntryCards(ctx, iconCount, themed, appCount, wpCount);
+        buildFindMeCards(ctx);
         setupScroll();
 
         return rootView;
@@ -170,46 +175,162 @@ public class DashboardFragment extends Fragment {
         if (subView instanceof TextView) ((TextView) subView).setText(subtitle);
     }
 
-    private void buildEntryCards(Context ctx, int icons, int themed, int apps, int wp) {
+    private void buildFindMeCards(Context ctx) {
         ViewGroup c = rootView.findViewById(R.id.dashboard_entries);
         if (c == null) return;
         c.removeAllViews();
 
-        // Item data: title, subtitle, badgeBg, iconRes, iconTint, navTarget
-        String[][] items = {
-            {"浏览图标", icons + " 个图标", null, null, null, String.valueOf(TARGET_ICONS)},
-            {"申请图标", themed + " / " + apps + " 已适配", null, null, null, String.valueOf(TARGET_REQUEST_ALL)},
-            {"壁纸", wp + " 张云端壁纸", null, null, null, String.valueOf(TARGET_WALLPAPERS)},
-        };
-        int[] badgeBgs = {R.drawable.bg_badge_blue, R.drawable.bg_badge_blue, R.drawable.bg_badge_purple};
-        int[] iconRes = {R.drawable.ic_rate, R.drawable.ic_info, R.drawable.ic_image_mountain};
-        int[] iconTints = {
-                ContextCompat.getColor(ctx, R.color.primary),
-                ContextCompat.getColor(ctx, R.color.primary),
-                ContextCompat.getColor(ctx, R.color.accent)
-        };
+        FindMeItem[] items = loadFindMeItems(ctx);
+        View header = rootView.findViewById(R.id.find_me_section_header);
+        if (items.length == 0) {
+            if (header != null) header.setVisibility(View.GONE);
+            c.setVisibility(View.GONE);
+            return;
+        }
+        if (header != null) header.setVisibility(View.VISIBLE);
+        c.setVisibility(View.VISIBLE);
 
-        for (int i = 0; i < 3; i++) {
+        int primary = ContextCompat.getColor(ctx, R.color.primary);
+        int accent = ContextCompat.getColor(ctx, R.color.accent);
+
+        for (FindMeItem item : items) {
             View v = LayoutInflater.from(ctx).inflate(R.layout.item_dashboard_entry, c, false);
-            // DO NOT override background — XML MaterialCardView handles it
 
             FrameLayout badge = v.findViewById(R.id.entry_badge);
-            if (badge != null) badge.setBackgroundResource(badgeBgs[i]);
+            if (badge != null) badge.setBackgroundResource("image".equals(item.type) ? R.drawable.bg_badge_purple : R.drawable.bg_badge_blue);
 
             ImageView iv = v.findViewById(R.id.entry_icon);
             if (iv != null) {
-                iv.setImageResource(iconRes[i]);
-                iv.setColorFilter(iconTints[i]);
+                iv.setImageResource(resolveFindMeIcon(item.icon));
+                iv.setColorFilter("image".equals(item.type) ? accent : primary);
             }
 
-            ((TextView) v.findViewById(R.id.entry_title)).setText(items[i][0]);
-            ((TextView) v.findViewById(R.id.entry_subtitle)).setText(items[i][1]);
-
-            int target = Integer.parseInt(items[i][5]);
-            v.setOnClickListener(vv -> nav(target));
+            ((TextView) v.findViewById(R.id.entry_title)).setText(item.title);
+            ((TextView) v.findViewById(R.id.entry_subtitle)).setText(item.description);
+            v.setOnClickListener(vv -> handleFindMeClick(ctx, item));
 
             c.addView(v);
         }
+    }
+
+    private FindMeItem[] loadFindMeItems(Context ctx) {
+        try {
+            String[] titles = ctx.getResources().getStringArray(R.array.find_me_titles);
+            String[] descriptions = ctx.getResources().getStringArray(R.array.find_me_descriptions);
+            String[] icons = ctx.getResources().getStringArray(R.array.find_me_icons);
+            String[] types = ctx.getResources().getStringArray(R.array.find_me_types);
+            String[] links = ctx.getResources().getStringArray(R.array.find_me_links);
+            String[] images = ctx.getResources().getStringArray(R.array.find_me_images);
+            int count = minLength(titles, descriptions, icons, types, links, images);
+            FindMeItem[] result = new FindMeItem[count];
+            for (int i = 0; i < count; i++) {
+                result[i] = new FindMeItem(
+                        titles[i],
+                        descriptions[i],
+                        icons[i],
+                        types[i],
+                        links[i],
+                        images[i]
+                );
+            }
+            return result;
+        } catch (Exception ignored) {
+            return new FindMeItem[0];
+        }
+    }
+
+    private int minLength(String[]... arrays) {
+        int min = Integer.MAX_VALUE;
+        for (String[] array : arrays) {
+            if (array == null) return 0;
+            min = Math.min(min, array.length);
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+
+    private void handleFindMeClick(Context ctx, FindMeItem item) {
+        if ("image".equals(item.type)) {
+            int imageRes = resolveDrawableByName(ctx, item.image);
+            if (imageRes == 0) {
+                Toast.makeText(ctx, "图片未配置", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            showFindMeImageDialog(ctx, item.title, imageRes);
+            return;
+        }
+
+        if (item.link == null || item.link.trim().isEmpty()) {
+            Toast.makeText(ctx, "链接未配置", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.link.trim()));
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(ctx, "无法打开链接", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showFindMeImageDialog(Context ctx, String title, int imageRes) {
+        int padding = (int) (24 * ctx.getResources().getDisplayMetrics().density);
+        LinearLayout box = new LinearLayout(ctx);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(padding, padding, padding, 0);
+
+        ImageView image = new ImageView(ctx);
+        image.setImageResource(imageRes);
+        image.setAdjustViewBounds(true);
+        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        box.addView(image, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+
+        TextView hint = new TextView(ctx);
+        hint.setText("长按或截图后扫码支持");
+        hint.setTextColor(ContextCompat.getColor(ctx, R.color.color_text_secondary));
+        hint.setTextSize(14);
+        hint.setGravity(android.view.Gravity.CENTER);
+        LinearLayout.LayoutParams hintParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        hintParams.topMargin = padding / 2;
+        box.addView(hint, hintParams);
+
+        new AlertDialog.Builder(ctx)
+                .setTitle(title)
+                .setView(box)
+                .setPositiveButton("关闭", null)
+                .show();
+    }
+
+    private int resolveFindMeIcon(String icon) {
+        String key = icon == null ? "" : icon.trim().toLowerCase();
+        switch (key) {
+            case "rednote":
+                return R.drawable.ic_rate;
+            case "douyin":
+                return R.drawable.ic_share;
+            case "qq":
+                return R.drawable.ic_info;
+            case "wechat":
+            case "alipay":
+                return R.drawable.ic_donate;
+            case "oppo":
+                return R.drawable.ic_cube_outline;
+            case "website":
+                return R.drawable.ic_more_apps;
+            case "link":
+            default:
+                return R.drawable.ic_arrow_right;
+        }
+    }
+
+    private int resolveDrawableByName(Context ctx, String name) {
+        String safeName = name == null ? "" : name.trim();
+        if (safeName.isEmpty()) return 0;
+        return ctx.getResources().getIdentifier(safeName, "drawable", ctx.getPackageName());
     }
 
     private void t(int id, String value) {
@@ -225,6 +346,24 @@ public class DashboardFragment extends Fragment {
         if (rootView instanceof NestedScrollView && getActivity() instanceof ScrollListener) {
             ((android.view.View) rootView).setOnScrollChangeListener(
                     (v, sx, sy, ox, oy) -> ((ScrollListener) getActivity()).onScroll(sy));
+        }
+    }
+
+    private static class FindMeItem {
+        final String title;
+        final String description;
+        final String icon;
+        final String type;
+        final String link;
+        final String image;
+
+        FindMeItem(String title, String description, String icon, String type, String link, String image) {
+            this.title = title == null ? "" : title;
+            this.description = description == null ? "" : description;
+            this.icon = icon == null ? "link" : icon;
+            this.type = "image".equals(type) ? "image" : "link";
+            this.link = link == null ? "" : link;
+            this.image = image == null ? "" : image;
         }
     }
 }

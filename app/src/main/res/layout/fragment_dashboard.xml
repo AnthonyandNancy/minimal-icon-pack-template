@@ -405,8 +405,9 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ══ SECTION: 快捷入口 ══ -->
+        <!-- ══ SECTION: 找到我 ══ -->
         <LinearLayout
+            android:id="@+id/find_me_section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -421,7 +422,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="快捷入口"
+                android:text="找到我"
                 android:textSize="@dimen/section_title_size"
                 android:textStyle="bold"
                 android:textColor="@color/color_text_primary"
@@ -429,7 +430,6 @@
                 android:includeFontPadding="false"/>
         </LinearLayout>
 
-        <!-- Quick Entry List (dynamically populated by DashboardFragment) -->
         <LinearLayout
             android:id="@+id/dashboard_entries"
             android:layout_width="match_parent"
