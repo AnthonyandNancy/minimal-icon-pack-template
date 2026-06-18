@@ -378,18 +378,47 @@ public class DashboardFragment extends Fragment {
 
     private int resolvePackIconResource(Context ctx, List<DrawableInfo> icons,
                                         Map<String, String> appFilter, String appKey) {
+        if (appFilter != null && !appFilter.isEmpty()) {
+            for (String packageName : getFindMePackages(appKey)) {
+                int resId = resolvePackIconByPackage(ctx, icons, appFilter, packageName);
+                if (resId != 0) return resId;
+            }
+            return 0;
+        }
+
         for (String candidate : getFindMeIconCandidates(appKey)) {
             int resId = resolveDrawableResource(ctx, icons, candidate);
             if (resId != 0) return resId;
         }
 
-        if (appFilter == null || appFilter.isEmpty()) return 0;
+        return 0;
+    }
+
+    private int resolvePackIconByPackage(Context ctx, List<DrawableInfo> icons,
+                                         Map<String, String> appFilter, String packageName) {
         for (Map.Entry<String, String> entry : appFilter.entrySet()) {
-            if (!matchesFindMePackage(appKey, entry.getKey())) continue;
+            if (!matchesPackage(entry.getKey(), packageName)) continue;
             int resId = resolveDrawableResource(ctx, icons, entry.getValue());
             if (resId != 0) return resId;
         }
         return 0;
+    }
+
+    private String[] getFindMePackages(String appKey) {
+        switch (appKey) {
+            case "rednote":
+                return new String[]{"com.xingin.xhs"};
+            case "douyin":
+                return new String[]{"com.ss.android.ugc.aweme", "com.ss.android.ugc.awemf"};
+            case "qq":
+                return new String[]{"com.tencent.mobileqq", "com.tencent.qq", "com.tencent.qqlite"};
+            case "wechat":
+                return new String[]{"com.tencent.mm"};
+            case "alipay":
+                return new String[]{"com.eg.android.alipaygphone", "hk.alipay.wallet"};
+            default:
+                return new String[0];
+        }
     }
 
     private String[] getFindMeIconCandidates(String appKey) {
@@ -409,22 +438,19 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-    private boolean matchesFindMePackage(String appKey, String component) {
-        String value = component == null ? "" : component.toLowerCase();
-        switch (appKey) {
-            case "rednote":
-                return value.contains("com.xingin.xhs");
-            case "douyin":
-                return value.contains("com.ss.android.ugc.aweme");
-            case "qq":
-                return value.contains("com.tencent.mobileqq");
-            case "wechat":
-                return value.contains("com.tencent.mm");
-            case "alipay":
-                return value.contains("com.eg.android.alipaygphone");
-            default:
-                return false;
-        }
+    private boolean matchesPackage(String component, String packageName) {
+        String componentPackage = extractPackageName(component);
+        return !componentPackage.isEmpty()
+                && componentPackage.equals(packageName == null ? "" : packageName.toLowerCase());
+    }
+
+    private String extractPackageName(String component) {
+        String value = component == null ? "" : component.trim().toLowerCase();
+        int start = value.indexOf('{');
+        int slash = value.indexOf('/', start >= 0 ? start : 0);
+        if (start >= 0 && slash > start) return value.substring(start + 1, slash);
+        if (slash > 0) return value.substring(0, slash);
+        return value;
     }
 
     private int resolveDrawableResource(Context ctx, List<DrawableInfo> icons, String name) {
