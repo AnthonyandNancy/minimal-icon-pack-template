@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -114,7 +115,8 @@ public class RequestFragment extends Fragment {
             if (p == null) continue;
             boolean sel = keys[i].equals(f);
             p.setBackgroundResource(sel ? R.drawable.bg_chip_selected : R.drawable.bg_surface_card);
-            ((TextView)p).setTextColor(sel ? 0xFFFFFFFF : 0xFF6B7280);
+            ((TextView)p).setTextColor(ContextCompat.getColor(requireContext(),
+                    sel ? R.color.text_on_primary : R.color.text_secondary));
         }
     }
 

@@ -52,6 +52,7 @@
     <!-- ══ Card tokens ══ -->
     <color name="glass_card">#FFFFFFFF</color>
     <color name="glass_stroke_bright">#FFEEF1F4</color>
+    <color name="glass_overlay">#40FFFFFF</color>
     <color name="card_background">#FFFFFFFF</color>
     <color name="card_background_dark">#FFFBFCFD</color>
     <color name="card_stroke">#FFEEF1F4</color>

@@ -2,6 +2,7 @@ package com.template.iconpack;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity
 
     private void configureSystemBars() {
         Window window = getWindow();
+        boolean nightMode = isNightModeActive();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -122,8 +124,14 @@ public class MainActivity extends AppCompatActivity
 
         WindowInsetsControllerCompat controller =
                 new WindowInsetsControllerCompat(window, window.getDecorView());
-        controller.setAppearanceLightStatusBars(true);
-        controller.setAppearanceLightNavigationBars(true);
+        controller.setAppearanceLightStatusBars(!nightMode);
+        controller.setAppearanceLightNavigationBars(!nightMode);
+    }
+
+    private boolean isNightModeActive() {
+        int mode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        return mode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private void applySystemBarInsets(View headerView) {
