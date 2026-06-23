@@ -23,13 +23,9 @@
         android:layout_marginBottom="8dp" />
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.IconPack.Card.List"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@color/glass_card"
-        app:strokeColor="@color/glass_stroke_bright"
-        app:strokeWidth="0.5dp"
         android:layout_marginBottom="@dimen/card_spacing">
 
         <LinearLayout
@@ -96,13 +92,9 @@
         android:layout_marginBottom="8dp" />
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.IconPack.Card.List"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@color/glass_card"
-        app:strokeColor="@color/glass_stroke_bright"
-        app:strokeWidth="0.5dp"
         android:layout_marginBottom="@dimen/card_spacing">
 
         <LinearLayout

@@ -20,7 +20,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_marginBottom="@dimen/card_spacing"
-        android:background="@drawable/glass_search_bg"
+        android:background="@drawable/bg_global_input"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="10dp"
         android:drawableTint="@color/text_hint"

@@ -88,6 +88,13 @@
 
     <color name="color_divider_soft">#FF273246</color>
 
+    <color name="surface_soft">@color/surface</color>
+    <color name="surface_soft_alt">@color/surface_dark</color>
+    <color name="surface_soft_tint">#FF111722</color>
+    <color name="surface_soft_border">@color/outline_variant</color>
+    <color name="surface_soft_divider">@color/outline_variant</color>
+    <color name="surface_soft_ripple">#267DA2FF</color>
+
     <color name="color_primary_clean">@color/primary</color>
     <color name="color_primary_clean_dark">@color/primary_dark</color>
     <color name="color_primary_container">@color/primary_light</color>

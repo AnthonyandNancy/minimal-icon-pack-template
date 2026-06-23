@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/glass_card_stat"
-    android:elevation="2dp"
+    android:background="@drawable/bg_global_card"
+    android:elevation="0dp"
     android:layout_marginTop="12dp" android:layout_marginBottom="8dp"
     android:outlineProvider="background">
 
@@ -51,6 +51,6 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent" android:layout_height="4dp"
             android:layout_marginTop="8dp"
-            android:progressDrawable="@drawable/glass_progress" />
+            android:progressDrawable="@drawable/bg_global_progress" />
     </LinearLayout>
 </FrameLayout>

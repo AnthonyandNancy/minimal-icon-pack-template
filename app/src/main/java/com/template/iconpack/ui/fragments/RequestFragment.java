@@ -138,7 +138,7 @@ public class RequestFragment extends Fragment {
             View p = pills[i];
             if (p == null) continue;
             boolean sel = keys[i].equals(f);
-            p.setBackgroundResource(sel ? R.drawable.bg_chip_selected : R.drawable.bg_surface_card);
+        p.setBackgroundResource(sel ? R.drawable.bg_chip_selected : R.drawable.bg_global_surface_button);
             ((TextView)p).setTextColor(ContextCompat.getColor(requireContext(),
                     sel ? R.color.text_on_primary : R.color.text_secondary));
         }

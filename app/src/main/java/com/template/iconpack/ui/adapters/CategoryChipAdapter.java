@@ -113,7 +113,7 @@ public class CategoryChipAdapter extends RecyclerView.Adapter<CategoryChipAdapte
             h.text.setTextColor(ContextCompat.getColor(
                     h.itemView.getContext(), R.color.text_on_primary));
         } else {
-            h.text.setBackgroundResource(R.drawable.bg_surface_card);
+            h.text.setBackgroundResource(R.drawable.bg_global_surface_button);
             h.text.setTextColor(ContextCompat.getColor(
                     h.itemView.getContext(), R.color.text_secondary));
         }

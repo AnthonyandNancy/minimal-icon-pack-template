@@ -25,20 +25,12 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="@dimen/header_to_hero">
 
-            <FrameLayout
+            <ImageView
+                android:id="@+id/hero_icon"
                 android:layout_width="@dimen/header_logo_size"
                 android:layout_height="@dimen/header_logo_size"
-                android:background="@drawable/bg_card_clean"
-                android:elevation="2dp">
-
-                <ImageView
-                    android:id="@+id/hero_icon"
-                    android:layout_width="@dimen/header_logo_inner_icon"
-                    android:layout_height="@dimen/header_logo_inner_icon"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher"
-                    android:scaleType="centerCrop"/>
-            </FrameLayout>
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="fitCenter" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -73,7 +65,7 @@
                 android:layout_width="@dimen/header_menu_size"
                 android:layout_height="@dimen/header_menu_size"
                 android:background="@drawable/bg_menu_circle_clean"
-                android:elevation="2dp"
+                android:elevation="0dp"
                 android:src="@drawable/ic_menu_glass"
                 android:tint="@color/color_primary_clean"
                 android:scaleType="centerInside"/>
@@ -81,13 +73,9 @@
 
         <!-- ══ HERO CARD ══ -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.IconPack.Card.Hero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/radius_hero"
-            app:cardElevation="2dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/color_card_stroke_light"
-            app:cardBackgroundColor="@color/color_card_surface"
             android:layout_marginBottom="@dimen/hero_to_section">
 
             <LinearLayout
@@ -257,12 +245,10 @@
                 android:layout_marginBottom="@dimen/stat_card_gap">
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_icons"
+                    style="@style/Widget.IconPack.Card"
                     android:layout_width="0dp" android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/stat_card_min_height"
-                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
-                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
-                    app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginEnd="7dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:minHeight="@dimen/stat_card_min_height"
@@ -292,12 +278,10 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_apps"
+                    style="@style/Widget.IconPack.Card"
                     android:layout_width="0dp" android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/stat_card_min_height"
-                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
-                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
-                    app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginStart="7dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:minHeight="@dimen/stat_card_min_height"
@@ -334,12 +318,10 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_themed"
+                    style="@style/Widget.IconPack.Card"
                     android:layout_width="0dp" android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/stat_card_min_height"
-                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
-                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
-                    app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginEnd="7dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:minHeight="@dimen/stat_card_min_height"
@@ -369,12 +351,10 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView android:id="@+id/stat_card_missing"
+                    style="@style/Widget.IconPack.Card"
                     android:layout_width="0dp" android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/stat_card_min_height"
-                    app:cardCornerRadius="@dimen/radius_stat_card" app:cardElevation="1dp"
-                    app:strokeWidth="1dp" app:strokeColor="@color/color_card_stroke_light"
-                    app:cardBackgroundColor="@color/color_card_surface"
                     android:layout_marginStart="7dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:minHeight="@dimen/stat_card_min_height"

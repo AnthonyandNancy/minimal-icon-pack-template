@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.IconPack.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="android:elevation">0dp</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="cardBackgroundColor">@color/surface_soft</item>
+        <item name="cardCornerRadius">@dimen/surface_radius</item>
+        <item name="cardElevation">@dimen/surface_elevation</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="strokeColor">@color/surface_soft_border</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="rippleColor">@color/surface_soft_ripple</item>
+    </style>
+
+    <style name="Widget.IconPack.Card.Hero" parent="Widget.IconPack.Card">
+        <item name="cardCornerRadius">@dimen/surface_radius_large</item>
+        <item name="cardElevation">@dimen/surface_elevation</item>
+    </style>
+
+    <style name="Widget.IconPack.Card.List" parent="Widget.IconPack.Card">
+        <item name="cardCornerRadius">@dimen/surface_radius_compact</item>
+        <item name="cardElevation">@dimen/surface_elevation_flat</item>
+    </style>
+
+    <style name="Widget.IconPack.Card.Dialog" parent="Widget.IconPack.Card">
+        <item name="cardCornerRadius">@dimen/surface_radius_large</item>
+        <item name="cardElevation">@dimen/surface_elevation_dialog</item>
+    </style>
+
+    <style name="Widget.IconPack.Input" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/bg_global_input</item>
+    </style>
+
+    <style name="ShapeAppearance.IconPack.Dialog" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/surface_radius_large</item>
+    </style>
+
+    <style name="ThemeOverlay.IconPack.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">@color/surface_soft</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.IconPack.Dialog</item>
+        <item name="android:backgroundDimAmount">0.28</item>
+    </style>
+</resources>

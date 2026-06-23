@@ -7,15 +7,11 @@
     android:padding="28dp">
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.IconPack.Card.Dialog"
         android:id="@+id/icon_preview_panel"
         android:layout_width="264dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:cardBackgroundColor="@color/glass_card"
-        app:cardCornerRadius="28dp"
-        app:cardElevation="14dp"
-        app:strokeColor="@color/glass_stroke_bright"
-        app:strokeWidth="1dp">
+        android:layout_gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"

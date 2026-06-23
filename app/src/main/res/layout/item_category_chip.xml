@@ -16,7 +16,7 @@
         android:textSize="12sp"
         android:maxLines="1"
         android:singleLine="true"
-        android:background="@drawable/bg_surface_card"
+        android:background="@drawable/bg_global_surface_button"
         android:clickable="false"
         android:duplicateParentState="true"
         android:focusable="false"/>

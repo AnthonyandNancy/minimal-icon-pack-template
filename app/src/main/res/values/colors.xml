@@ -7,8 +7,8 @@
     <color name="accent">#FF7089B5</color>
 
     <!-- ══ Background ══ -->
-    <color name="background">#FFF8F9FB</color>
-    <color name="background_dark">#FFF1F6FA</color>
+    <color name="background">#FFF0F4FB</color>
+    <color name="background_dark">#FFF0F4FB</color>
     <color name="surface">#FFFFFFFF</color>
     <color name="surface_dark">#FFFBFCFD</color>
 
@@ -28,9 +28,9 @@
     <color name="status_selected_bg">#FFEEF4FF</color>
 
     <!-- ══ Outlines & dividers ══ -->
-    <color name="outline">#FFEEF1F4</color>
+    <color name="outline">#FFEEF1F6</color>
     <color name="outline_variant">#FFF4F6F8</color>
-    <color name="divider">#FFEEF1F4</color>
+    <color name="divider">#FFEEF1F6</color>
 
     <!-- ══ Drawer ══ -->
     <color name="drawer_text">#FF171A20</color>
@@ -51,15 +51,15 @@
 
     <!-- ══ Card tokens ══ -->
     <color name="glass_card">#FFFFFFFF</color>
-    <color name="glass_stroke_bright">#FFEEF1F4</color>
+    <color name="glass_stroke_bright">#FFEEF1F6</color>
     <color name="glass_overlay">#40FFFFFF</color>
     <color name="card_background">#FFFFFFFF</color>
     <color name="card_background_dark">#FFFBFCFD</color>
-    <color name="card_stroke">#FFEEF1F4</color>
+    <color name="card_stroke">#FFEEF1F6</color>
 
     <!-- ══ Hero ══ -->
     <color name="hero_start">#FFEEF4FF</color>
-    <color name="hero_end">#FFF8F9FB</color>
+    <color name="hero_end">#FFF0F4FB</color>
 
     <!-- ══ Icon backgrounds ══ -->
     <color name="icon_bg_blue">#FFEEF4FF</color>
@@ -69,14 +69,14 @@
     <color name="icon_bg_gray">#FFF3F5F7</color>
 
     <!-- ══ BG mist ══ -->
-    <color name="bg_mist_start">#FFFDFCF8</color>
-    <color name="bg_mist_mid">#FFF8F9FB</color>
-    <color name="bg_mist_end">#FFF1F6FA</color>
+    <color name="bg_mist_start">#FFF0F4FB</color>
+    <color name="bg_mist_mid">#FFF0F4FB</color>
+    <color name="bg_mist_end">#FFF0F4FB</color>
 
     <!-- ══ Card surface ══ -->
     <color name="color_card_surface">#FFFFFFFF</color>
     <color name="color_card_surface_alt">#FFFBFCFD</color>
-    <color name="color_card_stroke">#FFEEF1F4</color>
+    <color name="color_card_stroke">#FFEEF1F6</color>
     <color name="color_card_stroke_light">#FFF4F6F8</color>
 
     <!-- ══ Status new ══ -->
@@ -86,7 +86,14 @@
     <color name="color_warning_container">#FFFFF0F2</color>
     <color name="color_neutral_number">#FF20242C</color>
 
-    <color name="color_divider_soft">#FFE6EAF0</color>
+    <color name="color_divider_soft">#FFEEF1F6</color>
+
+    <color name="surface_soft">#FFFFFFFF</color>
+    <color name="surface_soft_alt">#FFFBFCFD</color>
+    <color name="surface_soft_tint">#FFF7F9FC</color>
+    <color name="surface_soft_border">#FFEEF1F6</color>
+    <color name="surface_soft_divider">#FFEEF1F6</color>
+    <color name="surface_soft_ripple">#1A4F7CFF</color>
 
     <color name="color_primary_clean">@color/primary</color>
     <color name="color_primary_clean_dark">@color/primary_dark</color>

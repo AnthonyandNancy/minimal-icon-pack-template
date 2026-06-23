@@ -51,13 +51,9 @@
                 android:layout_marginBottom="24dp"/>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.IconPack.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/surface"
-                app:strokeColor="@color/outline_variant"
-                app:strokeWidth="1dp"
                 android:layout_marginBottom="12dp">
 
                 <LinearLayout
@@ -86,11 +82,9 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.IconPack.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp" app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/surface"
-                app:strokeColor="@color/outline_variant" app:strokeWidth="1dp"
                 android:layout_marginBottom="12dp">
 
                 <TextView
@@ -104,11 +98,9 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.IconPack.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp" app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/surface"
-                app:strokeColor="@color/outline_variant" app:strokeWidth="1dp"
                 android:layout_marginBottom="20dp">
 
                 <TextView

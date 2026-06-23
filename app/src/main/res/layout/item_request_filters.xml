@@ -9,16 +9,16 @@
     <TextView android:id="@+id/filter_all"
         android:layout_width="0dp" android:layout_height="38dp" android:layout_weight="1"
         android:gravity="center" android:text="全部" android:textSize="11sp"
-        android:textColor="@color/text_on_primary" android:background="@drawable/glass_chip_selected"
+        android:textColor="@color/text_on_primary" android:background="@drawable/bg_chip_selected"
         android:layout_marginEnd="5dp" android:clickable="true" android:focusable="true" />
     <TextView android:id="@+id/filter_themed"
         android:layout_width="0dp" android:layout_height="38dp" android:layout_weight="1"
         android:gravity="center" android:text="已适配" android:textSize="11sp"
-        android:textColor="@color/text_secondary" android:background="@drawable/glass_chip_unselected"
+        android:textColor="@color/text_secondary" android:background="@drawable/bg_global_surface_button"
         android:layout_marginEnd="5dp" android:clickable="true" android:focusable="true" />
     <TextView android:id="@+id/filter_unthemed"
         android:layout_width="0dp" android:layout_height="38dp" android:layout_weight="1"
         android:gravity="center" android:text="未适配" android:textSize="11sp"
-        android:textColor="@color/text_secondary" android:background="@drawable/glass_chip_unselected"
+        android:textColor="@color/text_secondary" android:background="@drawable/bg_global_surface_button"
         android:layout_marginEnd="5dp"         android:clickable="true" android:focusable="true" />
 </LinearLayout>

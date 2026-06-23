@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item><shape><solid android:color="@color/drawer_background"/></shape></item>
-    <item><shape><gradient android:startColor="@color/glass_overlay" android:endColor="@android:color/transparent" android:angle="135"/></shape></item>
-    <item><shape><stroke android:width="0.5dp" android:color="@color/glass_stroke_bright"/><solid android:color="@android:color/transparent"/></shape></item>
-</layer-list>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/drawer_background" />
+</shape>

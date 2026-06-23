@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.IconPack.Card.Dialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp"
-    app:cardBackgroundColor="@color/glass_card"
-    app:cardCornerRadius="28dp"
-    app:cardElevation="8dp"
-    app:strokeColor="@color/glass_stroke_bright"
-    app:strokeWidth="1dp">
+    android:layout_margin="20dp">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -27,7 +23,7 @@
             android:layout_height="44dp"
             android:layout_gravity="top|end"
             android:layout_margin="14dp"
-            android:background="@drawable/glass_btn_bg"
+            android:background="@drawable/bg_global_surface_button"
             android:padding="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_close"
