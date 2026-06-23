@@ -1,13 +1,16 @@
 package com.template.iconpack.ui.fragments;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -303,37 +306,39 @@ public class DashboardFragment extends Fragment {
     }
 
     private void showFindMeImageDialog(Context ctx, String title, int imageRes) {
-        int padding = (int) (24 * ctx.getResources().getDisplayMetrics().density);
-        LinearLayout box = new LinearLayout(ctx);
-        box.setOrientation(LinearLayout.VERTICAL);
-        box.setPadding(padding, padding, padding, 0);
+        Dialog dialog = new Dialog(ctx);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        ImageView image = new ImageView(ctx);
-        image.setImageResource(imageRes);
-        image.setAdjustViewBounds(true);
-        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        box.addView(image, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
+        View content = LayoutInflater.from(ctx)
+                .inflate(R.layout.dialog_find_me_image, null, false);
 
-        TextView hint = new TextView(ctx);
-        hint.setText("长按或截图后扫码支持");
-        hint.setTextColor(ContextCompat.getColor(ctx, R.color.color_text_secondary));
-        hint.setTextSize(14);
-        hint.setGravity(android.view.Gravity.CENTER);
-        LinearLayout.LayoutParams hintParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        hintParams.topMargin = padding / 2;
-        box.addView(hint, hintParams);
+        TextView titleView = content.findViewById(R.id.find_me_dialog_title);
+        if (titleView != null) titleView.setText(title);
 
-        new AlertDialog.Builder(ctx)
-                .setTitle(title)
-                .setView(box)
-                .setPositiveButton("关闭", null)
-                .show();
+        ImageView image = content.findViewById(R.id.find_me_dialog_image);
+        if (image != null) {
+            image.setImageResource(imageRes);
+            image.setContentDescription(title);
+        }
+
+        View close = content.findViewById(R.id.find_me_dialog_close);
+        if (close != null) close.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.setContentView(content);
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            int width = Math.min(
+                    ctx.getResources().getDisplayMetrics().widthPixels - dpToPx(ctx, 80),
+                    dpToPx(ctx, 280)
+            );
+            window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+    }
+
+    private int dpToPx(Context ctx, int dp) {
+        return (int) (dp * ctx.getResources().getDisplayMetrics().density + 0.5f);
     }
 
     private FindMeIcon resolveFindMeIcon(String icon, Map<String, Integer> packIcons) {
