@@ -122,11 +122,14 @@
                     android:layout_marginTop="24dp">
 
                     <LinearLayout
+                        android:id="@+id/hero_stat_icons"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
                         <TextView
                             android:id="@+id/hero_icon_count"
                             android:layout_width="wrap_content"
@@ -153,11 +156,14 @@
                         android:layout_marginEnd="8dp"/>
 
                     <LinearLayout
+                        android:id="@+id/hero_stat_wallpapers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
                         <TextView
                             android:id="@+id/hero_wallpaper_count"
                             android:layout_width="wrap_content"
@@ -184,11 +190,14 @@
                         android:layout_marginEnd="8dp"/>
 
                     <LinearLayout
+                        android:id="@+id/hero_stat_themed"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
                         <TextView
                             android:id="@+id/hero_themed_count"
                             android:layout_width="wrap_content"
@@ -396,8 +405,9 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ══ SECTION: 快捷入口 ══ -->
+        <!-- ══ SECTION: 找到我 ══ -->
         <LinearLayout
+            android:id="@+id/find_me_section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -412,7 +422,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="快捷入口"
+                android:text="找到我"
                 android:textSize="@dimen/section_title_size"
                 android:textStyle="bold"
                 android:textColor="@color/color_text_primary"
@@ -420,7 +430,6 @@
                 android:includeFontPadding="false"/>
         </LinearLayout>
 
-        <!-- Quick Entry List (dynamically populated by DashboardFragment) -->
         <LinearLayout
             android:id="@+id/dashboard_entries"
             android:layout_width="match_parent"

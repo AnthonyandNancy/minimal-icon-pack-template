@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary -->
+    <color name="primary">#FF7DA2FF</color>
+    <color name="primary_dark">#FF5E86F7</color>
+    <color name="primary_light">#FF162A55</color>
+    <color name="accent">#FFA8B8D8</color>
+
+    <!-- Background -->
+    <color name="background">#FF0D111A</color>
+    <color name="background_dark">#FF080B12</color>
+    <color name="surface">#FF151A24</color>
+    <color name="surface_dark">#FF1B2230</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFF4F7FB</color>
+    <color name="text_secondary">#FFC0C7D2</color>
+    <color name="text_hint">#FF8B94A3</color>
+    <color name="text_on_primary">#FFFFFFFF</color>
+
+    <!-- Status colors -->
+    <color name="status_themed">#FF78D99B</color>
+    <color name="status_themed_bg">#FF153524</color>
+    <color name="status_unthemed">#FFFF8A95</color>
+    <color name="status_unthemed_bg">#FF3A1C24</color>
+    <color name="error_red">#FFFF7A86</color>
+    <color name="status_selected">#FF7DA2FF</color>
+    <color name="status_selected_bg">#FF162A55</color>
+
+    <!-- Outlines and dividers -->
+    <color name="outline">#FF263041</color>
+    <color name="outline_variant">#FF1F2837</color>
+    <color name="divider">#FF253044</color>
+
+    <!-- Drawer -->
+    <color name="drawer_text">#FFF4F7FB</color>
+    <color name="drawer_text_secondary">#FFC0C7D2</color>
+    <color name="drawer_background">#FF111722</color>
+    <color name="drawer_item_selected">#FF182A4F</color>
+    <color name="drawer_item_ripple">#332B4A7D</color>
+
+    <!-- Chip -->
+    <color name="chip_bg">#FF162A55</color>
+    <color name="chip_text">#FF7DA2FF</color>
+
+    <!-- Misc -->
+    <color name="container_blue">#334F7CFF</color>
+    <color name="container_purple">#337A66E8</color>
+    <color name="progress_bg">#FF263041</color>
+    <color name="progress_fill">#FF7DA2FF</color>
+
+    <!-- Card tokens -->
+    <color name="glass_card">#FF151A24</color>
+    <color name="glass_stroke_bright">#FF273246</color>
+    <color name="glass_overlay">#1FFFFFFF</color>
+    <color name="card_background">#FF151A24</color>
+    <color name="card_background_dark">#FF1B2230</color>
+    <color name="card_stroke">#FF273246</color>
+
+    <!-- Hero -->
+    <color name="hero_start">#FF162A55</color>
+    <color name="hero_end">#FF0D111A</color>
+
+    <!-- Icon backgrounds -->
+    <color name="icon_bg_blue">#FF172A52</color>
+    <color name="icon_bg_green">#FF163423</color>
+    <color name="icon_bg_orange">#FF392B17</color>
+    <color name="icon_bg_red">#FF3A1C24</color>
+    <color name="icon_bg_gray">#FF202838</color>
+
+    <!-- BG mist -->
+    <color name="bg_mist_start">#FF0B0F17</color>
+    <color name="bg_mist_mid">#FF0D111A</color>
+    <color name="bg_mist_end">#FF111827</color>
+
+    <!-- Card surface -->
+    <color name="color_card_surface">#FF151A24</color>
+    <color name="color_card_surface_alt">#FF1B2230</color>
+    <color name="color_card_stroke">#FF273246</color>
+    <color name="color_card_stroke_light">#FF1F2837</color>
+
+    <!-- Status new -->
+    <color name="color_success">#FF78D99B</color>
+    <color name="color_success_container">#FF153524</color>
+    <color name="color_warning">#FFFF8A95</color>
+    <color name="color_warning_container">#FF3A1C24</color>
+    <color name="color_neutral_number">#FFF4F7FB</color>
+
+    <color name="color_divider_soft">#FF273246</color>
+
+    <color name="color_primary_clean">@color/primary</color>
+    <color name="color_primary_clean_dark">@color/primary_dark</color>
+    <color name="color_primary_container">@color/primary_light</color>
+    <color name="color_text_primary">@color/text_primary</color>
+    <color name="color_text_secondary">@color/text_secondary</color>
+    <color name="color_text_tertiary">@color/text_hint</color>
+
+    <color name="color_icon_bg_blue">@color/icon_bg_blue</color>
+    <color name="color_icon_bg_green">@color/icon_bg_green</color>
+    <color name="color_icon_bg_orange">@color/icon_bg_orange</color>
+    <color name="color_icon_bg_red">@color/icon_bg_red</color>
+    <color name="color_icon_bg_gray">@color/icon_bg_gray</color>
+</resources>

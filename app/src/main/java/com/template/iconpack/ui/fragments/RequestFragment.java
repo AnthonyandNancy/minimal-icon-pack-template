@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,15 +33,35 @@ import java.util.Map;
 
 public class RequestFragment extends Fragment {
 
+    public static final String FILTER_ALL = "all";
+    public static final String FILTER_THEMED = "themed";
+    public static final String FILTER_UNTHEMED = "unthemed";
+    private static final String ARG_INITIAL_FILTER = "initial_filter";
+
     private RecyclerView requestList;
     private View bottomBar, btnSelectAll, btnExport, btnShare, loadingOverlay;
     private TextView selectedCountText;
     private RequestAppAdapter adapter;
     private List<AppInfo> allApps;
-    private String currentFilter = "all";
+    private String currentFilter = FILTER_ALL;
     private boolean emailInProgress = false;
 
     private View pillAll, pillThemed, pillUnthemed;
+
+    public static RequestFragment newInstance(String initialFilter) {
+        RequestFragment fragment = new RequestFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_INITIAL_FILTER, normalizeFilter(initialFilter));
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public void setInitialFilter(String filter) {
+        currentFilter = normalizeFilter(filter);
+        if (adapter != null) {
+            applyFilter(currentFilter);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,9 +78,9 @@ public class RequestFragment extends Fragment {
         pillThemed = view.findViewById(R.id.filter_themed);
         pillUnthemed = view.findViewById(R.id.filter_unthemed);
 
-        pillAll.setOnClickListener(v -> applyFilter("all"));
-        pillThemed.setOnClickListener(v -> applyFilter("themed"));
-        pillUnthemed.setOnClickListener(v -> applyFilter("unthemed"));
+        pillAll.setOnClickListener(v -> applyFilter(FILTER_ALL));
+        pillThemed.setOnClickListener(v -> applyFilter(FILTER_THEMED));
+        pillUnthemed.setOnClickListener(v -> applyFilter(FILTER_UNTHEMED));
 
         bottomBar = view.findViewById(R.id.request_bottom_bar);
         btnSelectAll = view.findViewById(R.id.btn_select_all);
@@ -95,26 +116,31 @@ public class RequestFragment extends Fragment {
         btnShare.setOnClickListener(v -> sendEmail());
 
         updateBottomBar();
-        updatePillState("all");
+        Bundle args = getArguments();
+        if (args != null) {
+            currentFilter = normalizeFilter(args.getString(ARG_INITIAL_FILTER));
+        }
+        applyFilter(currentFilter);
         return view;
     }
 
     private void applyFilter(String f) {
-        currentFilter = f;
-        adapter.setFilter(f);
-        updatePillState(f);
+        currentFilter = normalizeFilter(f);
+        adapter.setFilter(currentFilter);
+        updatePillState(currentFilter);
         updateBottomBar();
     }
 
     private void updatePillState(String f) {
         View[] pills = {pillAll, pillThemed, pillUnthemed};
-        String[] keys = {"all","themed","unthemed"};
+        String[] keys = {FILTER_ALL, FILTER_THEMED, FILTER_UNTHEMED};
         for (int i = 0; i < pills.length; i++) {
             View p = pills[i];
             if (p == null) continue;
             boolean sel = keys[i].equals(f);
             p.setBackgroundResource(sel ? R.drawable.bg_chip_selected : R.drawable.bg_surface_card);
-            ((TextView)p).setTextColor(sel ? 0xFFFFFFFF : 0xFF6B7280);
+            ((TextView)p).setTextColor(ContextCompat.getColor(requireContext(),
+                    sel ? R.color.text_on_primary : R.color.text_secondary));
         }
     }
 
@@ -439,5 +465,10 @@ public class RequestFragment extends Fragment {
 
     private String safeText(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private static String normalizeFilter(String filter) {
+        if (FILTER_THEMED.equals(filter) || FILTER_UNTHEMED.equals(filter)) return filter;
+        return FILTER_ALL;
     }
 }

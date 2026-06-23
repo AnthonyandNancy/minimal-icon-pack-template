@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="find_me_titles" />
+    <string-array name="find_me_descriptions" />
+    <string-array name="find_me_icons" />
+    <string-array name="find_me_types" />
+    <string-array name="find_me_links" />
+    <string-array name="find_me_images" />
+</resources>

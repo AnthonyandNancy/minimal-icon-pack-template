@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
@@ -130,12 +131,14 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
 
         if (app.isThemed) {
             h.status.setText("已适配");
-            h.status.setBackgroundColor(0xFFEAF7EF);
-            h.status.setTextColor(0xFF4CAF73);
+            h.status.setBackgroundResource(R.drawable.bg_badge_green);
+            h.status.setTextColor(ContextCompat.getColor(
+                    h.itemView.getContext(), R.color.status_themed));
         } else {
             h.status.setText("未适配");
-            h.status.setBackgroundColor(0xFFFFF0F2);
-            h.status.setTextColor(0xFFE36B75);
+            h.status.setBackgroundResource(R.drawable.bg_badge_red);
+            h.status.setTextColor(ContextCompat.getColor(
+                    h.itemView.getContext(), R.color.status_unthemed));
         }
 
         // Row click toggles selection

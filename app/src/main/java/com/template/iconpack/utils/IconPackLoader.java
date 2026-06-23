@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.XmlResourceParser;
 
 import com.template.iconpack.models.DrawableInfo;
+import com.template.iconpack.models.ChangelogEntry;
 import com.template.iconpack.models.IconCategoryData;
 import com.template.iconpack.models.IconCategoryDef;
 import com.template.iconpack.models.IconCategoryEntry;
@@ -13,6 +14,7 @@ import com.template.iconpack.models.WallpaperInfo;
 import org.xmlpull.v1.XmlPullParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -158,6 +160,68 @@ public class IconPackLoader {
             list.add(new PresetInfo("light_bg", "浅色背景", "circle", "light"));
         }
         return list;
+    }
+
+    /**
+     * Parse assets/changelog.json.
+     * Supports both {"items": []} and a direct [] root.
+     */
+    public static List<ChangelogEntry> loadChangelog(Context context) {
+        List<ChangelogEntry> list = new ArrayList<>();
+        try {
+            String json = readAssetText(context, "changelog.json").trim();
+            if (json.isEmpty()) return list;
+
+            Object root = new JSONTokener(json).nextValue();
+            JSONArray items = null;
+            if (root instanceof JSONObject) {
+                items = ((JSONObject) root).optJSONArray("items");
+            } else if (root instanceof JSONArray) {
+                items = (JSONArray) root;
+            }
+            if (items == null) return list;
+
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject obj = items.optJSONObject(i);
+                if (obj == null) continue;
+                list.add(parseChangelogEntry(obj));
+            }
+            Collections.sort(list, (a, b) -> Integer.compare(b.versionCode, a.versionCode));
+        } catch (Exception e) {
+            list.clear();
+        }
+        return list;
+    }
+
+    private static ChangelogEntry parseChangelogEntry(JSONObject obj) {
+        List<String> icons = new ArrayList<>();
+        JSONArray iconArray = obj.optJSONArray("icons");
+        if (iconArray != null) {
+            for (int i = 0; i < iconArray.length(); i++) {
+                String icon = iconArray.optString(i, "");
+                if (!icon.isEmpty()) icons.add(icon);
+            }
+        }
+        return new ChangelogEntry(
+                obj.optString("versionName", ""),
+                obj.optInt("versionCode", 0),
+                obj.optString("date", ""),
+                obj.optString("title", ""),
+                obj.optString("content", ""),
+                icons
+        );
+    }
+
+    private static String readAssetText(Context context, String name) throws Exception {
+        InputStream is = context.getAssets().open(name);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append('\n');
+        }
+        reader.close();
+        return sb.toString();
     }
 
     /**

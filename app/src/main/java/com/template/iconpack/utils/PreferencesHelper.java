@@ -12,6 +12,7 @@ public class PreferencesHelper {
     private static final String KEY_DARK_MODE = "dark_mode";
     private static final String KEY_SHOW_ICON_NAME = "show_icon_name";
     private static final String KEY_ICON_COLUMNS = "icon_columns";
+    private static final String KEY_LAST_SEEN_CHANGELOG_VERSION_CODE = "last_seen_changelog_version_code";
 
     private final SharedPreferences prefs;
 
@@ -41,6 +42,14 @@ public class PreferencesHelper {
 
     public void setIconColumns(int columns) {
         prefs.edit().putInt(KEY_ICON_COLUMNS, columns).apply();
+    }
+
+    public int getLastSeenChangelogVersionCode() {
+        return prefs.getInt(KEY_LAST_SEEN_CHANGELOG_VERSION_CODE, 0);
+    }
+
+    public void setLastSeenChangelogVersionCode(int versionCode) {
+        prefs.edit().putInt(KEY_LAST_SEEN_CHANGELOG_VERSION_CODE, versionCode).apply();
     }
 
     public void clearCache() {

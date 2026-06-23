@@ -11,10 +11,10 @@
         android:layout_width="264dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:cardBackgroundColor="#F7FFFFFF"
+        app:cardBackgroundColor="@color/glass_card"
         app:cardCornerRadius="28dp"
         app:cardElevation="14dp"
-        app:strokeColor="#E8EEF4"
+        app:strokeColor="@color/glass_stroke_bright"
         app:strokeWidth="1dp">
 
         <LinearLayout

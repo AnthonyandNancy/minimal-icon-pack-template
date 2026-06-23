@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.template.iconpack.R;
@@ -109,10 +110,12 @@ public class CategoryChipAdapter extends RecyclerView.Adapter<CategoryChipAdapte
         h.itemView.setSelected(sel);
         if (sel) {
             h.text.setBackground(makeSelectedBackground(cat.color));
-            h.text.setTextColor(0xFFFFFFFF);
+            h.text.setTextColor(ContextCompat.getColor(
+                    h.itemView.getContext(), R.color.text_on_primary));
         } else {
             h.text.setBackgroundResource(R.drawable.bg_surface_card);
-            h.text.setTextColor(0xFF6B7280);
+            h.text.setTextColor(ContextCompat.getColor(
+                    h.itemView.getContext(), R.color.text_secondary));
         }
         View.OnClickListener clickListener = v -> handleChipClick(h);
         h.itemView.setOnClickListener(clickListener);

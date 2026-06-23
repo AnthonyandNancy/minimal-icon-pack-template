@@ -14,6 +14,7 @@
     <string name="menu_request">申请图标</string>
     <string name="menu_wallpapers">壁纸</string>
     <string name="menu_presets">预设</string>
+    <string name="menu_changelog">更新日志</string>
     <string name="menu_settings">设置</string>
     <string name="menu_faq">常见问题</string>
     <string name="menu_about">关于</string>
@@ -69,6 +70,12 @@
     <string name="wallpapers_empty">暂无壁纸</string>
     <string name="wallpapers_apply">设置壁纸</string>
     <string name="wallpapers_download">下载</string>
+
+    <!-- Changelog -->
+    <string name="changelog_empty">暂无更新日志</string>
+    <string name="changelog_dialog_title">本次更新</string>
+    <string name="changelog_dialog_ok">知道了</string>
+    <string name="changelog_dialog_view_all">查看全部</string>
 
     <!-- Presets -->
     <string name="presets_title">预设</string>
