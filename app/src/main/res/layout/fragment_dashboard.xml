@@ -72,139 +72,160 @@
         </LinearLayout>
 
         <!-- ══ HERO CARD ══ -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.IconPack.Card.Hero"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/hero_to_section">
+            android:layout_height="@dimen/hero_background_height"
+            android:layout_marginBottom="@dimen/hero_to_section"
+            android:background="@drawable/bg_hero_clip"
+            android:clipToOutline="true"
+            android:elevation="0dp"
+            android:stateListAnimator="@null">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/hero_padding">
+                android:layout_height="match_parent">
 
-                <TextView
+                <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="让你的主屏幕焕然一新"
-                    android:textColor="@color/color_text_primary"
-                    android:textSize="@dimen/hero_title_size"
-                    android:textStyle="bold"
-                    android:includeFontPadding="false"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="精美图标包，适配主流启动器"
-                    android:textColor="@color/color_text_secondary"
-                    android:textSize="@dimen/hero_subtitle_size"
-                    android:layout_marginTop="7dp"
-                    android:includeFontPadding="false"/>
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/hero_panel_art"
+                    android:scaleType="fitXY" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginTop="24dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/hero_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="让你的主屏幕焕然一新"
+                        android:textColor="@color/color_text_primary"
+                        android:textSize="@dimen/hero_title_size"
+                        android:textStyle="bold"
+                        android:includeFontPadding="false"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="精美图标包，适配主流启动器"
+                        android:textColor="@color/color_text_secondary"
+                        android:textSize="@dimen/hero_subtitle_size"
+                        android:layout_marginTop="7dp"
+                        android:includeFontPadding="false"/>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
                     <LinearLayout
-                        android:id="@+id/hero_stat_icons"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:orientation="horizontal"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <TextView
-                            android:id="@+id/hero_icon_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/hero_number_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/color_primary_clean"
-                            android:text="0"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="图标"
-                            android:textSize="@dimen/hero_label_size"
-                            android:textColor="@color/color_text_secondary"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
+                        android:layout_marginTop="18dp">
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="@dimen/hero_divider_height"
-                        android:background="@color/color_divider_soft"
-                        android:alpha="0.6"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"/>
+                        <LinearLayout
+                            android:id="@+id/hero_stat_icons"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <TextView
+                                android:id="@+id/hero_icon_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/hero_number_size"
+                                android:textStyle="bold"
+                                android:textColor="@color/color_primary_clean"
+                                android:text="0"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="图标"
+                                android:textSize="@dimen/hero_label_size"
+                                android:textColor="@color/color_text_secondary"
+                                android:layout_marginTop="4dp"/>
+                        </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/hero_stat_wallpapers"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <TextView
-                            android:id="@+id/hero_wallpaper_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/hero_number_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/color_success"
-                            android:text="0"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="壁纸"
-                            android:textSize="@dimen/hero_label_size"
-                            android:textColor="@color/color_text_secondary"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="@dimen/hero_divider_height"
+                            android:background="@color/color_divider_soft"
+                            android:alpha="0.6"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"/>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="@dimen/hero_divider_height"
-                        android:background="@color/color_divider_soft"
-                        android:alpha="0.6"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"/>
+                        <LinearLayout
+                            android:id="@+id/hero_stat_wallpapers"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <TextView
+                                android:id="@+id/hero_wallpaper_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/hero_number_size"
+                                android:textStyle="bold"
+                                android:textColor="@color/color_success"
+                                android:text="0"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="壁纸"
+                                android:textSize="@dimen/hero_label_size"
+                                android:textColor="@color/color_text_secondary"
+                                android:layout_marginTop="4dp"/>
+                        </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/hero_stat_themed"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <TextView
-                            android:id="@+id/hero_themed_count"
-                            android:layout_width="wrap_content"
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="@dimen/hero_divider_height"
+                            android:background="@color/color_divider_soft"
+                            android:alpha="0.6"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <LinearLayout
+                            android:id="@+id/hero_stat_themed"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/hero_number_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/color_neutral_number"
-                            android:text="0"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="已适配"
-                            android:textSize="@dimen/hero_label_size"
-                            android:textColor="@color/color_text_secondary"
-                            android:layout_marginTop="4dp"/>
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <TextView
+                                android:id="@+id/hero_themed_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/hero_number_size"
+                                android:textStyle="bold"
+                                android:textColor="@color/color_neutral_number"
+                                android:text="0"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="已适配"
+                                android:textSize="@dimen/hero_label_size"
+                                android:textColor="@color/color_text_secondary"
+                                android:layout_marginTop="4dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
+        </FrameLayout>
 
         <!-- ══ SECTION: 数据概览 ══ -->
         <LinearLayout

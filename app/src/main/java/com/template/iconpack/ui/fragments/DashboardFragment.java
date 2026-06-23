@@ -78,6 +78,10 @@ public class DashboardFragment extends Fragment {
 
     private void setupBrand(Context ctx) {
         try {
+            ImageView heroIcon = rootView.findViewById(R.id.hero_icon);
+            if (heroIcon != null) {
+                heroIcon.setImageDrawable(ctx.getPackageManager().getApplicationIcon(ctx.getPackageName()));
+            }
             t(R.id.hero_app_name, getString(R.string.app_name));
             String v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
             t(R.id.hero_version, "v" + v);

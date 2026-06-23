@@ -7,7 +7,7 @@
     <dimen name="drawer_top_radius">32dp</dimen>
     <dimen name="button_radius">999dp</dimen>
 
-    <dimen name="hero_height">150dp</dimen>
+    <dimen name="hero_height">182dp</dimen>
     <dimen name="toolbar_height">68dp</dimen>
     <dimen name="entry_card_height">84dp</dimen>
     <dimen name="menu_item_height">52dp</dimen>
@@ -43,8 +43,8 @@
     <dimen name="page_padding_bottom">32dp</dimen>
 
     <!-- ══ Header ══ -->
-    <dimen name="header_logo_size">64dp</dimen>
-    <dimen name="header_logo_inner_icon">64dp</dimen>
+    <dimen name="header_logo_size">56dp</dimen>
+    <dimen name="header_logo_inner_icon">56dp</dimen>
     <dimen name="header_menu_size">50dp</dimen>
     <dimen name="header_menu_icon">20dp</dimen>
     <dimen name="header_title_size">21sp</dimen>
@@ -52,6 +52,7 @@
 
     <!-- ══ Hero ══ -->
     <dimen name="hero_padding">24dp</dimen>
+    <dimen name="hero_background_height">182dp</dimen>
     <dimen name="hero_title_size">21sp</dimen>
     <dimen name="hero_subtitle_size">15sp</dimen>
     <dimen name="hero_number_size">28sp</dimen>
