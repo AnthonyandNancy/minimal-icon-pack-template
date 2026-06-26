@@ -45,6 +45,7 @@ public class RequestFragment extends Fragment {
     private List<AppInfo> allApps;
     private String currentFilter = FILTER_ALL;
     private boolean emailInProgress = false;
+    private int requestEmailAppLimit = 5;
 
     private View pillAll, pillThemed, pillUnthemed;
 
@@ -94,6 +95,7 @@ public class RequestFragment extends Fragment {
         requestList.setLayoutManager(new LinearLayoutManager(ctx));
 
         allApps = AppScanner.scanInstalledApps(ctx);
+        requestEmailAppLimit = Math.max(1, getResources().getInteger(R.integer.request_email_app_limit));
         int total = allApps.size(), themed = 0;
         for (AppInfo a : allApps) if (a.isThemed) themed++;
 
@@ -102,7 +104,14 @@ public class RequestFragment extends Fragment {
         ((TextView) view.findViewById(R.id.stat_unthemed)).setText(String.valueOf(total - themed));
 
         adapter = new RequestAppAdapter(allApps);
+        adapter.setSelectionLimit(requestEmailAppLimit);
         adapter.setSelectionListener(c -> updateBottomBar());
+        adapter.setSelectionLimitListener(limit -> {
+            Context toastContext = getContext();
+            if (toastContext != null) {
+                Toast.makeText(toastContext, "最多只能选择 " + limit + " 个未适配应用", Toast.LENGTH_SHORT).show();
+            }
+        });
         requestList.setAdapter(adapter);
 
         btnSelectAll.setOnClickListener(v -> {
@@ -149,13 +158,14 @@ public class RequestFragment extends Fragment {
         bottomBar.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
             int c = adapter.getSelectedCount();
-            selectedCountText.setText("已选 " + c + " 个");
+            selectedCountText.setText("已选 " + c + " / " + requestEmailAppLimit + " 个");
             boolean showSelect = currentFilter.equals("unthemed");
             btnSelectAll.setVisibility(showSelect ? View.VISIBLE : View.GONE);
             if (showSelect) {
                 int unthemed = 0;
                 for (AppInfo a : allApps) if (!a.isThemed) unthemed++;
-                ((TextView) btnSelectAll).setText(c >= unthemed ? "反选" : "全选");
+                int selectableCount = Math.min(unthemed, requestEmailAppLimit);
+                ((TextView) btnSelectAll).setText(c >= selectableCount ? "反选" : "全选");
             }
         }
     }

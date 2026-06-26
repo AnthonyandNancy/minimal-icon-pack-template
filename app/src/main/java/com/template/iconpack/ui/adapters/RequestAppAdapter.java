@@ -24,10 +24,13 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
     private final List<AppInfo> filteredApps;
     private String currentFilter = "all";
     private boolean showCheckboxes = false;
+    private int selectionLimit = 5;
 
     private SelectionListener selectionListener;
+    private SelectionLimitListener selectionLimitListener;
 
     public interface SelectionListener { void onSelectionChanged(int selectedCount); }
+    public interface SelectionLimitListener { void onSelectionLimitReached(int limit); }
 
     public RequestAppAdapter(List<AppInfo> apps) {
         this.allApps = apps;
@@ -35,6 +38,14 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
     }
 
     public void setSelectionListener(SelectionListener l) { this.selectionListener = l; }
+    public void setSelectionLimitListener(SelectionLimitListener l) { this.selectionLimitListener = l; }
+
+    public void setSelectionLimit(int limit) {
+        selectionLimit = Math.max(1, limit);
+        trimSelectionToLimit();
+        notifyDataSetChanged();
+        fireSelectionChanged();
+    }
 
     public void setFilter(String filter) {
         currentFilter = filter;
@@ -42,8 +53,11 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
     }
 
     public void selectAllUnthemed() {
+        int selected = 0;
         for (AppInfo a : filteredApps) {
-            if (!a.isThemed) a.isSelected = true;
+            if (a.isThemed) continue;
+            a.isSelected = selected < selectionLimit;
+            if (a.isSelected) selected++;
         }
         notifyDataSetChanged();
         fireSelectionChanged();
@@ -61,7 +75,7 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
 
     public int getSelectedCount() {
         int c = 0;
-        for (AppInfo a : filteredApps) if (a.isSelected) c++;
+        for (AppInfo a : allApps) if (a.isSelected) c++;
         return c;
     }
 
@@ -90,8 +104,25 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
 
     public List<AppInfo> getSelectedApps() {
         List<AppInfo> sel = new ArrayList<>();
-        for (AppInfo a : filteredApps) if (a.isSelected) sel.add(a);
+        for (AppInfo a : allApps) if (a.isSelected) sel.add(a);
         return sel;
+    }
+
+    private void trimSelectionToLimit() {
+        int selected = 0;
+        for (AppInfo a : allApps) {
+            if (!a.isSelected) continue;
+            selected++;
+            if (selected > selectionLimit) a.isSelected = false;
+        }
+    }
+
+    private boolean canSelectMore() {
+        return getSelectedCount() < selectionLimit;
+    }
+
+    private void notifySelectionLimitReached() {
+        if (selectionLimitListener != null) selectionLimitListener.onSelectionLimitReached(selectionLimit);
     }
 
     @Override public int getItemCount() { return filteredApps.size(); }
@@ -144,6 +175,11 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
         // Row click toggles selection
         View.OnClickListener toggle = v -> {
             if (!showCheckboxes || app.isThemed) return;
+            if (!app.isSelected && !canSelectMore()) {
+                notifySelectionLimitReached();
+                h.checkbox.setChecked(false);
+                return;
+            }
             app.isSelected = !app.isSelected;
             h.checkbox.setChecked(app.isSelected);
             fireSelectionChanged();
@@ -151,7 +187,13 @@ public class RequestAppAdapter extends RecyclerView.Adapter<RequestAppAdapter.Ap
         h.itemView.setOnClickListener(toggle);
         // Checkbox click also syncs
         h.checkbox.setOnClickListener(v -> {
-            app.isSelected = h.checkbox.isChecked();
+            boolean checked = h.checkbox.isChecked();
+            if (checked && !app.isSelected && !canSelectMore()) {
+                h.checkbox.setChecked(false);
+                notifySelectionLimitReached();
+                return;
+            }
+            app.isSelected = checked;
             fireSelectionChanged();
         });
     }
